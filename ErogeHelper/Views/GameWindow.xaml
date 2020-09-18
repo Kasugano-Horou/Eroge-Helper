@@ -1,0 +1,28 @@
+﻿<Window x:Class="ErogeHelper.Views.GameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:ErogeHelper.ViewModels"
+        mc:Ignorable="d" 
+        Height="{Binding WinHeight, Mode=TwoWay}" 
+        Width="{Binding WinWidth, Mode=TwoWay}"
+        Top="{Binding WinTop, Mode=TwoWay}" 
+        Left="{Binding WinLeft, Mode=TwoWay}"
+        IsEnabled="{Binding WindowSwitch}"
+        Title="GameWindow" AllowsTransparency="True" WindowStyle="None" 
+        Topmost="True"
+        FontFamily="MotoyaLMaru W3 mono">
+    <Window.Background>
+        <SolidColorBrush Opacity="0"/>
+    </Window.Background>
+
+    <!-- Layout of the whole game window -->
+    <Border BorderBrush="red" BorderThickness="1">
+        <!-- Client area in window mode -->
+        <Border BorderBrush="red" BorderThickness="1"
+                Margin="{Binding ClientAreaMargin}">
+                        
+        </Border>
+    </Border>
+</Window>
