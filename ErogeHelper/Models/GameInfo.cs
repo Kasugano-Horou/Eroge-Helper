@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ErogeHelper.Models
@@ -23,7 +24,7 @@ namespace ErogeHelper.Models
         public string HookCode { get; set; }
         public int HookThread { get; set; }
 
-        public Process[] ProcList { get; set; } // 可能有些已经退出的进程
+        public List<Process> ProcList = new List<Process>(); // 可能有些已经退出的进程
         public IntPtr hWnd { get; set; }
 
         public RECT Rect = new RECT(); // 存放游戏窗口坐标信息

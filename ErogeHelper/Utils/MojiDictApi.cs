@@ -1,0 +1,189 @@
+﻿using System;
+using System.Diagnostics;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace ErogeHelper.Utils
+{
+    class MojiDictApi
+    {
+        string BaseUrl = "https://api.mojidict.com";
+
+        string searchApi = "/parse/functions/search_v3";
+        string fetchApi = "/parse/functions/fetchWord_v2";
+
+        private HttpClient client;
+        public MojiDictApi()
+        {
+            // lower than 100ms
+            client = new HttpClient();
+            client.BaseAddress = new Uri(BaseUrl);
+        }
+
+        public async Task<MojiFetchResponse> RequestAsync(string query)
+        {
+            MojiSearchPayload searchPayload = new MojiSearchPayload
+            {
+                //langEnv = "zh-CN_ja",
+                needWords = "true",
+                searchText = query,
+                _ApplicationId = "E62VyFVLMiW7kvbtVq3p",
+                //_ClientVersion = "",
+                //_InstallationId = "",
+                //_SessionToken = ""
+            };
+
+            // FIXME: https://stackoverflow.com/questions/62802238/very-slow-httpclient-sendasync-call
+            // https://stackoverflow.com/questions/39693783/httpclients-sendasync-is-very-slow-not-a-proxy-issue
+            var sw = new Stopwatch();
+            sw.Start();
+            HttpResponseMessage resMsg = await client.PostAsJsonAsync(searchApi, searchPayload);
+            sw.Stop();
+            Console.WriteLine(sw.ElapsedMilliseconds);
+
+            resMsg.EnsureSuccessStatusCode();
+
+            var searchResponse = await resMsg.Content.ReadAsAsync<MojiSearchResponse>();
+
+            MojiFetchPayload fetchPayload = new MojiFetchPayload
+            {
+                wordId = searchResponse.result.searchResults[0].tarId,
+                _ApplicationId = "E62VyFVLMiW7kvbtVq3p",
+            };
+
+            resMsg = await client.PostAsJsonAsync(fetchApi, fetchPayload);
+            resMsg.EnsureSuccessStatusCode();
+            return await resMsg.Content.ReadAsAsync<MojiFetchResponse>();
+        }
+    }
+
+    #region MojiFetchPayload
+    internal class MojiFetchPayload
+    {
+        public string wordId { get; set; }
+        public string _ApplicationId { get; set; }
+        public string _ClientVersion { get; set; }
+        public string _InstallationId { get; set; }
+        public string _SessionToken { get; set; }
+    }
+    #endregion
+
+    #region MojiSearchPayload
+    class MojiSearchPayload
+    {
+        public string langEnv { get; set; }
+        public string needWords { get; set; }
+        public string searchText { get; set; }
+        public string _ApplicationId { get; set; }
+        public string _ClientVersion { get; set; }
+        public string _InstallationId { get; set; }
+        public string _SessionToken { get; set; }
+    }
+    #endregion
+
+    #region MojiSearchResponse
+    public class MojiSearchResponse
+    {
+        public Result result { get; set; }
+
+        public class Result
+        {
+            public string originalSearchText { get; set; } // same as query
+            public Searchresult[] searchResults { get; set; } // 与query最相近的索引列表，以及别个网站的跳转
+            public Word[] words { get; set; } // 与 searchResults 索引对应，不一定完全一致，所以只使用index[0]号
+        }
+
+        public class Searchresult
+        {
+            public string searchText { get; set; }
+            public string tarId { get; set; }    // 对应单词url后缀
+            public int type { get; set; }
+            public int count { get; set; }
+            public string title { get; set; }
+            public DateTime createdAt { get; set; }
+            public DateTime updatedAt { get; set; }
+            public string objectId { get; set; } // BoVutOlaPR
+        }
+
+        public class Word
+        {
+            public string excerpt { get; set; }  // [惯用语] 主动承担。（自分からすすんで引き受ける。） 
+            public string spell { get; set; }    // 買う
+            public string accent { get; set; }   // ?
+            public string pron { get; set; }     // かう 
+            public string romaji { get; set; }
+            public DateTime createdAt { get; set; }
+            public DateTime updatedAt { get; set; }
+            public string updatedBy { get; set; }
+            public string objectId { get; set; }  // 对应tarId
+        }
+    }
+    #endregion
+
+    #region MojiFetchResponse
+    public class MojiFetchResponse
+    {
+        public Result result { get; set; }
+
+        public class Result
+        {
+            public Word word { get; set; }
+            public Detail[] details { get; set; }
+            public Subdetail[] subdetails { get; set; }
+            public Example[] examples { get; set; }
+        }
+
+        public class Word
+        {
+            public string excerpt { get; set; }
+            public string spell { get; set; }
+            public string accent { get; set; }
+            public string pron { get; set; }
+            public string romaji { get; set; }
+            public DateTime createdAt { get; set; }
+            public DateTime updatedAt { get; set; }
+            public string updatedBy { get; set; }
+            public string objectId { get; set; }
+        }
+
+        public class Detail
+        {
+            public string title { get; set; }
+            public int index { get; set; }
+            public DateTime createdAt { get; set; }
+            public DateTime updatedAt { get; set; }
+            public string wordId { get; set; }
+            public string updatedBy { get; set; }
+            public bool converted { get; set; }
+            public string objectId { get; set; }
+        }
+
+        public class Subdetail
+        {
+            public string title { get; set; }
+            public int index { get; set; }
+            public DateTime createdAt { get; set; }
+            public DateTime updatedAt { get; set; }
+            public string wordId { get; set; }
+            public string detailsId { get; set; }
+            public string updatedBy { get; set; }
+            public bool converted { get; set; }
+            public string objectId { get; set; }
+        }
+
+        public class Example
+        {
+            public string title { get; set; }
+            public int index { get; set; }
+            public string trans { get; set; }
+            public DateTime createdAt { get; set; }
+            public DateTime updatedAt { get; set; }
+            public string wordId { get; set; }
+            public string subdetailsId { get; set; }
+            public string updatedBy { get; set; }
+            public bool converted { get; set; }
+            public string objectId { get; set; }
+        }
+    }
+    #endregion
+}

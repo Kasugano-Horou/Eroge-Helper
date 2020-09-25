@@ -69,9 +69,17 @@ namespace ErogeHelper
 
             log.Info("Game Process Start over.");
 
-            gameInfo.ProcList = Process.GetProcessesByName(gameInfo.ProcessName);
-            log.Info($"{gameInfo.ProcList.Length} Process(es) detected.");
-            if (gameInfo.ProcList.Length != 0)
+            foreach (Process p in Process.GetProcessesByName(gameInfo.ProcessName))
+            {
+                gameInfo.ProcList.Add(p);
+            }
+            foreach (Process p in Process.GetProcessesByName(gameInfo.ProcessName + ".log"))
+            {
+                gameInfo.ProcList.Add(p);
+            }
+
+            log.Info($"{gameInfo.ProcList.Count} Process(es) detected.");
+            if (gameInfo.ProcList.Count != 0)
             {
                 // Cheak if there is eh.config file
                 if (File.Exists(gameInfo.ConfigPath))

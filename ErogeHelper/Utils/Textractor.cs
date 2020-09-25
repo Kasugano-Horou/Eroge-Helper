@@ -105,7 +105,7 @@ namespace ErogeHelper.Utils
                 }
                
                 // HookThread越小 - ctx 越大 - 越晚被捕捉 - 在Config页面的选择越靠前
-                if (ThreadIndex[GameInfo.Instance.HookThread] == hp.ctx) 
+                if (ThreadIndex[GameInfo.Instance.HookThread] == hp.ctx) // 所有thread读取完毕ThreadIndex.Count == MAX
                 {
                     log.Info(hp.text);
                     SelectedDataEvent?.Invoke(typeof(Textractor), hp);

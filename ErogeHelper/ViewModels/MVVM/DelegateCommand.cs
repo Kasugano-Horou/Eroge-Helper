@@ -20,6 +20,10 @@ namespace ErogeHelper.ViewModels
             _action = action;
         }
 
+        public DelegateCommand()
+        {
+        }
+
         public void Execute(object parameter)
         {
             _action();

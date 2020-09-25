@@ -1,10 +1,13 @@
 ﻿using ErogeHelper.Models;
+using ErogeHelper.Utils;
 using log4net;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
+using System.Windows.Input;
 
 namespace ErogeHelper.ViewModels
 {
@@ -12,17 +15,64 @@ namespace ErogeHelper.ViewModels
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(TextWindow));
 
-        #region Window Follow Hook
-        protected Hook.WinEventDelegate WinEventDelegate;
-        private static GCHandle GCSafetyHandle; // 需回收释放
-        private IntPtr hWinEventHook;   // 同上
-
         private GameInfo gameInfo = GameInfo.Instance;
 
         /// <summary>
         /// Constructor of GameWindowViewModel, set hook for the window
         /// </summary>
         public GameWindowViewModel()
+        {
+            TopMost = true;
+
+            SetGameWindowHook();
+
+            DisplayTextBlock = new ObservableCollection<RubyTextViewModel>();
+
+            Textractor.SelectedDataEvent += SelectedDataEventHandler;
+
+        }
+
+        private MecabHelper _mecabHelper = new MecabHelper();
+
+        private void SelectedDataEventHandler(object sender, HookParam hp)
+        {
+            SynchronizationContext.SetSynchronizationContext(new
+                System.Windows.Threading.DispatcherSynchronizationContext(System.Windows.Application.Current.Dispatcher));
+            SynchronizationContext.Current.Post(pl =>
+            {
+                LineHeightOfText = hp.text.Length;
+
+                DisplayTextBlock.Clear();
+
+                var mecabWordList = _mecabHelper.SentenceHandle(hp.text);
+                foreach (MecabWordInfo mecabWord in mecabWordList)
+                {
+                    if (mecabWord.PartOfSpeech == "名詞" ||
+                        mecabWord.PartOfSpeech == "助詞" ||
+                        mecabWord.PartOfSpeech == "動詞") // bad
+                    {
+                        DisplayTextBlock.Add(new RubyTextViewModel { RubyText = mecabWord.Kana, 
+                                                                     Text = mecabWord.Word,
+                                                                     canSearch = true});
+
+                    }
+                    else
+                    {
+                        DisplayTextBlock.Add(new RubyTextViewModel { RubyText = "", 
+                                                                     Text = mecabWord.Word,
+                                                                     canSearch = false});
+                    }
+                }
+
+            }, null);
+        }
+
+        #region Window Follow Hook
+        protected Hook.WinEventDelegate WinEventDelegate;
+        private static GCHandle GCSafetyHandle; // 需回收释放
+        private IntPtr hWinEventHook;   // 同上
+
+        private void SetGameWindowHook()
         {
             WinEventDelegate = new Hook.WinEventDelegate(WinEventCallback);
             GCSafetyHandle = GCHandle.Alloc(WinEventDelegate);
@@ -241,5 +291,46 @@ namespace ErogeHelper.ViewModels
             }
         }
         #endregion
+
+        public ObservableCollection<RubyTextViewModel> DisplayTextBlock { get; set; }
+        public ICommand AddText { get; }
+
+        private int _lineHeightOfText;
+        public int LineHeightOfText 
+        {
+            get => _lineHeightOfText;
+            set
+            {
+                // value is lenth of text
+                int line = value / 27; // line == 0 => 1 line
+                                       // line == 1 => 2 line
+                int height = 45 + line * 55;
+
+
+                _lineHeightOfText = height;
+                RaisePropertyChangedEvent(nameof(LineHeightOfText));
+            } 
+        }
+
+        public ICommand WordQuery
+        {
+            get
+            {
+                return new DelegateCommand(WordSearch);
+            }
+        }
+
+        private void WordSearch()
+        {
+            log.Info("查询单词");
+        }
+    }
+
+    public class RubyTextViewModel
+    {
+        //Properties for Binding to Combobox and Textbox goes here
+        public string RubyText { get; set; }
+        public string Text { get; set; }
+        public bool canSearch { get; set; }
     }
 }

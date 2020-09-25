@@ -7,7 +7,7 @@
         mc:Ignorable="d" Height="auto" Width="auto"
         Title="TextWindow" AllowsTransparency="True" WindowStyle="None" 
         Topmost="True"
-        FontFamily="MotoyaLMaru W3 mono">
+        >
     <Window.DataContext>
         <vm:TextWindowViewModel />
     </Window.DataContext>

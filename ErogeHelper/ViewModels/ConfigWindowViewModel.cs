@@ -99,7 +99,7 @@ namespace ErogeHelper.ViewModels
 
                 GameInfo.Instance.HookCode = SelectedHook.hookcode;
                 GameInfo.Instance.HookThread = serial;
-                new GameWindow();
+                new GameWindow().Show();
             }
         }
     }
