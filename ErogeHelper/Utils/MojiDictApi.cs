@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -7,6 +8,8 @@ namespace ErogeHelper.Utils
 {
     class MojiDictApi
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(MojiDictApi));
+
         string BaseUrl = "https://api.mojidict.com";
 
         string searchApi = "/parse/functions/search_v3";
@@ -39,21 +42,31 @@ namespace ErogeHelper.Utils
             sw.Start();
             HttpResponseMessage resMsg = await client.PostAsJsonAsync(searchApi, searchPayload);
             sw.Stop();
-            Console.WriteLine(sw.ElapsedMilliseconds);
-
+            log.Info($"搜索Api返回用时 {sw.ElapsedMilliseconds} 毫秒");
             resMsg.EnsureSuccessStatusCode();
 
             var searchResponse = await resMsg.Content.ReadAsAsync<MojiSearchResponse>();
 
-            MojiFetchPayload fetchPayload = new MojiFetchPayload
+            if (searchResponse.result.words.Length != 0)
             {
-                wordId = searchResponse.result.searchResults[0].tarId,
-                _ApplicationId = "E62VyFVLMiW7kvbtVq3p",
-            };
+                MojiFetchPayload fetchPayload = new MojiFetchPayload
+                {
+                    wordId = searchResponse.result.searchResults[0].tarId,
+                    _ApplicationId = "E62VyFVLMiW7kvbtVq3p",
+                };
 
-            resMsg = await client.PostAsJsonAsync(fetchApi, fetchPayload);
-            resMsg.EnsureSuccessStatusCode();
-            return await resMsg.Content.ReadAsAsync<MojiFetchResponse>();
+                resMsg = await client.PostAsJsonAsync(fetchApi, fetchPayload);
+                resMsg.EnsureSuccessStatusCode();
+
+                return await resMsg.Content.ReadAsAsync<MojiFetchResponse>();
+            }
+            else
+            {
+                return new MojiFetchResponse
+                {
+                    result = null
+                };
+            }
         }
     }
 
@@ -82,6 +95,13 @@ namespace ErogeHelper.Utils
     #endregion
 
     #region MojiSearchResponse
+    /*
+     * Search搜索不到时result状态
+     * 
+     * originalSearchText: "ドバサ"
+     * searchResults: [{searchText: "ドバサ", count: 1,…}] 包含一个其他网站的索引
+     * words: []
+     * **/
     public class MojiSearchResponse
     {
         public Result result { get; set; }

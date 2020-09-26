@@ -67,6 +67,10 @@ namespace ErogeHelper.Views
                 Pron.Text = mojiResp.result.word.pron;
                 Trans.Text = mojiResp.result.subdetails[0].title;
             }
+            else
+            {
+                Word.Content = $"{control.Text} 没有找到";
+            }
 
 
             //WordInfo word = new WordInfo();

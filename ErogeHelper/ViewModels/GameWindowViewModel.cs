@@ -30,9 +30,11 @@ namespace ErogeHelper.ViewModels
 
             Textractor.SelectedDataEvent += SelectedDataEventHandler;
 
+            _mecabHelper = new MecabHelper();
+
         }
 
-        private MecabHelper _mecabHelper = new MecabHelper();
+        private MecabHelper _mecabHelper;
 
         private void SelectedDataEventHandler(object sender, HookParam hp)
         {
@@ -87,42 +89,59 @@ namespace ErogeHelper.ViewModels
                 {
                     if (!proc.HasExited)
                     {
+                        var changeProcFlag = false;
                         targetProc = proc;
+
+                        // 设置进程终止时触发的事件
+                        targetProc.EnableRaisingEvents = true;
+                        targetProc.Exited += new EventHandler(GameExited);
+
+                        // 设置窗口跟随相关钩子
+                        if (targetProc != null)
+                        {
+                            var sw = new Stopwatch();
+                            sw.Start();
+                            while (targetProc.MainWindowHandle == IntPtr.Zero)
+                            {
+                                Thread.Sleep(100);
+                                if (sw.Elapsed.TotalSeconds > 2)
+                                {
+                                    changeProcFlag = true;
+                                    break;
+                                }
+                            }
+                            if (changeProcFlag)
+                            {
+                                log.Info($"Can't find window in current PID {targetProc.Id}");
+                                continue;
+                            }
+
+                            //targetProc.Refresh(); 丢弃数据
+                            log.Info($"Spend {sw.Elapsed.TotalSeconds}s to find game window's handle");
+                            sw.Stop();
+
+                            gameInfo.hWnd = targetProc.MainWindowHandle;
+                            Debug.Assert(gameInfo.hWnd != (IntPtr)0);
+                            uint targetThreadId = Hook.GetWindowThread(gameInfo.hWnd);
+
+                            if (gameInfo.hWnd != IntPtr.Zero)
+                            {
+                                // 调用 SetWinEventHook 传入 WinEventDelegate 回调函数
+                                hWinEventHook = Hook.WinEventHookOne(Hook.SWEH_Events.EVENT_OBJECT_LOCATIONCHANGE,
+                                                                     WinEventDelegate,
+                                                                     (uint)targetProc.Id,
+                                                                     targetThreadId);
+                                // 首次设置窗口位置
+                                SetLocation();
+                                log.Info("Begin to follow the window");
+                                return;
+                            }
+                        }
+
                     }
                 }
-                //targetProc.WaitForInputIdle(7000);
 
-                // 设置进程终止时触发的事件
-                targetProc.EnableRaisingEvents = true;
-                targetProc.Exited += new EventHandler(GameExited);
-
-                // 设置窗口跟随相关钩子
-                if (targetProc != null)
-                {
-                    var sw = new Stopwatch();
-                    sw.Start();
-                    while (targetProc.MainWindowHandle == IntPtr.Zero)
-                        Thread.Sleep(100);
-                    //targetProc.Refresh(); 丢弃数据
-                    log.Info($"Spend {sw.Elapsed.TotalSeconds}s to find game window's handle");
-                    sw.Stop();
-
-                    gameInfo.hWnd = targetProc.MainWindowHandle;
-                    Debug.Assert(gameInfo.hWnd != (IntPtr)0);
-                    uint targetThreadId = Hook.GetWindowThread(gameInfo.hWnd);
-
-                    if (gameInfo.hWnd != IntPtr.Zero)
-                    {
-                        // 调用 SetWinEventHook 传入 WinEventDelegate 回调函数
-                        hWinEventHook = Hook.WinEventHookOne(Hook.SWEH_Events.EVENT_OBJECT_LOCATIONCHANGE,
-                                                             WinEventDelegate,
-                                                             (uint)targetProc.Id,
-                                                             targetThreadId);
-                        // 首次设置窗口位置
-                        SetLocation();
-                        log.Info("Begin to follow the window");
-                    }
-                }
+                
             }
             catch (Exception ex)
             {
@@ -302,7 +321,7 @@ namespace ErogeHelper.ViewModels
             set
             {
                 // value is lenth of text
-                int line = value / 27; // line == 0 => 1 line
+                int line = value / 28; // line == 0 => 1 line
                                        // line == 1 => 2 line
                 int height = 45 + line * 55;
 

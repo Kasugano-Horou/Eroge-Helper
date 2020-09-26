@@ -6,6 +6,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Xml;
 
@@ -67,6 +68,8 @@ namespace ErogeHelper
                 res.WaitForInputIdle(7000);
             }
 
+            log.Info("Wait 7 seconds.");
+            Thread.Sleep(7000);
             log.Info("Game Process Start over.");
 
             foreach (Process p in Process.GetProcessesByName(gameInfo.ProcessName))
@@ -87,10 +90,14 @@ namespace ErogeHelper
                     // read xml file
                     XmlDocument config = new XmlDocument();
                     config.Load(gameInfo.ConfigPath);
-                    XmlNodeList nodeList = config.GetElementsByTagName("HookCode");
+                    var nodeList = config.GetElementsByTagName("HookCode");
                     GameInfo.Instance.HookCode = nodeList[0].InnerText;
-                    XmlNodeList threadList = config.GetElementsByTagName("HookThreadNumber");
-                    GameInfo.Instance.HookThread = int.Parse(threadList[0].InnerText);
+                    nodeList = config.GetElementsByTagName("HookThreadNumber");
+                    GameInfo.Instance.HookThread = int.Parse(nodeList[0].InnerText);
+                    nodeList = config.GetElementsByTagName("RepeatType");
+                    GameInfo.Instance.RepeatType = nodeList[0].InnerText;
+                    nodeList = config.GetElementsByTagName("RepeatNumber");
+                    GameInfo.Instance.RepeatTime = int.Parse(nodeList[0].InnerText);
 
                     log.Info($"Get HCode {GameInfo.Instance.HookCode} from file {gameInfo.ProcessName}.eh.config");
                     // Display text window

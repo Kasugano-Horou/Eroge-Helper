@@ -83,11 +83,11 @@ namespace ErogeHelper.Utils
                 Match match = matches[0];
                 GroupCollection groups = match.Groups;
                 //提取匹配项内的分组信息
-                hp.handle = Int64.Parse(groups[1].Value, System.Globalization.NumberStyles.HexNumber);
-                hp.pid = Int64.Parse(groups[2].Value, System.Globalization.NumberStyles.HexNumber);
-                hp.addr = Int64.Parse(groups[3].Value, System.Globalization.NumberStyles.HexNumber);
-                hp.ctx = Int64.Parse(groups[4].Value, System.Globalization.NumberStyles.HexNumber);
-                hp.ctx2 = Int64.Parse(groups[5].Value, System.Globalization.NumberStyles.HexNumber);
+                hp.handle = long.Parse(groups[1].Value, System.Globalization.NumberStyles.HexNumber);
+                hp.pid = long.Parse(groups[2].Value, System.Globalization.NumberStyles.HexNumber);
+                hp.addr = long.Parse(groups[3].Value, System.Globalization.NumberStyles.HexNumber);
+                hp.ctx = long.Parse(groups[4].Value, System.Globalization.NumberStyles.HexNumber);
+                hp.ctx2 = long.Parse(groups[5].Value, System.Globalization.NumberStyles.HexNumber);
                 hp.name = groups[6].Value;
                 hp.hookcode = groups[7].Value;
                 hp.text = groups[8].Value;
@@ -107,6 +107,28 @@ namespace ErogeHelper.Utils
                 // HookThread越小 - ctx 越大 - 越晚被捕捉 - 在Config页面的选择越靠前
                 if (ThreadIndex[GameInfo.Instance.HookThread] == hp.ctx) // 所有thread读取完毕ThreadIndex.Count == MAX
                 {
+                    switch(GameInfo.Instance.RepeatType)
+                    {
+                        case "AABB":
+                            patten = $@"([^\\]){{{GameInfo.Instance.RepeatTime}}}";
+                            regex = new Regex(patten);
+                            matches = regex.Matches(hp.text);
+
+                            if (matches.Count != 0)
+                            {
+                                string tmp = "";
+                                foreach (Match match in matches)
+                                {
+                                    tmp += match.Groups[1];
+                                }
+                                hp.text = tmp;
+                            }
+                            break;
+                        case "ABAB":
+                            break;
+                        default:
+                            break;
+                    }
                     log.Info(hp.text);
                     SelectedDataEvent?.Invoke(typeof(Textractor), hp);
                 }

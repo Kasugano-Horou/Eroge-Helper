@@ -23,6 +23,8 @@ namespace ErogeHelper.Models
         public string MD5 { get; set; }
         public string HookCode { get; set; }
         public int HookThread { get; set; }
+        public string RepeatType { get; internal set; } // AABB ABAB NONE
+        public int RepeatTime { get; internal set; }
 
         public List<Process> ProcList = new List<Process>(); // 可能有些已经退出的进程
         public IntPtr hWnd { get; set; }
