@@ -5,9 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ErogeHelper.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
-        DataContext="{Binding Game, Source={StaticResource Locator}}">
-    <Grid>
-        
-    </Grid>
+        Title="GameView" 
+        AllowsTransparency="True" 
+        WindowStyle="None" 
+        Topmost="{Binding Topmost}"
+        DataContext="{Binding Game, Source={StaticResource Locator}}"
+        d:DataContext="{d:DesignInstance d:Type=vm:GameViewModel,
+                                         IsDesignTimeCreatable=True}">
+    <Window.Background>
+        <SolidColorBrush />
+    </Window.Background>
+    <Window.Resources>
+        <Style TargetType="Border" x:Key="DesignView">
+            <Setter Property="BorderBrush" Value="red"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Window.Resources>
+    
+    <!-- Layout of the whole game window -->
+    <Border Style="{StaticResource ResourceKey=DesignView}">
+        <!-- Client area -->
+        <Border x:Name="ClientArea" Style="{StaticResource ResourceKey=DesignView}" Margin="{Binding ClientAreaMargin}">
+            <DockPanel LastChildFill="False">
+
+            </DockPanel>
+        </Border>
+    </Border>
 </Window>

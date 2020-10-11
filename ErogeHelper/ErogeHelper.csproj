@@ -76,6 +76,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\EHConfig.cs" />
+    <Compile Include="Common\Hook.cs" />
     <Compile Include="Common\Textractor.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Model\EHProfile.cs" />
@@ -132,6 +133,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="View\Control\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,4 +1,5 @@
 using GalaSoft.MvvmLight;
+using System.Windows;
 
 namespace ErogeHelper.ViewModel
 {
@@ -21,14 +22,21 @@ namespace ErogeHelper.ViewModel
         /// </summary>
         public GameViewModel()
         {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
+            if (IsInDesignMode)
+            {
+                // Code runs in Blend --> create design time data.
+                ClientAreaMargin = new Thickness(10, 30, 10, 10);
+
+            }
+            else
+            {
+                // Code runs "for real"
+                Topmost = true;
+
+            }
         }
+
+        public bool Topmost { get; set; }
+        public Thickness ClientAreaMargin { get; set; }
     }
 }
