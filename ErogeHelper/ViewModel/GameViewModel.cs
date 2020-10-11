@@ -1,4 +1,5 @@
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using System.Windows;
 
 namespace ErogeHelper.ViewModel
@@ -31,8 +32,8 @@ namespace ErogeHelper.ViewModel
             else
             {
                 // Code runs "for real"
-                Topmost = true;
 
+                Topmost = true;
             }
         }
 

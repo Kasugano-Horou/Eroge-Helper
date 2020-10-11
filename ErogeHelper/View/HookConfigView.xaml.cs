@@ -29,12 +29,13 @@ namespace ErogeHelper.View
 
         private void NotificationMessageReceived(NotificationMessage msg)
         {
-            var window = Application.Current.Windows.OfType<GameView>().FirstOrDefault();
-            if (msg.Notification == "ShowGameView" && window == null)
+            if (msg.Notification == "ShowGameView")
             {
-                new GameView().Show();
+                var window = Application.Current.Windows.OfType<GameView>().FirstOrDefault();
+                if (window == null)
+                    new GameView().Show();
+                Close();
             }
-            Close();
         }
     }
 }

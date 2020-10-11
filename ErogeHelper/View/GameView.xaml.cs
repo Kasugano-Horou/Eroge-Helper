@@ -1,9 +1,11 @@
 ﻿using ErogeHelper.Model.Singleton;
+using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace ErogeHelper.View
 {
@@ -111,6 +113,12 @@ namespace ErogeHelper.View
                 Closed -= Window_Closed;
                 Close();
             });
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            WinArea.SetValue(StyleProperty, null);
+            ClientArea.SetValue(StyleProperty, null);
         }
     }
 }

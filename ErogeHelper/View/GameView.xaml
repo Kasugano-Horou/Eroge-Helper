@@ -11,7 +11,8 @@
         Topmost="{Binding Topmost}"
         DataContext="{Binding Game, Source={StaticResource Locator}}"
         d:DataContext="{d:DesignInstance d:Type=vm:GameViewModel,
-                                         IsDesignTimeCreatable=True}">
+                                         IsDesignTimeCreatable=True}"
+        Loaded="Window_Loaded">
     <Window.Background>
         <SolidColorBrush />
     </Window.Background>
@@ -23,7 +24,7 @@
     </Window.Resources>
     
     <!-- Layout of the whole game window -->
-    <Border Style="{StaticResource ResourceKey=DesignView}">
+    <Border x:Name="WinArea" Style="{StaticResource ResourceKey=DesignView}">
         <!-- Client area -->
         <Border x:Name="ClientArea" Style="{StaticResource ResourceKey=DesignView}" Margin="{Binding ClientAreaMargin}">
             <DockPanel LastChildFill="False">
