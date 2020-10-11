@@ -1,5 +1,5 @@
 ﻿using ErogeHelper.Model.Singleton;
-using ErogeHelper.Models;
+using ErogeHelper.Model;
 using log4net;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,7 @@
 ﻿using ErogeHelper.Common;
 using ErogeHelper.Model.Singleton;
 using ErogeHelper.View;
+using ErogeHelper.ViewModel;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
 using System;
@@ -134,21 +135,20 @@ namespace ErogeHelper
                     //if ( !gameInfo.MD5.Equals(profile.Element("MD5").Value) )
 
                     gameInfo.HookCode = profile.Element("HookCode").Value;
-                    gameInfo.ThreadContext = long.Parse(profile.Element("HookThread").Value) & 0xFFFF;
+                    gameInfo.ThreadContext = long.Parse(profile.Element("ThreadContext").Value);
                     gameInfo.RepeatType = profile.Element("RepeatType").Value;
                     gameInfo.RepeatTime = int.Parse(profile.Element("RepeatTime").Value);
 
                     log.Info($"Get HCode {gameInfo.HookCode} from file {gameInfo.ProcessName}.exe.eh.config");
                     // Display text window
-                    new GameView().Show();
+                    var vm = new GameViewModel();
+                    new GameView { DataContext = vm }.Show();
                 }
                 else
                 {
-                    new GameView().Show();
-
                     log.Info("No xml config file, open hook panel.");
-                    // Open config panel
-                    //new HookWindow().Show();
+                    var vm = new HookConfigViewModel();
+                    new HookConfigView{ DataContext = vm }.Show();
                 }
 
                 Textractor.Init();

@@ -43,6 +43,7 @@ namespace ErogeHelper.ViewModel
             ////}
 
             SimpleIoc.Default.Register<GameViewModel>();
+            SimpleIoc.Default.Register<HookConfigViewModel>();
         }
 
         public GameViewModel Game
@@ -52,7 +53,14 @@ namespace ErogeHelper.ViewModel
                 return ServiceLocator.Current.GetInstance<GameViewModel>();
             }
         }
-        
+        public HookConfigViewModel HookConfig
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<HookConfigViewModel>();
+            }
+        }
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

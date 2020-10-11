@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace ErogeHelper.Models
+namespace ErogeHelper.Model
 {
     //[Handle:ProcessId:Address :Context:Context2:Name(Engine):HookCode                 ]
     //[19    :272C     :769550C0:2C78938:0       :TextOutA    :HS10@0:gdi32.dll:TextOutA] 俺は…………。
-    class HookParam : EventArgs
+    public class HookParam : EventArgs
     {
         public long Handle { get; set; }
         public long Pid { get; set; }
