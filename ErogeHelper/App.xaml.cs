@@ -23,7 +23,7 @@ namespace ErogeHelper
 
         private readonly GameInfo gameInfo = GameInfo.Instance;
 
-        protected override void OnStartup(StartupEventArgs e)
+        private void Application_Startup(object sender, StartupEventArgs e)
         {
             Directory.SetCurrentDirectory(Path.GetDirectoryName(GetType().Assembly.Location));
             DispatcherHelper.Initialize();
@@ -39,8 +39,6 @@ namespace ErogeHelper
                 Current.Shutdown();
                 return;
             }
-
-            base.OnStartup(e);
 
             gameInfo.Path = e.Args[0];
             gameInfo.ConfigPath = gameInfo.Path + ".eh.config";
@@ -141,14 +139,12 @@ namespace ErogeHelper
 
                     log.Info($"Get HCode {gameInfo.HookCode} from file {gameInfo.ProcessName}.exe.eh.config");
                     // Display text window
-                    var vm = new GameViewModel();
-                    new GameView { DataContext = vm }.Show();
+                    new GameView().Show();
                 }
                 else
                 {
                     log.Info("No xml config file, open hook panel.");
-                    var vm = new HookConfigViewModel();
-                    new HookConfigView{ DataContext = vm }.Show();
+                    new HookConfigView().Show();
                 }
 
                 Textractor.Init();

@@ -3,9 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ErogeHelper.View"
+        xmlns:vm="clr-namespace:ErogeHelper.ViewModel"
         mc:Ignorable="d"
-        Title="HookConfigView" Height="450" Width="800">
+        Title="HookConfigView" Height="450" Width="800"
+        DataContext="{Binding HookConfig, Source={StaticResource Locator}}"
+        d:DataContext="{d:DesignInstance d:Type=vm:HookConfigViewModel,
+                                         IsDesignTimeCreatable=True}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="300" />

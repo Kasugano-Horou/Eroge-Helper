@@ -22,6 +22,19 @@ namespace ErogeHelper.ViewModel
         {
             if (IsInDesignMode)
             {
+                HookMapData = new HookBindingList<long, HookParam>(p => p.Handle);
+                HookParam hp = new HookParam()
+                {
+                    Addr = 0,
+                    Ctx = 0,
+                    Ctx2 = 0,
+                    Handle = 1,
+                    Hookcode = "e@e.exe",
+                    Name = "engine",
+                    Pid = 10000,
+                    Text = "Text is me"
+                };
+                HookMapData.Insert(0, hp);
 
             }
             else
@@ -36,7 +49,7 @@ namespace ErogeHelper.ViewModel
 
         private void DataRecvEventHandler(object sender, HookParam hp)
         {
-            DispatcherHelper.CheckBeginInvokeOnUI(() => 
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
                 var targetItem = HookMapData.FastFind(hp.Handle);
                 if (targetItem == null)
@@ -53,14 +66,14 @@ namespace ErogeHelper.ViewModel
 
         public HookBindingList<long, HookParam> HookMapData { get; set; }
         public HookParam SelectedHook { get; set; } = null;
-        public RelayCommand SubmitCommand { get; private set; } 
+        public RelayCommand SubmitCommand { get; private set; }
 
         private bool CanSubmitMessage() => SelectedHook != null;
 
         private void SubmitMessage()
         {
             log.Info($"Selected Hook: {SelectedHook.Hookcode}");
-            
+
             // write xml file
             // FIXME: 用了try catch的地方
             try

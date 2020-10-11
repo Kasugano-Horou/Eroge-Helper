@@ -32,8 +32,7 @@ namespace ErogeHelper.View
             var window = Application.Current.Windows.OfType<GameView>().FirstOrDefault();
             if (msg.Notification == "ShowGameView" && window == null)
             {
-                var vm = new GameViewModel();
-                new GameView { DataContext = vm }.Show();
+                new GameView().Show();
             }
             Close();
         }
