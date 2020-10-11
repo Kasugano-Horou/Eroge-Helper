@@ -42,14 +42,14 @@ namespace ErogeHelper.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
-            SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<GameViewModel>();
         }
 
-        public MainViewModel Main
+        public GameViewModel Game
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
+                return ServiceLocator.Current.GetInstance<GameViewModel>();
             }
         }
         
