@@ -6,6 +6,7 @@
         xmlns:vm="clr-namespace:ErogeHelper.ViewModel"
         mc:Ignorable="d"
         Title="HookConfigView" Height="450" Width="800"
+        Topmost="true"
         DataContext="{Binding HookConfig, Source={StaticResource Locator}}"
         d:DataContext="{d:DesignInstance d:Type=vm:HookConfigViewModel,
                                          IsDesignTimeCreatable=True}">

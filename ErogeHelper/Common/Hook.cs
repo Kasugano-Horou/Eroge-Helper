@@ -20,6 +20,9 @@ namespace ErogeHelper
     /// </summary>
     public class Hook
     {
+        public const int WS_EX_NOACTIVATE = 0x08000000;
+        public const int GWL_EXSTYLE = -20;
+
         public static long SWEH_CHILDID_SELF = 0;
 
         public enum WM : uint
@@ -222,6 +225,23 @@ namespace ErogeHelper
         {
             return SafeNativeMethods.DestroyWindow(hWnd);
         }
+
+        public static int GetWindowLong(IntPtr hWnd, int index)
+        {
+            return SafeNativeMethods.GetWindowLong(hWnd, index);
+        }
+        public static int SetWindowLong(IntPtr hWnd, int index, int newStyle)
+        {
+            return SafeNativeMethods.SetWindowLong(hWnd, index, newStyle);
+        }
+        public static bool SetForegroundWindow(IntPtr hWnd)
+        {
+            return SafeNativeMethods.SetForegroundWindow(hWnd);
+        }
+        public static bool BringWindowToTop(IntPtr hWnd)
+        {
+            return SafeNativeMethods.BringWindowToTop(hWnd);
+        }
     }
 
     [SuppressUnmanagedCodeSecurity]
@@ -247,6 +267,19 @@ namespace ErogeHelper
 
         [DllImport("user32.dll", EntryPoint = "DestroyWindow", CharSet = CharSet.Unicode)]
         internal static extern bool DestroyWindow(IntPtr hWnd);
+
+        // 
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int GetWindowLong(IntPtr hwnd, int index);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
+        [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern bool BringWindowToTop(IntPtr hWnd);
     }
 
     [SuppressUnmanagedCodeSecurity]
