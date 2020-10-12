@@ -1,5 +1,8 @@
-﻿using System;
+﻿using ErogeHelper.Common;
+using System;
+using System.Reflection;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace ErogeHelper.Model
 {
@@ -15,11 +18,23 @@ namespace ErogeHelper.Model
             get => _partOfSpeed;
             set
             {
-                // 找到有哪些词性
-                if (value.Equals(""))
+                switch (value.ToString())
                 {
-                    // TODO:
-                    //SubMarkColor = new BitmapImage(new Uri(@"C:\Users\k1mlka\source\repos\luojunyuan\WpfPlayground\TextControlMVVMLight\Resources\notitle4.png", UriKind.Absolute));
+                    case "名詞":
+                        SubMarkColor = Utils.LoadBitmapFromResource("Resource/yellow.png");
+                        break;
+                    case "助詞":
+                        SubMarkColor = Utils.LoadBitmapFromResource("Resource/green.png");
+                        break;
+                    case "動詞":
+                        SubMarkColor = Utils.LoadBitmapFromResource("Resource/aqua_green.png");
+                        break;
+                    case "副詞":
+                        SubMarkColor = Utils.LoadBitmapFromResource("Resource/purple.png");
+                        break;
+                    default:
+                        SubMarkColor = Utils.LoadBitmapFromResource("Resource/transparent.png");
+                        break;
                 }
 
                 _partOfSpeed = value;
