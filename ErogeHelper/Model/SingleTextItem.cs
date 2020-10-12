@@ -41,6 +41,11 @@ namespace ErogeHelper.Model
         }
         public TextTemplateType TextTemplateType { get; set; }
         public ImageSource SubMarkColor { get; internal set; }
+        // FIXME: Annoying System.Windows.Data Error: 2 : 
+        // Cannot find governing FrameworkElement or FrameworkContentElement for target element. 
+        // BindingExpression:Path=SubMarkColor; DataItem=null; 
+        // target element is 'ImageBrush' (HashCode=40519951); 
+        // target property is 'ImageSource' (type 'ImageSource')
     }
 
     public enum TextTemplateType
