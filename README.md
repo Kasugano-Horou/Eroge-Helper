@@ -27,11 +27,3 @@ a.  选择VS上方工具栏 - 调试 - ErogeHelper属性
 ![屏幕截图 2020-09-26 142206.png](https://i.loli.net/2020/09/26/eKrl8tziucgqLZE.png)
 
 输入完成，保存，F5 运行项目
-
-### Install
-
-将软件注册到右键选项单
-
-Run in Admin
-
-`.\ServerRegistrationManager.exe install .\EHShellMenuHandler.dll -codebase`
