@@ -22,6 +22,7 @@
             <Setter Property="BorderBrush" Value="red"/>
             <Setter Property="BorderThickness" Value="1"/>
         </Style>
+        <SolidColorBrush Color="Black" Opacity=".1" x:Key="WhiteHalfOpacityBrush"/>
     </Window.Resources>
     
     <!-- Layout of the whole game window -->
@@ -34,9 +35,11 @@
                             MouseEnter="TriggerPopupBorder_MouseEnter"
                             Width="auto" 
                             Height="12"
-                            Background="White"/>
+                            Background="white"
+                            Opacity="0.1"/>
 
                     <control:TextControl x:Name="TextArea"
+                                         Background="{StaticResource WhiteHalfOpacityBrush}"
                                          MouseLeave="TextArea_MouseLeave" 
                                          Visibility="{Binding TextAreaVisibility}"/>
                 </StackPanel>
