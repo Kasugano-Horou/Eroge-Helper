@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Windows;
 using System.Xml.Linq;
 
@@ -28,8 +29,15 @@ namespace ErogeHelper
             Directory.SetCurrentDirectory(Path.GetDirectoryName(GetType().Assembly.Location));
             DispatcherHelper.Initialize();
             log4net.Config.XmlConfigurator.Configure();
+            
             log.Info("Started Logging");
             log.Info($"Enviroment directory: {Directory.GetCurrentDirectory()}");
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            if (principal.IsInRole(WindowsBuiltInRole.Administrator))
+            {
+                log.Info("Program run in Admin mode");
+            }
 
             if (e.Args.Length == 0)
             {
@@ -134,8 +142,6 @@ namespace ErogeHelper
 
                     gameInfo.HookCode = profile.Element("HookCode").Value;
                     gameInfo.ThreadContext = long.Parse(profile.Element("ThreadContext").Value);
-                    gameInfo.RepeatType = profile.Element("RepeatType").Value;
-                    gameInfo.RepeatTime = int.Parse(profile.Element("RepeatTime").Value);
 
                     log.Info($"Get HCode {gameInfo.HookCode} from file {gameInfo.ProcessName}.exe.eh.config");
                     // Display text window

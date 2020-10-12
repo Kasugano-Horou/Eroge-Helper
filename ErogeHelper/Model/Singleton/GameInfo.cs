@@ -40,13 +40,6 @@ namespace ErogeHelper.Model.Singleton
         public string HookCode { get; set; }
 
         public long ThreadContext { get; set; }
-
-        /// <summary>
-        /// 特殊码对应文本的重复类型；值为AABB ABAB NONE 三类
-        /// </summary>
-        public string RepeatType { get; internal set; }
-
-        public int RepeatTime { get; internal set; }
         #endregion
 
         public List<Process> ProcList = new List<Process>(); // 考虑存在已经退出的进程

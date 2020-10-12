@@ -1,12 +1,12 @@
 ﻿using ErogeHelper.Model.Singleton;
-using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Threading;
 
 namespace ErogeHelper.View
 {
@@ -113,6 +113,29 @@ namespace ErogeHelper.View
                 Closed -= Window_Closed;
                 Close();
             });
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            var interopHelper = new WindowInteropHelper(this);
+            int exStyle = Hook.GetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE);
+            Hook.SetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE, exStyle | Hook.WS_EX_NOACTIVATE);
+
+            DispatcherTimer timer = new DispatcherTimer();
+            var pointer = new WindowInteropHelper(this);
+            timer.Tick += (sender, _) =>
+            {
+                if (pointer.Handle == IntPtr.Zero)
+                {
+                    timer.Stop();
+                }
+                Hook.BringWindowToTop(pointer.Handle);
+            };
+
+            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Start();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

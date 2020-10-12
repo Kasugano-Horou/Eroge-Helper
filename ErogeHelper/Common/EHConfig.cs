@@ -14,9 +14,7 @@ namespace ErogeHelper.Common
                                       new XAttribute("Name", value: pro.Name),
                                       new XElement("MD5", content: pro.MD5.ToUpper()),
                                       new XElement("HookCode", content: pro.HookCode),
-                                      new XElement("ThreadContext", content: pro.ThreadContext),
-                                      new XElement("RepeatType", content: pro.RepeatType),
-                                      new XElement("RepeatTime", content: pro.RepeatTime)
+                                      new XElement("ThreadContext", content: pro.ThreadContext)
                              );
 
             var tree = new XElement("EHConfig", baseNode);

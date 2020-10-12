@@ -80,8 +80,6 @@ namespace ErogeHelper.ViewModel
                 MD5 = gameInfo.MD5,
                 ThreadContext = SelectedHook.Ctx,
                 Name = gameInfo.ProcessName + ".eh.config",
-                RepeatType = "",
-                RepeatTime = 0
             });
 
             gameInfo.HookCode = SelectedHook.Hookcode;

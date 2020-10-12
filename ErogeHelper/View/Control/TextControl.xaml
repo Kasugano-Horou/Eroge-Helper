@@ -13,14 +13,12 @@
     <UserControl.Resources>
         <DataTemplate x:Key="TextDefaultTemplate">
             <TextBlock LineHeight="24" 
-                       TextAlignment="Center"
-                       Margin="0,0,0,0">
+                       TextAlignment="Center">
                 <Border>
                     <Border.Background>
                         <ImageBrush ImageSource="{Binding SubMarkColor}" />
                     </Border.Background>
-                    <TextBlock Text="{Binding Text}"
-                               Margin="0,0,0,0"/>               
+                    <TextBlock Text="{Binding Text}"/>               
                 </Border>
             </TextBlock>
         </DataTemplate>

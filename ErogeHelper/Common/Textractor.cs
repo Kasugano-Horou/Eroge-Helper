@@ -99,28 +99,6 @@ namespace ErogeHelper.Common
                 gameInfo.HookCode == hp.Hookcode &&
                 (gameInfo.ThreadContext & 0xFFFF) == (hp.Ctx & 0xFFFF))
             {
-                switch (gameInfo.RepeatType)
-                {
-                    case "AABB":
-                        patten = $@"([^\\]){{{gameInfo.RepeatTime}}}";
-                        regex = new Regex(patten);
-                        matches = regex.Matches(hp.Text);
-
-                        if (matches.Count != 0)
-                        {
-                            string tmp = "";
-                            foreach (Match match in matches)
-                            {
-                                tmp += match.Groups[1];
-                            }
-                            hp.Text = tmp;
-                        }
-                        break;
-                    case "ABAB":
-                        break;
-                    default:
-                        break;
-                }
                 log.Info(hp.Text);
                 SelectedDataEvent?.Invoke(typeof(Textractor), hp);
             }
