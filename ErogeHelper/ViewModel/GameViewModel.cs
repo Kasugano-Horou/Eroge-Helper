@@ -1,11 +1,14 @@
 using ErogeHelper.Common;
 using ErogeHelper.Model;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Input;
 
 namespace ErogeHelper.ViewModel
 {
@@ -158,7 +161,7 @@ namespace ErogeHelper.ViewModel
 
                 Textractor.SelectedDataEvent += SelectedDataEventHandler;
                 _mecabHelper = new MecabHelper();
-
+                WordSearchCommand = new RelayCommand<MouseButtonEventArgs>(WordSearch, CanWordSearch);
             }
         }
 
@@ -209,6 +212,15 @@ namespace ErogeHelper.ViewModel
                 }
                 _textPanelPin = value;
             }
+        }
+
+        public RelayCommand<MouseButtonEventArgs> WordSearchCommand { get; private set; }
+        private bool CanWordSearch(MouseButtonEventArgs e) => true;
+
+        private void WordSearch(MouseButtonEventArgs e)
+        {
+            log.Info(e.Source.ToString());
+            log.Info("Click");
         }
     }
 }
