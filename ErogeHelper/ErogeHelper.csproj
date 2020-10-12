@@ -17,7 +17,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-	<MeCabUseDefaultDictionary>False</MeCabUseDefaultDictionary>
+    <MeCabUseDefaultDictionary>False</MeCabUseDefaultDictionary>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -145,11 +145,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="dic\char.bin" />
-    <None Include="dic\dicrc" />
-    <None Include="dic\matrix.bin" />
-    <None Include="dic\sys.dic" />
-    <None Include="dic\unk.dic" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -170,9 +165,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resource\transparent.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="dic\README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

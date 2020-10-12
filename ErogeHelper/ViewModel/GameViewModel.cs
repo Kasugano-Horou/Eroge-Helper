@@ -8,6 +8,7 @@ using log4net;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ErogeHelper.ViewModel
@@ -161,7 +162,7 @@ namespace ErogeHelper.ViewModel
 
                 Textractor.SelectedDataEvent += SelectedDataEventHandler;
                 _mecabHelper = new MecabHelper();
-                WordSearchCommand = new RelayCommand<MouseButtonEventArgs>(WordSearch, CanWordSearch);
+                WordSearchCommand = new RelayCommand<SingleTextItem>(WordSearch, CanWordSearch);
             }
         }
 
@@ -214,13 +215,19 @@ namespace ErogeHelper.ViewModel
             }
         }
 
-        public RelayCommand<MouseButtonEventArgs> WordSearchCommand { get; private set; }
-        private bool CanWordSearch(MouseButtonEventArgs e) => true;
-
-        private void WordSearch(MouseButtonEventArgs e)
+        public RelayCommand<SingleTextItem> WordSearchCommand { get; private set; }
+        private bool CanWordSearch(SingleTextItem item)
         {
-            log.Info(e.Source.ToString());
-            log.Info("Click");
+            if (item.PartOfSpeed == "ÖúÔ~")
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void WordSearch(SingleTextItem item)
+        {
+            log.Info($"Search \"{item.Text}\", partofspeech {item.PartOfSpeed} ");
         }
     }
 }

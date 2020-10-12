@@ -11,7 +11,6 @@ namespace ErogeHelper.Model
         //Properties for Binding
         public string RubyText { get; set; }
         public string Text { get; set; }
-        // 名詞 助詞 動詞 助動詞 記号 副詞
         private string _partOfSpeed;
         public string PartOfSpeed
         {

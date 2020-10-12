@@ -45,7 +45,7 @@ namespace ErogeHelper.Common
                     {
                         word.Kana = features[7];
                     }
-                    // 清除不需要的假名
+                    // 清理不需要的假名
                     if (word.PartOfSpeech == "記号")
                     {
                         word.Kana = "";
@@ -78,7 +78,8 @@ namespace ErogeHelper.Common
         public string Word;
 
         /// <summary>
-        /// 词性
+        /// 品詞（ひんし）
+        /// 诸如 名詞 助詞 動詞 助動詞 記号 副詞
         /// </summary>
         public string PartOfSpeech;
 
@@ -96,5 +97,15 @@ namespace ErogeHelper.Common
         /// Mecab能提供的关于这个词的详细信息 CSV表示
         /// </summary>
         public string Feature;
+    }
+
+    public enum Hinshi
+    {
+        名詞,
+        助詞,
+        動詞,
+        助動詞,
+        記号,
+        副詞
     }
 }
