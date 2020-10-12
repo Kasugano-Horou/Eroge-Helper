@@ -6,6 +6,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ErogeHelper.View
 {
@@ -59,7 +60,7 @@ namespace ErogeHelper.View
             }
         }
 
-        private double winShadow = -1;
+        private double winShadow;
         private void SetLocation()
         {
             var rect = Hook.GetWindowRect(gameHWnd);
@@ -67,8 +68,7 @@ namespace ErogeHelper.View
             Width = rect.Right - rect.Left;  // rectClient.Right + shadow*2
             Height = rect.Bottom - rect.Top; // rectClient.Bottom + shadow + title
 
-            if (winShadow == -1)
-                winShadow = (Width - rectClient.Right) / 2;
+            winShadow = (Width - rectClient.Right) / 2;
 
             var wholeHeight = rect.Bottom - rect.Top;
             var winTitleHeight = wholeHeight - rectClient.Bottom - winShadow;
@@ -119,6 +119,18 @@ namespace ErogeHelper.View
         {
             WinArea.SetValue(StyleProperty, null);
             ClientArea.SetValue(StyleProperty, null);
+        }
+
+        private void TriggerPopupBorder_MouseEnter(object sender, MouseEventArgs e)
+        {
+            TextArea.Visibility = Visibility.Visible;
+            TriggerPopupBorder.Visibility = Visibility.Collapsed;
+        }
+
+        private void TextArea_MouseLeave(object sender, MouseEventArgs e)
+        {
+            TextArea.Visibility = Visibility.Collapsed;
+            TriggerPopupBorder.Visibility = Visibility.Visible;
         }
     }
 }

@@ -133,7 +133,7 @@ namespace ErogeHelper
             OBJID_NATIVEOM = 0xFFFFFFF0
         }
 
-        private static SWEH_dwFlags WinEventHookInternalFlags = SWEH_dwFlags.WINEVENT_OUTOFCONTEXT |
+        private static readonly SWEH_dwFlags WinEventHookInternalFlags = SWEH_dwFlags.WINEVENT_OUTOFCONTEXT |
                                                                 SWEH_dwFlags.WINEVENT_SKIPOWNPROCESS |
                                                                 SWEH_dwFlags.WINEVENT_SKIPOWNTHREAD;
 
@@ -190,7 +190,7 @@ namespace ErogeHelper
         public static RECT GetWindowRect(IntPtr hWnd)
         {
             RECT rect = new RECT();
-            bool _result = SafeNativeMethods.GetWindowRect(hWnd, ref rect);
+            _ = SafeNativeMethods.GetWindowRect(hWnd, ref rect);
             return rect;
         }
 
@@ -202,18 +202,8 @@ namespace ErogeHelper
         public static RECT GetClientRect(IntPtr hWnd)
         {
             RECT rect = new RECT();
-            bool _result = SafeNativeMethods.GetClientRect(hWnd, ref rect);
+            _ = SafeNativeMethods.GetClientRect(hWnd, ref rect);
             return rect;
-        }
-        
-        private static IntPtr GetActiveWindow()
-        {
-            return SafeNativeMethods.GetActiveWindow();
-        }
-
-        private static int GetWindowThreadProcessId(IntPtr hWnd, out int PID)
-        {
-            return SafeNativeMethods.GetWindowThreadProcessId(hWnd, out PID);
         }
 
         public static IntPtr GetForegroundWindow()

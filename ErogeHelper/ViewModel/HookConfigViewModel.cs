@@ -34,8 +34,7 @@ namespace ErogeHelper.ViewModel
                     Pid = 10000,
                     Text = "Text is me"
                 };
-                HookMapData.Insert(0, hp);
-
+                HookMapData.Add(hp);
             }
             else
             {
@@ -75,23 +74,15 @@ namespace ErogeHelper.ViewModel
             log.Info($"Selected Hook: {SelectedHook.Hookcode}");
 
             // write xml file
-            // FIXME: 用了try catch的地方
-            try
+            EHConfig.WriteConfig(gameInfo.ConfigPath, new EHProfile()
             {
-                EHConfig.WriteConfig(gameInfo.ConfigPath, new EHProfile()
-                {
-                    HookCode = SelectedHook.Hookcode,
-                    MD5 = gameInfo.MD5,
-                    ThreadContext = SelectedHook.Ctx,
-                    Name = gameInfo.ProcessName + ".eh.config",
-                    RepeatType = "",
-                    RepeatTime = 0
-                });
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+                HookCode = SelectedHook.Hookcode,
+                MD5 = gameInfo.MD5,
+                ThreadContext = SelectedHook.Ctx,
+                Name = gameInfo.ProcessName + ".eh.config",
+                RepeatType = "",
+                RepeatTime = 0
+            });
 
             gameInfo.HookCode = SelectedHook.Hookcode;
             gameInfo.ThreadContext = SelectedHook.Ctx;

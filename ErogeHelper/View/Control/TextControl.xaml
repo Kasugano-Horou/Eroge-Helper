@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="ErogeHelper.View.Control.TextControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:ErogeHelper.ViewModel"
+             xmlns:selector="clr-namespace:ErogeHelper.Common.Selector"
+             mc:Ignorable="d" 
+             d:DesignWidth="400"
+             MinHeight="12"
+             d:DataContext="{d:DesignInstance vm:GameViewModel, 
+                                              IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="TextDefaultTemplate">
+            <TextBlock LineHeight="24" 
+                       TextAlignment="Center"
+                       Margin="0,0,0,0">
+                <Border>
+                    <!--<Border.Background>
+                        <ImageBrush ImageSource="{Binding SubMarkColor}" />
+                    </Border.Background>-->
+                    <TextBlock Text="{Binding Text}"
+                               Margin="0,0,0,0"/>               
+                </Border>
+            </TextBlock>
+        </DataTemplate>
+
+        <selector:TextTemplateSelector x:Key="KanaTemplateSelector"
+                                       TextDefaultTemplate="{StaticResource TextDefaultTemplate}"/>
+    </UserControl.Resources>
+
+    <StackPanel>
+        <TextBlock FontSize="24" 
+                   FontFamily="ＭＳ ゴシック"
+                   Foreground="Black">
+            <ItemsControl ItemsSource="{Binding DisplayTextCollection}"
+                          ItemTemplateSelector="{StaticResource KanaTemplateSelector}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </TextBlock>
+    </StackPanel>
+</UserControl>

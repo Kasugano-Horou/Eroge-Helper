@@ -33,7 +33,7 @@ namespace ErogeHelper.View
         {
             base.OnSourceInitialized(e);
 
-            // FIXME: 窗口会穿透
+            // FIXME: 部分奇葩引擎(ハミダシ)窗口会穿透
             var interopHelper = new WindowInteropHelper(this);
             int exStyle = Hook.GetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE);
             Hook.SetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE, exStyle | Hook.WS_EX_NOACTIVATE);

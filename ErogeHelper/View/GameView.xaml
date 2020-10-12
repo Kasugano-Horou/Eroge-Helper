@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ErogeHelper.ViewModel"
+        xmlns:control="clr-namespace:ErogeHelper.View.Control"
         mc:Ignorable="d"
         Title="GameView" 
         AllowsTransparency="True" 
@@ -28,7 +29,17 @@
         <!-- Client area -->
         <Border x:Name="ClientArea" Style="{StaticResource ResourceKey=DesignView}" Margin="{Binding ClientAreaMargin}">
             <DockPanel LastChildFill="False">
+                <StackPanel DockPanel.Dock="Top">
+                    <Border Name="TriggerPopupBorder" 
+                            MouseEnter="TriggerPopupBorder_MouseEnter"
+                            Width="auto" 
+                            Height="12"
+                            Background="White"/>
 
+                    <control:TextControl x:Name="TextArea"
+                               MouseLeave="TextArea_MouseLeave" 
+                               Visibility="{Binding TextAreaVisibility}"/>
+                </StackPanel>
             </DockPanel>
         </Border>
     </Border>
