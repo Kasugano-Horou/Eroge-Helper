@@ -54,6 +54,12 @@
     <Reference Include="log4net, Version=2.0.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.11\lib\net45\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="MaterialDesignColors, Version=1.2.7.1979, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.1.2.7\lib\net45\MaterialDesignColors.dll</HintPath>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=3.2.0.1979, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.3.2.0\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="MeCab.DotNet, Version=0.0.26.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MeCab.DotNet.0.0.26\lib\net45\MeCab.DotNet.dll</HintPath>
     </Reference>
@@ -173,6 +179,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\MeCab.DotNet.0.0.26\build\MeCab.DotNet.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MeCab.DotNet.0.0.26\build\MeCab.DotNet.props'))" />
     <Error Condition="!Exists('..\packages\MeCab.DotNet.0.0.26\build\MeCab.DotNet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MeCab.DotNet.0.0.26\build\MeCab.DotNet.targets'))" />
+    <Error Condition="!Exists('..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets'))" />
   </Target>
   <Import Project="..\packages\MeCab.DotNet.0.0.26\build\MeCab.DotNet.targets" Condition="Exists('..\packages\MeCab.DotNet.0.0.26\build\MeCab.DotNet.targets')" />
+  <Import Project="..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />
 </Project>
