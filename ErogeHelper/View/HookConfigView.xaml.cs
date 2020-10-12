@@ -14,8 +14,14 @@ namespace ErogeHelper.View
     {
         public HookConfigView()
         {
-            InitializeComponent();
             Messenger.Default.Register<NotificationMessage>(this, NotificationMessageReceived);
+
+            InitializeComponent();
+        }
+
+        ~HookConfigView()
+        {
+            this.Unloaded += (sender, e) => Messenger.Default.Unregister(this);
         }
 
         protected override void OnSourceInitialized(EventArgs e)

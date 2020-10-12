@@ -3,6 +3,7 @@ using ErogeHelper.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
+using log4net;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -22,11 +23,15 @@ namespace ErogeHelper.ViewModel
     /// </summary>
     public class GameViewModel : ViewModelBase
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(GameViewModel));
+
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         public GameViewModel()
         {
+            log.Info("Initialize");
+
             DisplayTextCollection = new ObservableCollection<SingleTextItem>();
             TextTemplateConfig = TextTemplateType.KanaBottom;
 
@@ -149,6 +154,7 @@ namespace ErogeHelper.ViewModel
                 // Code runs "for real"
                 TextAreaVisibility = Visibility.Collapsed;
                 Topmost = true;
+                TextPanelPin = true;
 
                 Textractor.SelectedDataEvent += SelectedDataEventHandler;
                 _mecabHelper = new MecabHelper();
@@ -185,5 +191,24 @@ namespace ErogeHelper.ViewModel
         public ObservableCollection<SingleTextItem> DisplayTextCollection { get; set; }
         public TextTemplateType TextTemplateConfig { get; set; } = TextTemplateType.Default;
 
+        private bool _textPanelPin;
+        public bool TextPanelPin 
+        {
+            get => _textPanelPin;
+            set
+            {
+                if (value == true)
+                {
+                    TextAreaVisibility = Visibility.Visible;
+                    Messenger.Default.Send(new NotificationMessage("MakeTextPanelPin"));
+                }
+                else
+                {
+                    TextAreaVisibility = Visibility.Collapsed;
+                    Messenger.Default.Send(new NotificationMessage("CancelTextPanelPin"));
+                }
+                _textPanelPin = value;
+            }
+        }
     }
 }

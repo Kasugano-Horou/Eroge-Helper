@@ -1,4 +1,5 @@
 ﻿using ErogeHelper.Model.Singleton;
+using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
 using System;
@@ -20,12 +21,31 @@ namespace ErogeHelper.View
         private readonly GameInfo gameInfo = GameInfo.Instance;
 
         public IntPtr gameHWnd = IntPtr.Zero;
+        private bool textPanelPin;
 
         public GameView()
         {
-            InitializeComponent();
+            log.Info("Initialize");
+            textPanelPin = false;
+            Messenger.Default.Register<NotificationMessage>(this, NotificationMessageReceived);
+
+            InitializeComponent(); // VM Initialize -> Component Initialize
 
             SetGameWindowHook();
+        }
+
+        ~GameView()
+        {
+            Unloaded += (sender, e) => Messenger.Default.Unregister(this);
+        }
+
+        private void NotificationMessageReceived(NotificationMessage obj)
+        {
+            if (obj.Notification == "MakeTextPanelPin")
+            {
+                log.Info("Set TextPanel Pin");
+                textPanelPin = true;
+            }
         }
 
         #region Window Follow Game Initialize
@@ -61,6 +81,7 @@ namespace ErogeHelper.View
         }
 
         private double winShadow;
+
         private void SetLocation()
         {
             var rect = Hook.GetWindowRect(gameHWnd);
@@ -142,18 +163,28 @@ namespace ErogeHelper.View
         {
             WinArea.SetValue(StyleProperty, null);
             ClientArea.SetValue(StyleProperty, null);
+            if (textPanelPin == true)
+            {
+                TriggerPopupBorder.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void TriggerPopupBorder_MouseEnter(object sender, MouseEventArgs e)
         {
-            TextArea.Visibility = Visibility.Visible;
-            TriggerPopupBorder.Visibility = Visibility.Collapsed;
+            if (textPanelPin == false)
+            {
+                TextArea.Visibility = Visibility.Visible;
+                TriggerPopupBorder.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void TextArea_MouseLeave(object sender, MouseEventArgs e)
         {
-            TextArea.Visibility = Visibility.Collapsed;
-            TriggerPopupBorder.Visibility = Visibility.Visible;
+            if (textPanelPin == false)
+            {
+                TextArea.Visibility = Visibility.Collapsed;
+                TriggerPopupBorder.Visibility = Visibility.Visible;
+            }
         }
     }
 }
