@@ -37,8 +37,8 @@
                             Background="White"/>
 
                     <control:TextControl x:Name="TextArea"
-                               MouseLeave="TextArea_MouseLeave" 
-                               Visibility="{Binding TextAreaVisibility}"/>
+                                         MouseLeave="TextArea_MouseLeave" 
+                                         Visibility="{Binding TextAreaVisibility}"/>
                 </StackPanel>
             </DockPanel>
         </Border>

@@ -1,6 +1,8 @@
+using ErogeHelper.Common;
 using ErogeHelper.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Threading;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -26,13 +28,13 @@ namespace ErogeHelper.ViewModel
         public GameViewModel()
         {
             DisplayTextCollection = new ObservableCollection<SingleTextItem>();
+            TextTemplateConfig = TextTemplateType.KanaBottom;
 
             if (IsInDesignMode)
             {
                 // Code runs in Blend --> create design time data.
                 ClientAreaMargin = new Thickness(10, 30, 10, 10);
                 TextAreaVisibility = Visibility.Visible;
-
                 // ÓÆÕæ(¥æ¥¦¥Þ)¤¯¤ó¤ò¹¥ÂÔ(¥³¥¦¥ê¥ã¥¯)¤¹¤ì¤Ð£²£±£°ƒÒ(¥¨¥ó)¤«¡£¤Ê¤ë¤Û¤É¤Ê¤¡¡­
                 #region Render Model
                 DisplayTextCollection.Add(new SingleTextItem
@@ -147,7 +149,33 @@ namespace ErogeHelper.ViewModel
                 // Code runs "for real"
                 TextAreaVisibility = Visibility.Collapsed;
                 Topmost = true;
+
+                Textractor.SelectedDataEvent += SelectedDataEventHandler;
+                _mecabHelper = new MecabHelper();
+
             }
+        }
+
+        private readonly MecabHelper _mecabHelper;
+
+        private void SelectedDataEventHandler(object sender, HookParam hp)
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            {
+                DisplayTextCollection.Clear();
+
+                var mecabWordList = _mecabHelper.SentenceHandle(hp.Text);
+                foreach (MecabWordInfo mecabWord in mecabWordList)
+                {
+                    DisplayTextCollection.Add(new SingleTextItem
+                    {
+                        Text = mecabWord.Word,
+                        RubyText = mecabWord.Kana,
+                        PartOfSpeed = mecabWord.PartOfSpeech,
+                        TextTemplateType = TextTemplateConfig
+                    });
+                }
+            });
         }
 
         public bool Topmost { get; set; }

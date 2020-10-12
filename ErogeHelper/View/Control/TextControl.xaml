@@ -23,8 +23,29 @@
             </TextBlock>
         </DataTemplate>
 
+        <DataTemplate x:Key="TextKanaBottomTemplate">
+            <StackPanel >
+                <TextBlock LineHeight="24" 
+                           TextAlignment="Center"
+                           Margin="0,0,0,-10">
+                    <Border>
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding SubMarkColor}" />
+                        </Border.Background>
+                        <TextBlock Text="{Binding Text}"/>
+                    </Border>
+                    <LineBreak/>
+                    <Run FontSize="12" 
+                         Typography.Variants="Ruby"
+                         Text="{Binding RubyText}">
+                    </Run>
+                </TextBlock>
+            </StackPanel>
+        </DataTemplate>
+
         <selector:TextTemplateSelector x:Key="KanaTemplateSelector"
-                                       TextDefaultTemplate="{StaticResource TextDefaultTemplate}"/>
+                                       TextDefaultTemplate="{StaticResource TextDefaultTemplate}"
+                                       TextKanaBottomTemplate="{StaticResource TextKanaBottomTemplate}"/>
     </UserControl.Resources>
 
     <StackPanel>
