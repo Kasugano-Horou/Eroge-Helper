@@ -38,7 +38,7 @@ namespace ErogeHelper.ViewModel
             log.Info("Initialize");
 
             DisplayTextCollection = new ObservableCollection<SingleTextItem>();
-            TextTemplateConfig = TextTemplateType.OutLine;
+            TextTemplateConfig = TextTemplateType.OutLineKanaBottom;
 
             if (IsInDesignMode)
             {

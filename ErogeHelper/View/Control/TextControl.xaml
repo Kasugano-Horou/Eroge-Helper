@@ -13,7 +13,7 @@
                                               IsDesignTimeCreatable=True}"
              xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
-    
+
     <UserControl.Resources>
         <DataTemplate x:Key="TextDefaultTemplate">
             <TextBlock LineHeight="24" 
@@ -75,11 +75,44 @@
                 </i:Interaction.Triggers>
             </Border>
         </DataTemplate>
+        
+        <DataTemplate x:Key="OutLineBottomTemplate">
+            <StackPanel>
+                <Border>
+                    <Border.Background>
+                        <ImageBrush ImageSource="{Binding SubMarkColor}" />
+                    </Border.Background>
+                    <common:OutlinedTextBlock Stroke="Black" 
+                                              HorizontalAlignment="Center"
+                             ClipToBounds="False"
+                             FontSize="30"  
+                             Fill="white"
+                             StrokePosition="Outside"
+                             StrokeThickness="1" Text="{Binding Text}">
+                    </common:OutlinedTextBlock>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseUp">
+                            <cmd:EventToCommand Command="{Binding DataContext.WordSearchCommand, RelativeSource={RelativeSource AncestorType=UserControl} }"
+                                            CommandParameter="{Binding}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Border>
+                <common:OutlinedTextBlock Stroke="Black" 
+                                          HorizontalAlignment="Center"
+                             ClipToBounds="False"
+                             FontSize="16"  
+                             Fill="white"
+                             StrokePosition="Outside"
+                             StrokeThickness="1" Text="{Binding RubyText}">
+                </common:OutlinedTextBlock>
+            </StackPanel>
+        </DataTemplate>
 
         <selector:TextTemplateSelector x:Key="KanaTemplateSelector"
                                        TextDefaultTemplate="{StaticResource TextDefaultTemplate}"
                                        TextKanaBottomTemplate="{StaticResource TextKanaBottomTemplate}"
-                                       OutLineDefaultTemplate="{StaticResource OutLineDefaultTemplate}"/>
+                                       OutLineDefaultTemplate="{StaticResource OutLineDefaultTemplate}"
+                                       OutLineBottomTemplate="{StaticResource OutLineBottomTemplate}"/>
     </UserControl.Resources>
 
     <StackPanel>

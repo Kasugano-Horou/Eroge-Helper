@@ -10,6 +10,7 @@ namespace ErogeHelper.Common.Selector
         public DataTemplate TextKanaTopTemplate { get; set; }
         public DataTemplate TextKanaBottomTemplate { get; set; }
         public DataTemplate OutLineDefaultTemplate { get; set; }
+        public DataTemplate OutLineBottomTemplate { get; set; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             // 可以通过container找keyname，也可以通过绑定的template直接返回
@@ -27,6 +28,8 @@ namespace ErogeHelper.Common.Selector
                         return TextKanaBottomTemplate;
                     case TextTemplateType.OutLine:
                         return OutLineDefaultTemplate;
+                    case TextTemplateType.OutLineKanaBottom:
+                        return OutLineBottomTemplate;
                 }
 
             }
