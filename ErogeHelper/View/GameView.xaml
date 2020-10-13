@@ -39,7 +39,7 @@
                             Opacity="0.1"/>
 
                     <control:TextControl x:Name="TextArea"
-                                         Background="{StaticResource WhiteHalfOpacityBrush}"
+                                         Background="Transparent"
                                          MouseLeave="TextArea_MouseLeave" 
                                          Visibility="{Binding TextAreaVisibility}"/>
                     <Popup x:Name="WordCard" 

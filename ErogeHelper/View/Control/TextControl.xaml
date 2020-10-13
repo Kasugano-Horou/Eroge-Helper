@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:ErogeHelper.ViewModel"
              xmlns:selector="clr-namespace:ErogeHelper.Common.Selector"
+             xmlns:common="clr-namespace:ErogeHelper.Common"
              mc:Ignorable="d" 
              d:DesignWidth="400"
              MinHeight="12"
@@ -54,9 +55,31 @@
             </StackPanel>
         </DataTemplate>
 
+        <DataTemplate x:Key="OutLineDefaultTemplate">
+            <Border>
+                <Border.Background>
+                    <ImageBrush ImageSource="{Binding SubMarkColor}" />
+                </Border.Background>
+                <common:OutlinedTextBlock Stroke="Black" 
+                             ClipToBounds="False"
+                             FontSize="30"  
+                             Fill="white"
+                             StrokePosition="Outside"
+                             StrokeThickness="1" Text="{Binding Text}">
+                </common:OutlinedTextBlock>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseUp">
+                        <cmd:EventToCommand Command="{Binding DataContext.WordSearchCommand, RelativeSource={RelativeSource AncestorType=UserControl} }"
+                                            CommandParameter="{Binding}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Border>
+        </DataTemplate>
+
         <selector:TextTemplateSelector x:Key="KanaTemplateSelector"
                                        TextDefaultTemplate="{StaticResource TextDefaultTemplate}"
-                                       TextKanaBottomTemplate="{StaticResource TextKanaBottomTemplate}"/>
+                                       TextKanaBottomTemplate="{StaticResource TextKanaBottomTemplate}"
+                                       OutLineDefaultTemplate="{StaticResource OutLineDefaultTemplate}"/>
     </UserControl.Resources>
 
     <StackPanel>

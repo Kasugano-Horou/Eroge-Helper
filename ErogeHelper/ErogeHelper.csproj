@@ -28,6 +28,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -119,8 +121,10 @@
     <Compile Include="Common\Hook.cs" />
     <Compile Include="Common\MecabHelper.cs" />
     <Compile Include="Common\MojiDictApi.cs" />
+    <Compile Include="Common\OutlinedTextBlock.cs" />
     <Compile Include="Common\Selector\TextTemplateSelector.cs" />
     <Compile Include="Common\Textractor.cs" />
+    <Compile Include="Common\TextractorLib.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Model\EHProfile.cs" />
     <Compile Include="Model\HookBindingList.cs" />

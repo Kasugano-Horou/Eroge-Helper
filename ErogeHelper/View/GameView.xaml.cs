@@ -34,11 +34,6 @@ namespace ErogeHelper.View
             SetGameWindowHook();
         }
 
-        ~GameView()
-        {
-            Unloaded += (sender, e) => Messenger.Default.Unregister(this);
-        }
-
         private void NotificationMessageReceived(NotificationMessage obj)
         {
             if (obj.Notification == "MakeTextPanelPin")
@@ -151,7 +146,8 @@ namespace ErogeHelper.View
             var interopHelper = new WindowInteropHelper(this);
             int exStyle = Hook.GetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE);
             Hook.SetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE, exStyle | Hook.WS_EX_NOACTIVATE);
-
+            // bool(exStyle & win32con.WS_EX_NOACTIVATE) 窗口忽视焦点开关状态
+            // exStyle & ~win32con.WS_EX_NOACTIVATE 关闭忽视焦点（即默认状态）
             DispatcherTimer timer = new DispatcherTimer();
             var pointer = new WindowInteropHelper(this);
             timer.Tick += (sender, _) =>

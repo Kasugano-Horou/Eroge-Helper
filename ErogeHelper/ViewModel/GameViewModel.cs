@@ -38,7 +38,7 @@ namespace ErogeHelper.ViewModel
             log.Info("Initialize");
 
             DisplayTextCollection = new ObservableCollection<SingleTextItem>();
-            TextTemplateConfig = TextTemplateType.KanaBottom;
+            TextTemplateConfig = TextTemplateType.OutLine;
 
             if (IsInDesignMode)
             {
@@ -175,6 +175,7 @@ namespace ErogeHelper.ViewModel
                 TextPanelPin = true;
 
                 Textractor.SelectedDataEvent += SelectedDataEventHandler;
+                TextractorLib.SelectedDataEvent += SelectedDataEventHandler;
                 _mecabHelper = new MecabHelper();
                 _mojiHelper = new MojiDictApi();
                 WordSearchCommand = new RelayCommand<SingleTextItem>(WordSearch, CanWordSearch);
@@ -242,6 +243,9 @@ namespace ErogeHelper.ViewModel
             if (item.PartOfSpeed == "ÖúÔ~")
             {
                 return false;
+            } else if (item.PartOfSpeed == "Ó›ºÅ")
+            {
+                return false;
             }
             return true;
         }
@@ -258,13 +262,16 @@ namespace ErogeHelper.ViewModel
 
             var resp = await _mojiHelper.RequestAsync(item.Text);
 
-            if (resp.result != null)
+            var result = resp.result;
+            if (result != null)
             {
-                CardInfo.Word = resp.result.word.spell;
-                CardInfo.Hinshi = resp.result.details[0].title;
-                CardInfo.Ruby = resp.result.word.pron;
+                log.Info($"Find explain <{result.word.excerpt}>");
+
+                CardInfo.Word = result.word.spell;
+                CardInfo.Hinshi = result.details[0].title;
+                CardInfo.Ruby = result.word.pron;
                 int count = 1;
-                foreach (var subdetail in resp.result.subdetails)
+                foreach (var subdetail in result.subdetails)
                 {
                     CardInfo.Kaisetsu.Add($"{count++}. {subdetail.title}");
                 }

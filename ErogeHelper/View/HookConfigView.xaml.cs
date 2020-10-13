@@ -19,11 +19,6 @@ namespace ErogeHelper.View
             InitializeComponent();
         }
 
-        ~HookConfigView()
-        {
-            this.Unloaded += (sender, e) => Messenger.Default.Unregister(this);
-        }
-
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);

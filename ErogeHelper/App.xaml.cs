@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading;
 using System.Windows;
 using System.Xml.Linq;
 
@@ -153,7 +154,8 @@ namespace ErogeHelper
                     new HookConfigView().Show();
                 }
 
-                Textractor.Init();
+                //Textractor.Init();
+                TextractorLib.Init();
             }
             else
             {

@@ -42,6 +42,7 @@ namespace ErogeHelper.ViewModel
                 SubmitCommand = new RelayCommand(SubmitMessage, CanSubmitMessage);
 
                 Textractor.DataEvent += DataRecvEventHandler;
+                TextractorLib.DataEvent += DataRecvEventHandler;
             }
 
         }

@@ -23,13 +23,19 @@ namespace ErogeHelper.Model
                         SubMarkColor = Utils.LoadBitmapFromResource("Resource/yellow.png");
                         break;
                     case "助詞":
-                        SubMarkColor = Utils.LoadBitmapFromResource("Resource/green.png");
+                        //SubMarkColor = Utils.LoadBitmapFromResource("Resource/aqua_green.png");
+                        SubMarkColor = Utils.LoadBitmapFromResource("Resource/transparent.png");
+                        // 不能点击的单词就不要上色了
                         break;
                     case "動詞":
-                        SubMarkColor = Utils.LoadBitmapFromResource("Resource/aqua_green.png");
+                    case "感動詞":
+                        SubMarkColor = Utils.LoadBitmapFromResource("Resource/green.png");
                         break;
                     case "副詞":
                         SubMarkColor = Utils.LoadBitmapFromResource("Resource/purple.png");
+                        break;
+                    case "形容詞":
+                        SubMarkColor = Utils.LoadBitmapFromResource("Resource/pink.png");
                         break;
                     default:
                         SubMarkColor = Utils.LoadBitmapFromResource("Resource/transparent.png");
