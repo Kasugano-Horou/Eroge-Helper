@@ -6,6 +6,7 @@ using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -152,6 +153,19 @@ namespace ErogeHelper.ViewModel
                     PartOfSpeed = "記号"
                 });
                 #endregion
+
+                CardInfo = new WordCardInfo()
+                {
+                    Word = "買う",
+                    Ruby = "かう",
+                    IsProcess = true, // fake
+                    Hinshi = "動詞",
+                    Kaisetsu = new ObservableCollection<string>()
+                    {
+                        "1. 多，多数，许多。（たくさん。多くのもの。）",
+                        "2. 多半，大都。（ふつう。一般に。たいてい。）"
+                    }
+                };
             }
             else
             {
@@ -162,11 +176,18 @@ namespace ErogeHelper.ViewModel
 
                 Textractor.SelectedDataEvent += SelectedDataEventHandler;
                 _mecabHelper = new MecabHelper();
+                _mojiHelper = new MojiDictApi();
                 WordSearchCommand = new RelayCommand<SingleTextItem>(WordSearch, CanWordSearch);
+                CardInfo = new WordCardInfo();
+                PopupCloseCommand = new RelayCommand(() =>
+                {
+                    Messenger.Default.Send(new NotificationMessage("CloseCard"));
+                });
             }
         }
 
         private readonly MecabHelper _mecabHelper;
+        private readonly MojiDictApi _mojiHelper;
 
         private void SelectedDataEventHandler(object sender, HookParam hp)
         {
@@ -225,9 +246,57 @@ namespace ErogeHelper.ViewModel
             return true;
         }
 
-        private void WordSearch(SingleTextItem item)
+        private async void WordSearch(SingleTextItem item)
         {
             log.Info($"Search \"{item.Text}\", partofspeech {item.PartOfSpeed} ");
+
+            CardInfo.Word = item.Text;
+            CardInfo.Kaisetsu.Clear();
+            CardInfo.IsProcess = true;
+
+            Messenger.Default.Send(new NotificationMessage("OpenCard"));
+
+            var resp = await _mojiHelper.RequestAsync(item.Text);
+
+            if (resp.result != null)
+            {
+                CardInfo.Word = resp.result.word.spell;
+                CardInfo.Hinshi = resp.result.details[0].title;
+                CardInfo.Ruby = resp.result.word.pron;
+                int count = 1;
+                foreach (var subdetail in resp.result.subdetails)
+                {
+                    CardInfo.Kaisetsu.Add($"{count++}. {subdetail.title}");
+                }
+                CardInfo.IsProcess = false;
+            }
+            else
+            {
+                CardInfo.Word = item.Text;
+                CardInfo.IsProcess = false;
+                CardInfo.Hinshi = "空空";
+                CardInfo.Kaisetsu = new ObservableCollection<string>()
+                {
+                    "没有找到呀！",
+                };
+            }
+
         }
+        public WordCardInfo CardInfo { get; set; }
+        public RelayCommand PopupCloseCommand { get; set; }
+    }
+
+    public class WordCardInfo : ViewModelBase
+    {
+        private bool isProcess;
+        private string ruby;
+        private string hinshi;
+        private string word;
+
+        public string Word { get => word; set { word = value; RaisePropertyChanged(nameof(word)); } }
+        public string Hinshi { get => hinshi; set { hinshi = value; RaisePropertyChanged(nameof(hinshi)); } }
+        public string Ruby { get => ruby; set { ruby = value; RaisePropertyChanged(nameof(ruby)); } }
+        public ObservableCollection<string> Kaisetsu { get; set; } = new ObservableCollection<string>();
+        public bool IsProcess { get => isProcess; set { isProcess = value; RaisePropertyChanged(nameof(isProcess)); } }
     }
 }

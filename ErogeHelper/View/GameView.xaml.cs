@@ -46,6 +46,14 @@ namespace ErogeHelper.View
                 log.Info("Set TextPanel Pin");
                 textPanelPin = true;
             }
+            if (obj.Notification == "OpenCard")
+            {
+                WordCard.IsOpen = true;
+            }
+            if (obj.Notification == "CloseCard")
+            {
+                WordCard.IsOpen = false;
+            }
         }
 
         #region Window Follow Game Initialize

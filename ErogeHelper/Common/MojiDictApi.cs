@@ -148,16 +148,22 @@ namespace ErogeHelper.Common
         public class Result
         {
             public Word word { get; set; }
-            public Detail[] details { get; set; }
+            public Detail[] details { get; set; } // details[0].title aka Shinhi
             public Subdetail[] subdetails { get; set; }
-            public Example[] examples { get; set; }
+            public Example[] examples { get; set; } // 与subdetails相对应，可能null
         }
 
         public class Word
         {
-            public string excerpt { get; set; }
-            public string spell { get; set; }
+            public string excerpt { get; set; } // details[0].title + subdetails[0]
+            /// <summary>
+            /// Surface
+            /// </summary>
+            public string spell { get; set; }   
             public string accent { get; set; }
+            /// <summary>
+            /// Hirakana
+            /// </summary>
             public string pron { get; set; }
             public string romaji { get; set; }
             public DateTime createdAt { get; set; }

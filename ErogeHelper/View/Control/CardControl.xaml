@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="ErogeHelper.View.Control.CardControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:ErogeHelper.ViewModel"
+             xmlns:convert="clr-namespace:ErogeHelper.Common.Converter"
+             mc:Ignorable="d"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             FontFamily="{DynamicResource MaterialDesignFont}"
+             d:DataContext="{d:DesignInstance vm:GameViewModel, 
+                                              IsDesignTimeCreatable=True}" >
+    <UserControl.Resources>
+        <convert:BoolToVisibilityConverter x:Key="ShowDetail"/>
+    </UserControl.Resources>
+    <materialDesign:Card Margin="16" 
+                         Padding="16,16,0,16"
+                         Width="300"
+                         Height="auto"
+                         MaxHeight="400">
+        <ScrollViewer Margin="0,0,0,0">
+            <StackPanel>
+                <DockPanel>
+                    <Label DockPanel.Dock="Left" 
+                           Style="{DynamicResource MaterialDesignLabel}"
+                           Content="{Binding CardInfo.Word}" 
+                           FontSize="32"/>
+                    <Button DockPanel.Dock="Right"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource MaterialDesignIconForegroundButton}"
+                            Background="{DynamicResource MaterialDesignTextFieldBoxBackground}"
+                            Command="{Binding PopupCloseCommand}">
+                        <materialDesign:PackIcon Kind="Close" />
+
+                    </Button>
+                </DockPanel>
+                
+                <Border BorderBrush="{DynamicResource MaterialDesignDivider}" 
+                                                      BorderThickness="0 0 0 2" />
+
+                <ProgressBar IsIndeterminate="{Binding CardInfo.IsProcess}" />
+
+                <!--{Binding CardInfo.IsProcess, Converter={StaticResource ShowDetail} }-->
+                <StackPanel Visibility="Visible">
+                    <TextBlock Style="{DynamicResource MaterialDesignTextBlock}"
+                               FontSize="16"
+                               Text="{Binding CardInfo.Ruby}"
+                               Padding="0,8,0,8"/>
+                    <materialDesign:Card Background="{DynamicResource PrimaryHueLightBrush}"
+                                         Foreground="{DynamicResource PrimaryHueLightForegroundBrush}"
+                                         Padding="8"
+                                         UniformCornerRadius="8"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center">
+                        <TextBlock  Text="{Binding CardInfo.Hinshi}" />
+                    </materialDesign:Card>
+
+                    <ItemsControl ItemsSource="{Binding CardInfo.Kaisetsu}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"
+                                           Style="{DynamicResource MaterialDesignBody1TextBlock}"
+                                           TextWrapping="Wrap"
+                                           Padding="0,8,0,0"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+                
+            </StackPanel>
+        </ScrollViewer>
+
+    </materialDesign:Card>
+</UserControl>

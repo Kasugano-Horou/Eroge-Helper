@@ -114,6 +114,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="Common\EHConfig.cs" />
     <Compile Include="Common\Hook.cs" />
     <Compile Include="Common\MecabHelper.cs" />
@@ -129,12 +130,19 @@
     <Compile Include="ViewModel\GameViewModel.cs" />
     <Compile Include="ViewModel\HookConfigViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\Control\CardControl.xaml.cs">
+      <DependentUpon>CardControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Control\TextControl.xaml.cs">
       <DependentUpon>TextControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\HookConfigView.xaml.cs">
       <DependentUpon>HookConfigView.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\Control\CardControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Control\TextControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

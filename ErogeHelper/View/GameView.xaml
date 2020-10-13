@@ -42,6 +42,14 @@
                                          Background="{StaticResource WhiteHalfOpacityBrush}"
                                          MouseLeave="TextArea_MouseLeave" 
                                          Visibility="{Binding TextAreaVisibility}"/>
+                    <Popup x:Name="WordCard" 
+                           Placement="Bottom" 
+                           PlacementTarget="{Binding ElementName=TextArea}"
+                           StaysOpen="False" 
+                           AllowsTransparency="True"
+                           PopupAnimation="Slide">
+                        <control:CardControl />
+                    </Popup>
                 </StackPanel>
             </DockPanel>
         </Border>
