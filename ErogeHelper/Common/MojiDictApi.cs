@@ -36,13 +36,9 @@ namespace ErogeHelper.Common
                 //_SessionToken = ""
             };
 
-            // FIXME: https://stackoverflow.com/questions/62802238/very-slow-httpclient-sendasync-call
-            // https://stackoverflow.com/questions/39693783/httpclients-sendasync-is-very-slow-not-a-proxy-issue
-            var sw = new Stopwatch();
-            sw.Start();
+            // ? System.Net.Http.HttpRequestException:“发送请求时出错。”
+            // WebException: 未能解析此远程名称: 'api.mojidict.com'
             HttpResponseMessage resMsg = await client.PostAsJsonAsync(searchApi, searchPayload);
-            sw.Stop();
-            log.Info($"搜索Api返回用时 {sw.ElapsedMilliseconds} 毫秒");
             resMsg.EnsureSuccessStatusCode();
 
             var searchResponse = await resMsg.Content.ReadAsAsync<MojiSearchResponse>();

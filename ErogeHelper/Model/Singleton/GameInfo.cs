@@ -40,6 +40,8 @@ namespace ErogeHelper.Model.Singleton
         public string HookCode { get; set; }
 
         public long ThreadContext { get; set; }
+
+        public long SubThreadContext { get; set; }
         #endregion
 
         public List<Process> ProcList = new List<Process>(); // 考虑存在已经退出的进程

@@ -10,6 +10,9 @@ using System.Text.RegularExpressions;
 
 namespace ErogeHelper.Common
 {
+    /// <summary>
+    /// No longer use cli
+    /// </summary>
     static class Textractor
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(Textractor));

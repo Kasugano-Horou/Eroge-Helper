@@ -80,11 +80,13 @@ namespace ErogeHelper.ViewModel
                 HookCode = SelectedHook.Hookcode,
                 MD5 = gameInfo.MD5,
                 ThreadContext = SelectedHook.Ctx,
+                SubThreadContext = SelectedHook.Ctx2,
                 Name = gameInfo.ProcessName + ".eh.config",
             });
 
             gameInfo.HookCode = SelectedHook.Hookcode;
             gameInfo.ThreadContext = SelectedHook.Ctx;
+            gameInfo.SubThreadContext = SelectedHook.Ctx2;
 
             Messenger.Default.Send(new NotificationMessage("ShowGameView"));
         }

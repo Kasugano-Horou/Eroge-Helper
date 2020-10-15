@@ -23,10 +23,12 @@ namespace ErogeHelper.View
         {
             base.OnSourceInitialized(e);
 
-            // FIXME: 部分奇葩引擎(ハミダシ)窗口会穿透
-            var interopHelper = new WindowInteropHelper(this);
-            int exStyle = Hook.GetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE);
-            Hook.SetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE, exStyle | Hook.WS_EX_NOACTIVATE);
+            if (false)
+            {
+                var interopHelper = new WindowInteropHelper(this);
+                int exStyle = Hook.GetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE);
+                Hook.SetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE, exStyle | Hook.WS_EX_NOACTIVATE);
+            }
 
             DispatcherTimer timer = new DispatcherTimer();
             var pointer = new WindowInteropHelper(this);
@@ -39,7 +41,7 @@ namespace ErogeHelper.View
                 Hook.BringWindowToTop(pointer.Handle);
             };
 
-            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Interval = TimeSpan.FromMilliseconds(100);
             timer.Start();
         }
 

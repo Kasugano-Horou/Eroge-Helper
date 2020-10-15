@@ -21,6 +21,7 @@ namespace ErogeHelper.Common
         public static void Init()
         {
             log.Info("initilize start.");
+            log.Info($"Work directory {Directory.GetCurrentDirectory()}");
 
             createthread = CreateThreadHandle;
             output = OutputHandle;
@@ -82,7 +83,8 @@ namespace ErogeHelper.Common
 
             if (gameInfo.HookCode != null &&
                 gameInfo.HookCode == hp.Hookcode &&
-                (gameInfo.ThreadContext & 0xFFFF) == (hp.Ctx & 0xFFFF))
+                (gameInfo.ThreadContext & 0xFFFF) == (hp.Ctx & 0xFFFF) &&
+                gameInfo.SubThreadContext == hp.Ctx2)
             {
                 log.Info(hp.Text);
                 SelectedDataEvent?.Invoke(typeof(TextractorLib), hp);

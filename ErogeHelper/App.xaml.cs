@@ -30,9 +30,15 @@ namespace ErogeHelper
             Directory.SetCurrentDirectory(Path.GetDirectoryName(GetType().Assembly.Location));
             DispatcherHelper.Initialize();
             log4net.Config.XmlConfigurator.Configure();
-            
+            // AppDomain.CurrentDomain.UnhandledException += ErrorHandle 非ui线程
+            DispatcherUnhandledException += (s, eventArgs) => {
+                log.Error($"Unknown Error {eventArgs.Exception}");
+                MessageBox.Show(eventArgs.Exception.ToString());
+                // 复制粘贴板到github
+            };
             log.Info("Started Logging");
             log.Info($"Enviroment directory: {Directory.GetCurrentDirectory()}");
+
             var identity = WindowsIdentity.GetCurrent();
             var principal = new WindowsPrincipal(identity);
             if (principal.IsInRole(WindowsBuiltInRole.Administrator))
@@ -76,7 +82,12 @@ namespace ErogeHelper
             else
             {
                 // Direct start
-                Process.Start(gameInfo.Path);
+                Process.Start(new ProcessStartInfo 
+                {
+                    FileName = gameInfo.Path,
+                    UseShellExecute = false,
+                    WorkingDirectory = gameInfo.Dir
+                });
             }
 
             bool newProcFind;
@@ -108,9 +119,17 @@ namespace ErogeHelper
                     {
                         procMark.Add(p.Id);
                         // May occurrent System.InvalidOperationException
-                        if (p.WaitForInputIdle(500) == false) // 500 延迟随意写的，正常启动一般在100~200范围
+                        try
                         {
-                            log.Info($"Procces {p.Id} maybe stuck");
+                            if (p.WaitForInputIdle(500) == false) // 500 延迟随意写的，正常启动一般在100~200范围
+                            {
+                                log.Info($"Procces {p.Id} maybe stuck");
+                            }
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            // skip error
+                            log.Error(ex.Message);
                         }
 
                         newProcFind = true;
@@ -138,11 +157,14 @@ namespace ErogeHelper
                     // Read xml file
                     var profile = XElement.Load(gameInfo.ConfigPath).Element("Profile");
 
+                    // Update xml file
+
                     // TODO: 试探MD5是否与配置文件相同。若不同，弹窗提醒exe程序有变动，可能需要重新选取hook以读取文本
                     //if ( !gameInfo.MD5.Equals(profile.Element("MD5").Value) )
 
                     gameInfo.HookCode = profile.Element("HookCode").Value;
                     gameInfo.ThreadContext = long.Parse(profile.Element("ThreadContext").Value);
+                    gameInfo.SubThreadContext = long.Parse(profile.Element("SubThreadContext").Value);
 
                     log.Info($"Get HCode {gameInfo.HookCode} from file {gameInfo.ProcessName}.exe.eh.config");
                     // Display text window

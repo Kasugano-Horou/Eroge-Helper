@@ -218,7 +218,8 @@ namespace ErogeHelper.ViewModel
         public TextTemplateType TextTemplateConfig { get; set; } = TextTemplateType.Default;
 
         private bool _textPanelPin;
-        public bool TextPanelPin 
+
+        public bool TextPanelPin
         {
             get => _textPanelPin;
             set
@@ -243,7 +244,8 @@ namespace ErogeHelper.ViewModel
             if (item.PartOfSpeed == "助詞")
             {
                 return false;
-            } else if (item.PartOfSpeed == "記号")
+            }
+            else if (item.PartOfSpeed == "記号")
             {
                 return false;
             }
@@ -254,9 +256,11 @@ namespace ErogeHelper.ViewModel
         {
             log.Info($"Search \"{item.Text}\", partofspeech {item.PartOfSpeed} ");
 
-            CardInfo.Word = item.Text;
-            CardInfo.Kaisetsu.Clear();
-            CardInfo.IsProcess = true;
+            CardInfo = new WordCardInfo()
+            {
+                Word = item.Text,
+                IsProcess = true
+            };
 
             Messenger.Default.Send(new NotificationMessage("OpenCard"));
 
@@ -267,6 +271,7 @@ namespace ErogeHelper.ViewModel
             {
                 log.Info($"Find explain <{result.word.excerpt}>");
 
+                CardInfo.IsProcess = false;
                 CardInfo.Word = result.word.spell;
                 CardInfo.Hinshi = result.details[0].title;
                 CardInfo.Ruby = result.word.pron;
@@ -275,35 +280,33 @@ namespace ErogeHelper.ViewModel
                 {
                     CardInfo.Kaisetsu.Add($"{count++}. {subdetail.title}");
                 }
-                CardInfo.IsProcess = false;
             }
             else
             {
-                CardInfo.Word = item.Text;
                 CardInfo.IsProcess = false;
                 CardInfo.Hinshi = "空空";
-                CardInfo.Kaisetsu = new ObservableCollection<string>()
-                {
-                    "没有找到呀！",
-                };
+                CardInfo.Kaisetsu.Add("没有找到呀!");
             }
 
         }
-        public WordCardInfo CardInfo { get; set; }
+
+        private WordCardInfo cardInfo;
+        public WordCardInfo CardInfo { get => cardInfo; set { cardInfo = value; RaisePropertyChanged(nameof(cardInfo)); } }
         public RelayCommand PopupCloseCommand { get; set; }
     }
 
     public class WordCardInfo : ViewModelBase
     {
-        private bool isProcess;
+        private bool isProcess; // procssing flag
         private string ruby;
-        private string hinshi;
+        private string hinshi; // 品詞
         private string word;
+        private ObservableCollection<string> kaisetsu = new ObservableCollection<string>();
 
         public string Word { get => word; set { word = value; RaisePropertyChanged(nameof(word)); } }
         public string Hinshi { get => hinshi; set { hinshi = value; RaisePropertyChanged(nameof(hinshi)); } }
         public string Ruby { get => ruby; set { ruby = value; RaisePropertyChanged(nameof(ruby)); } }
-        public ObservableCollection<string> Kaisetsu { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> Kaisetsu { get => kaisetsu; set { kaisetsu = value; RaisePropertyChanged(nameof(kaisetsu)); } }
         public bool IsProcess { get => isProcess; set { isProcess = value; RaisePropertyChanged(nameof(isProcess)); } }
     }
 }

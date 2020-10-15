@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace ErogeHelper.View
@@ -21,12 +22,11 @@ namespace ErogeHelper.View
         private readonly GameInfo gameInfo = GameInfo.Instance;
 
         public IntPtr gameHWnd = IntPtr.Zero;
-        private bool textPanelPin;
+        private bool textPanelPin = false;
 
         public GameView()
         {
             log.Info("Initialize");
-            textPanelPin = false;
             Messenger.Default.Register<NotificationMessage>(this, NotificationMessageReceived);
 
             InitializeComponent(); // VM Initialize -> Component Initialize
@@ -68,6 +68,7 @@ namespace ErogeHelper.View
 
             gameHWnd = targetProc.MainWindowHandle;
             uint targetThreadId = Hook.GetWindowThread(gameHWnd);
+            dpi = VisualTreeHelper.GetDpi(this).DpiScaleX;
 
             if (gameHWnd != IntPtr.Zero)
             {
@@ -84,11 +85,13 @@ namespace ErogeHelper.View
         }
 
         private double winShadow;
+        private double dpi;
 
         private void SetLocation()
         {
-            var rect = Hook.GetWindowRect(gameHWnd);
-            var rectClient = Hook.GetClientRect(gameHWnd);
+            var rect = Hook.GetWindowRect(gameHWnd, dpi);
+            var rectClient = Hook.GetClientRect(gameHWnd, dpi);
+
             Width = rect.Right - rect.Left;  // rectClient.Right + shadow*2
             Height = rect.Bottom - rect.Top; // rectClient.Bottom + shadow + title
 
@@ -103,6 +106,12 @@ namespace ErogeHelper.View
             Top = rect.Top;
         }
 
+        protected override void OnDpiChanged(DpiScale oldDpiScaleInfo, DpiScale newDpiScaleInfo)
+        {
+            dpi = VisualTreeHelper.GetDpi(this).DpiScaleX;
+            log.Info($"Current screen dpi {dpi*100}%");
+        }
+
         protected void WinEventCallback(IntPtr hWinEventHook,
                                     Hook.SWEH_Events eventType,
                                     IntPtr hWnd,
@@ -111,7 +120,7 @@ namespace ErogeHelper.View
                                     uint dwEventThread,
                                     uint dwmsEventTime)
         {
-            // 仅游戏窗口获取焦点时调用
+            // 仅游戏窗口获取焦点时会调用
             //if (hWnd == GameInfo.Instance.hWnd &&
             //    eventType == Hook.SWEH_Events.EVENT_OBJECT_FOCUS)
             //{
@@ -143,11 +152,16 @@ namespace ErogeHelper.View
         {
             base.OnSourceInitialized(e);
 
-            var interopHelper = new WindowInteropHelper(this);
-            int exStyle = Hook.GetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE);
-            Hook.SetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE, exStyle | Hook.WS_EX_NOACTIVATE);
+            // しばらくはつかなくてもいい
+            if (false)
+            {
+                var interopHelper = new WindowInteropHelper(this);
+                int exStyle = Hook.GetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE);
+                Hook.SetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE, exStyle | Hook.WS_EX_NOACTIVATE);
+            }
             // bool(exStyle & win32con.WS_EX_NOACTIVATE) 窗口忽视焦点开关状态
             // exStyle & ~win32con.WS_EX_NOACTIVATE 关闭忽视焦点（即默认状态）
+
             DispatcherTimer timer = new DispatcherTimer();
             var pointer = new WindowInteropHelper(this);
             timer.Tick += (sender, _) =>
@@ -159,7 +173,7 @@ namespace ErogeHelper.View
                 Hook.BringWindowToTop(pointer.Handle);
             };
 
-            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Interval = TimeSpan.FromMilliseconds(100);
             timer.Start();
         }
 
