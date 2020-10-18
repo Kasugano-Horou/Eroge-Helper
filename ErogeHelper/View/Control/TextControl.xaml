@@ -71,6 +71,7 @@
                     <i:EventTrigger EventName="PreviewMouseUp">
                         <cmd:EventToCommand Command="{Binding DataContext.WordSearchCommand, RelativeSource={RelativeSource AncestorType=UserControl} }"
                                             CommandParameter="{Binding}" />
+                        <!-- Binding to SingleTextItem-->
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Border>

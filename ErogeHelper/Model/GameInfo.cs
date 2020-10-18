@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ErogeHelper.Model
 {
@@ -39,6 +35,8 @@ namespace ErogeHelper.Model
             public long ThreadContext { get; set; }
 
             public long SubThreadContext { get; set; }
+
+            public string Regexp { get; set; }
             #endregion
 
             public List<Process> ProcList = new List<Process>(); // 考虑存在已经退出的进程

@@ -1,5 +1,6 @@
 ﻿using ErogeHelper.Service;
 using GalaSoft.MvvmLight.Ioc;
+using System;
 using System.Linq;
 using System.Windows;
 
@@ -19,7 +20,7 @@ namespace ErogeHelper.View
         }
 
         /// <summary>
-        /// 打开主窗口
+        /// Submit 打开主窗口
         /// </summary>
         public void OpenWindow()
         {

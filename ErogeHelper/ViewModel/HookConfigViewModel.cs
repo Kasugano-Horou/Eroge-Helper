@@ -1,5 +1,6 @@
 ﻿using CommonServiceLocator;
 using ErogeHelper.Common;
+using ErogeHelper.Common.Validation;
 using ErogeHelper.Model;
 using ErogeHelper.Service;
 using GalaSoft.MvvmLight;
@@ -9,7 +10,9 @@ using GalaSoft.MvvmLight.Threading;
 using log4net;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Media.TextFormatting;
+using System.Xml.Linq;
 
 namespace ErogeHelper.ViewModel
 {
@@ -19,23 +22,65 @@ namespace ErogeHelper.ViewModel
 
         private readonly IHookConfigDataService _dataService;
 
+        #region Constructor
         public HookConfigViewModel(IHookConfigDataService dataService)
         {
             _dataService = dataService;
             HookMapData = _dataService.GetHookMapData();
 
-            if (IsInDesignMode) { }
+            if (IsInDesignMode)
+            {
+                InputCode = "/HS-10@21967:NUKITASHI2.EXE";
+            }
             else
             {
                 // initialize
+                InsertCodeCommand = new RelayCommand(() => Textractor.InsertHook(InputCode), CanInsertCode);
+                SelectedHookChangeCommand = new RelayCommand(() => {
+                    log.Info($"Select hook {SelectedHook.Name}");
+                    SelectedText = SelectedHook.Text;
+                });
                 SubmitCommand = new RelayCommand(SubmitMessage, CanSubmitMessage);
 
                 Textractor.DataEvent += DataRecvEventHandler;
             }
         }
+        #endregion
 
-        private string consoleOutput;
+        #region HookCode
+        public string InputCode { get; set; } = "";
+        public RelayCommand InsertCodeCommand { get; private set; }
+        public bool InvalidHookCood { get; set; }
+        private bool CanInsertCode() => InputCode != "" && !InvalidHookCood;
+        #endregion
+
+        #region Regexp
+        public string Regexp { get; set; } = "";
+        public bool InvalidRegexp { get; set; }
+        private string selectedText;
+        public string SelectedText
+        { 
+            get => selectedText;
+            set 
+            {
+                string tmp = value;
+                if (!InvalidRegexp)
+                {
+                    // value with regexp
+                    var list = Regex.Split(tmp, Regexp);
+                    tmp = string.Join("", list);
+                }
+                if (tmp == "") return;
+
+                selectedText = tmp;
+                RaisePropertyChanged(() => SelectedText);
+            }
+        }
+        #endregion
+
+        #region HookParam Data
         public HookBindingList<long, HookParam> HookMapData { get; set; }
+        private string consoleOutput;
         public string ConsoleOutput { get => consoleOutput; set { consoleOutput = value; RaisePropertyChanged(() => ConsoleOutput); } }
         public string ClipboardOutput { get; set; }
 
@@ -62,13 +107,9 @@ namespace ErogeHelper.ViewModel
                 }
                 else
                 {
-                    if (hp.Text.Length > 80)
-                    {
-                        hp.Text = "String.Length > 80. Skip";
-                    }
                     string tmp = targetItem.TotalText + "\n\n" + hp.Text;
 
-                    // dummy way
+                    // dummy way with my TextBlock item
                     var count = tmp.Count(f => f == '\n');
                     if (count > 5)
                     {
@@ -77,15 +118,22 @@ namespace ErogeHelper.ViewModel
                     }
                     targetItem.TotalText = tmp;
                 }
+
+                if (SelectedHook != null && hp.Handle == SelectedHook.Handle)
+                {
+                    SelectedText = hp.Text;
+                }
             });
         }
 
         public HookParam SelectedHook { get; set; } = null;
+        public RelayCommand SelectedHookChangeCommand { get; set; }
+        #endregion
 
         #region SubmitCommand
         public RelayCommand SubmitCommand { get; private set; }
 
-        private bool CanSubmitMessage() => SelectedHook != null;
+        private bool CanSubmitMessage() => SelectedHook != null && !InvalidRegexp;
 
         private void SubmitMessage()
         {
@@ -102,16 +150,23 @@ namespace ErogeHelper.ViewModel
                     HookCode = SelectedHook.Hookcode,
                     ThreadContext = SelectedHook.Ctx,
                     SubThreadContext = SelectedHook.Ctx2,
+                    Regexp = Regexp,
                 });
             }
             else
             {
                 // load and write
+                var root = XElement.Load(gameInfo.ConfigPath).Elements("Profile");
+                // update 4 node
+                // TODO
+                // write to file
+                EHConfig.NewWriteConfig(root);
             }
 
             gameInfo.HookCode = SelectedHook.Hookcode;
             gameInfo.ThreadContext = SelectedHook.Ctx;
             gameInfo.SubThreadContext = SelectedHook.Ctx2;
+            gameInfo.Regexp = Regexp;
 
             if (WindowService != null)
                 WindowService.OpenWindow();

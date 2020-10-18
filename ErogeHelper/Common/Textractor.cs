@@ -43,16 +43,13 @@ namespace ErogeHelper.Common
         static private OnCreateThread createthread;
         static private OnRemoveThread removethread;
 
-        static public void Inject(int pid)
-        {
-            InjectProcess((uint)pid);
-        }
         public delegate void DataRecvEventHandler(object sender, HookParam e);
         public static event DataRecvEventHandler SelectedDataEvent;
         public static event DataRecvEventHandler DataEvent;
 
         static Dictionary<long, HookParam> ThreadHandleDict = new Dictionary<long, HookParam>();
 
+        #region TextHostInit Callback Implement
         static public void CreateThreadHandle(
             long threadId,
             uint processId,
@@ -94,6 +91,16 @@ namespace ErogeHelper.Common
         static public void RemoveThreadHandle(long threadId) { }
 
         static public void CallBackHandle(uint processId) { }
+        #endregion
+
+        public static void InsertHook(string hookcode)
+        {
+            foreach (Process p in gameInfo.ProcList)
+            {
+                TextHostLib.InsertHook((uint)p.Id, hookcode);
+                log.Info($"Try insert code {hookcode} to PID {p.Id}");
+            }
+        }
 
         internal class TextHostLib
         {

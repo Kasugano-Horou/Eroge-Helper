@@ -165,6 +165,7 @@ namespace ErogeHelper
                     gameInfo.HookCode = profile.Element("HookCode").Value;
                     gameInfo.ThreadContext = long.Parse(profile.Element("ThreadContext").Value);
                     gameInfo.SubThreadContext = long.Parse(profile.Element("SubThreadContext").Value);
+                    gameInfo.Regexp = profile.Element("Regexp").Value;
 
                     log.Info($"Get HCode {gameInfo.HookCode} from file {gameInfo.ProcessName}.exe.eh.config");
                     // Display text window

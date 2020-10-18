@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="PreferenceView" Height="450" Width="800">
     <Grid>
-        
+        <Label Content="关闭文本显示焦点（如果你在全屏模式下点击查词会弹回桌面，请打开这个）" HorizontalAlignment="Left" Margin="286,137,0,0" VerticalAlignment="Top"/>
+
     </Grid>
 </Window>
