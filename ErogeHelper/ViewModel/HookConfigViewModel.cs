@@ -55,7 +55,7 @@ namespace ErogeHelper.ViewModel
         #endregion
 
         #region Regexp
-        public string Regexp { get; set; } = "";
+        public string Regexp { get; set; } = SimpleIoc.Default.GetInstance<GameInfo>().Regexp;
         public bool InvalidRegexp { get; set; }
         private string selectedText;
         public string SelectedText

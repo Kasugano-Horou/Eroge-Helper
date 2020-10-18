@@ -37,6 +37,12 @@ namespace ErogeHelper.Common
                 InjectProcess((uint)p.Id);
                 log.Info($"attach to PID {p.Id}.");
             }
+
+            foreach (Process p in gameInfo.ProcList)
+            {
+                TextHostLib.InsertHook((uint)p.Id, gameInfo.HookCode);
+                log.Info($"Try insert code {gameInfo.HookCode} to PID {p.Id}");
+            }
         }
         static private OnOutputText output;
         static private ProcessCallback callback;

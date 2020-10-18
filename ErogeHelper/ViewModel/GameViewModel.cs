@@ -2,12 +2,14 @@ using ErogeHelper.Common;
 using ErogeHelper.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -194,6 +196,9 @@ namespace ErogeHelper.ViewModel
             DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
                 DisplayTextCollection.Clear();
+
+                var list = Regex.Split(hp.Text, SimpleIoc.Default.GetInstance<GameInfo>().Regexp);
+                hp.Text = string.Join("", list);
 
                 if (hp.Text.Length > 80)
                 {
