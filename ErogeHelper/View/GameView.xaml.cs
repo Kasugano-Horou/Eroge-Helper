@@ -1,8 +1,10 @@
-﻿using ErogeHelper.Model.Singleton;
+﻿using ErogeHelper.Model;
+using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
@@ -18,8 +20,6 @@ namespace ErogeHelper.View
     public partial class GameView : Window
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(GameView));
-
-        private readonly GameInfo gameInfo = GameInfo.Instance;
 
         public IntPtr gameHWnd = IntPtr.Zero;
         private bool textPanelPin = false;
@@ -60,6 +60,7 @@ namespace ErogeHelper.View
             WinEventDelegate = new Hook.WinEventDelegate(WinEventCallback);
             GCSafetyHandle = GCHandle.Alloc(WinEventDelegate);
 
+            var gameInfo = (GameInfo)SimpleIoc.Default.GetInstance(typeof(GameInfo));
             var targetProc = gameInfo.HWndProc;
 
             targetProc.EnableRaisingEvents = true;
@@ -82,6 +83,7 @@ namespace ErogeHelper.View
                 log.Info("Begin to follow the window");
                 return;
             }
+
         }
 
         private double winShadow;
@@ -91,6 +93,7 @@ namespace ErogeHelper.View
         {
             var rect = Hook.GetWindowRect(gameHWnd, dpi);
             var rectClient = Hook.GetClientRect(gameHWnd, dpi);
+            // 再把字体除以dpi好了嘛 不解决窗口大小随着字体变化，两个事情
 
             Width = rect.Right - rect.Left;  // rectClient.Right + shadow*2
             Height = rect.Bottom - rect.Top; // rectClient.Bottom + shadow + title
@@ -144,7 +147,7 @@ namespace ErogeHelper.View
             DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
                 Closed -= Window_Closed;
-                Close();
+                Application.Current.Shutdown();
             });
         }
 
@@ -155,6 +158,7 @@ namespace ErogeHelper.View
             // しばらくはつかなくてもいい
             if (false)
             {
+                // 不需要再OnSourceInitialized设置应该也有效果
                 var interopHelper = new WindowInteropHelper(this);
                 int exStyle = Hook.GetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE);
                 Hook.SetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE, exStyle | Hook.WS_EX_NOACTIVATE);
@@ -170,7 +174,10 @@ namespace ErogeHelper.View
                 {
                     timer.Stop();
                 }
-                Hook.BringWindowToTop(pointer.Handle);
+                if (gameHWnd ==  Hook.GetForegroundWindow())
+                {
+                    Hook.BringWindowToTop(pointer.Handle);
+                }
             };
 
             timer.Interval = TimeSpan.FromMilliseconds(100);

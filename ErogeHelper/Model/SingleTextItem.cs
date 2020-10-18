@@ -1,8 +1,5 @@
 ﻿using ErogeHelper.Common;
-using System;
-using System.Reflection;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace ErogeHelper.Model
 {
@@ -46,7 +43,7 @@ namespace ErogeHelper.Model
             }
         }
         public TextTemplateType TextTemplateType { get; set; }
-        public ImageSource SubMarkColor { get; internal set; }
+        public ImageSource SubMarkColor { get; internal set; } = Utils.LoadBitmapFromResource("Resource/transparent.png");
     }
 
     public enum TextTemplateType

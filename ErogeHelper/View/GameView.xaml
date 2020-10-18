@@ -37,11 +37,10 @@
                             Height="12"
                             Background="white"
                             Opacity="0.1"/>
-
                     <control:TextControl x:Name="TextArea"
-                                         Background="Transparent"
-                                         MouseLeave="TextArea_MouseLeave" 
-                                         Visibility="{Binding TextAreaVisibility}"/>
+                                     Background="Transparent"
+                                     MouseLeave="TextArea_MouseLeave" 
+                                     Visibility="{Binding TextAreaVisibility}"/>
                     <Popup x:Name="WordCard" 
                            Placement="Bottom" 
                            PlacementTarget="{Binding ElementName=TextArea}"

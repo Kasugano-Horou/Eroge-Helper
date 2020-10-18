@@ -175,7 +175,6 @@ namespace ErogeHelper.ViewModel
                 TextPanelPin = true;
 
                 Textractor.SelectedDataEvent += SelectedDataEventHandler;
-                TextractorLib.SelectedDataEvent += SelectedDataEventHandler;
                 _mecabHelper = new MecabHelper();
                 _mojiHelper = new MojiDictApi();
                 WordSearchCommand = new RelayCommand<SingleTextItem>(WordSearch, CanWordSearch);

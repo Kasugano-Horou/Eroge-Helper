@@ -78,32 +78,34 @@
         
         <DataTemplate x:Key="OutLineBottomTemplate">
             <StackPanel>
+                <!-- 文字部分 -->
                 <Border>
                     <Border.Background>
                         <ImageBrush ImageSource="{Binding SubMarkColor}" />
                     </Border.Background>
                     <common:OutlinedTextBlock Stroke="Black" 
                                               HorizontalAlignment="Center"
-                             ClipToBounds="False"
-                             FontSize="30"  
-                             Fill="white"
-                             StrokePosition="Outside"
-                             StrokeThickness="1" Text="{Binding Text}">
+                                              ClipToBounds="False"
+                                              FontSize="30"  
+                                              Fill="white"
+                                              StrokePosition="Outside"
+                                              StrokeThickness="1" Text="{Binding Text}">
                     </common:OutlinedTextBlock>
                     <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseUp">
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
                             <cmd:EventToCommand Command="{Binding DataContext.WordSearchCommand, RelativeSource={RelativeSource AncestorType=UserControl} }"
-                                            CommandParameter="{Binding}" />
+                                                CommandParameter="{Binding}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Border>
+                <!-- 假名部分 -->
                 <common:OutlinedTextBlock Stroke="Black" 
                                           HorizontalAlignment="Center"
-                             ClipToBounds="False"
-                             FontSize="16"  
-                             Fill="white"
-                             StrokePosition="Outside"
-                             StrokeThickness="1" Text="{Binding RubyText}">
+                                          ClipToBounds="False"
+                                          FontSize="16"  
+                                          Fill="white"
+                                          StrokePosition="Outside"
+                                          StrokeThickness="1" Text="{Binding RubyText}">
                 </common:OutlinedTextBlock>
             </StackPanel>
         </DataTemplate>
@@ -116,7 +118,7 @@
     </UserControl.Resources>
 
     <StackPanel>
-        <TextBlock FontSize="24" 
+        <TextBlock FontSize="24"
                    FontFamily="ＭＳ ゴシック"
                    Foreground="Black">
             <ItemsControl ItemsSource="{Binding DisplayTextCollection}"

@@ -15,6 +15,8 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using CommonServiceLocator;
+using ErogeHelper.Model;
+using ErogeHelper.Service;
 
 namespace ErogeHelper.ViewModel
 {
@@ -31,19 +33,20 @@ namespace ErogeHelper.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            ////if (ViewModelBase.IsInDesignModeStatic)
-            ////{
-            ////    // Create design time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DesignDataService>();
-            ////}
-            ////else
-            ////{
-            ////    // Create run time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DataService>();
-            ////}
+            if (ViewModelBase.IsInDesignModeStatic)
+            {
+                // Create design time view services and models
+                SimpleIoc.Default.Register<IHookConfigDataService, DesignHookConfigDataService>();
+            }
+            else
+            {
+                // Create run time view services and models
+                SimpleIoc.Default.Register<IHookConfigDataService, HookConfigDataService>();
+            }
 
             SimpleIoc.Default.Register<GameViewModel>();
             SimpleIoc.Default.Register<HookConfigViewModel>();
+            SimpleIoc.Default.Register<NotifyIconViewModel>();
         }
 
         public GameViewModel Game
@@ -58,6 +61,13 @@ namespace ErogeHelper.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<HookConfigViewModel>();
+            }
+        }
+        public NotifyIconViewModel NotifyIcon
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<NotifyIconViewModel>();
             }
         }
 

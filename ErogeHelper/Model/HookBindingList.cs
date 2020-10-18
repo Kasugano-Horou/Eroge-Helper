@@ -40,7 +40,7 @@ namespace ErogeHelper.Model
             return val;
         }
 
-        // -- 以下重写都不能直接调用，为底层方法 --
+        // --  --
 
         protected override void InsertItem(int index, TVal val)
         {

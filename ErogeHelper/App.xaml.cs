@@ -1,21 +1,24 @@
 ﻿using ErogeHelper.Common;
-using ErogeHelper.Model.Singleton;
+using ErogeHelper.Model;
 using ErogeHelper.View;
 using ErogeHelper.ViewModel;
+using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
+using Hardcodet.Wpf.TaskbarNotification;
 using log4net;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Principal;
-using System.Threading;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Xml.Linq;
 
 namespace ErogeHelper
 {
+
+
     /// <summary>
     /// App.xaml 的交互逻辑
     /// </summary>
@@ -23,28 +26,26 @@ namespace ErogeHelper
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(App));
 
-        private readonly GameInfo gameInfo = GameInfo.Instance;
+        private TaskbarIcon notifyIcon;
 
-        private void Application_Startup(object sender, StartupEventArgs e)
+        protected override void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
+
             Directory.SetCurrentDirectory(Path.GetDirectoryName(GetType().Assembly.Location));
             DispatcherHelper.Initialize();
+            SimpleIoc.Default.Register<GameInfo>();
+            //new TaskbarView();
+            notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
             log4net.Config.XmlConfigurator.Configure();
             // AppDomain.CurrentDomain.UnhandledException += ErrorHandle 非ui线程
             DispatcherUnhandledException += (s, eventArgs) => {
                 log.Error($"Unknown Error {eventArgs.Exception}");
                 MessageBox.Show(eventArgs.Exception.ToString());
-                // 复制粘贴板到github
+                // TODO: 复制粘贴板转到github
             };
             log.Info("Started Logging");
             log.Info($"Enviroment directory: {Directory.GetCurrentDirectory()}");
-
-            var identity = WindowsIdentity.GetCurrent();
-            var principal = new WindowsPrincipal(identity);
-            if (principal.IsInRole(WindowsBuiltInRole.Administrator))
-            {
-                log.Info("Program run in Admin mode");
-            }
 
             if (e.Args.Length == 0)
             {
@@ -55,6 +56,7 @@ namespace ErogeHelper
                 return;
             }
 
+            GameInfo gameInfo = SimpleIoc.Default.GetInstance(typeof(GameInfo)) as GameInfo;
             gameInfo.Path = e.Args[0];
             gameInfo.ConfigPath = gameInfo.Path + ".eh.config";
             gameInfo.Dir = gameInfo.Path.Substring(0, gameInfo.Path.LastIndexOf('\\'));
@@ -67,7 +69,8 @@ namespace ErogeHelper
             if (e.Args.Contains("/le"))
             {
                 // Use Locate Emulator
-                ProcessStartInfo startInfo = new ProcessStartInfo
+                // LE AccessViolationException
+                Process.Start(new ProcessStartInfo
                 {
                     FileName = Directory.GetCurrentDirectory() + @"\libs\x86\LEProc.exe",
                     UseShellExecute = false,
@@ -75,9 +78,7 @@ namespace ErogeHelper
                     Arguments = File.Exists(gameInfo.Path + ".le.config") ?
                     $"-run \"{gameInfo.Path}\"" :
                     $"\"{gameInfo.Path}\""
-                };
-
-                Process.Start(startInfo);
+                });
             }
             else
             {
@@ -128,7 +129,7 @@ namespace ErogeHelper
                         }
                         catch (InvalidOperationException ex)
                         {
-                            // skip error
+                            // skip no effect error
                             log.Error(ex.Message);
                         }
 
@@ -138,6 +139,7 @@ namespace ErogeHelper
                 // 进程找完却没有得到hWnd的可能也是存在的，所以以hWnd为主
                 gameInfo.HWndProc = Utils.FindHWndProc(gameInfo.ProcList);
 
+                // timeout
                 if (totalTime.Elapsed.TotalSeconds > 7 && gameInfo.HWndProc.MainWindowHandle == IntPtr.Zero)
                 {
                     log.Info("Timeout! Find MainWindowHandle Faied");
@@ -157,7 +159,7 @@ namespace ErogeHelper
                     // Read xml file
                     var profile = XElement.Load(gameInfo.ConfigPath).Element("Profile");
 
-                    // Update xml file
+                    // TODO: Check version and update xml file
 
                     // TODO: 试探MD5是否与配置文件相同。若不同，弹窗提醒exe程序有变动，可能需要重新选取hook以读取文本
                     //if ( !gameInfo.MD5.Equals(profile.Element("MD5").Value) )
@@ -176,8 +178,7 @@ namespace ErogeHelper
                     new HookConfigView().Show();
                 }
 
-                //Textractor.Init();
-                TextractorLib.Init();
+                Textractor.Init();
             }
             else
             {

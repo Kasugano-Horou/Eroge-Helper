@@ -56,6 +56,9 @@
     <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.4.1.0, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.4.1.1\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
     </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=2.0.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.11\lib\net45\log4net.dll</HintPath>
     </Reference>
@@ -127,15 +130,19 @@
     <Compile Include="Common\OutlinedTextBlock.cs" />
     <Compile Include="Common\Selector\TextTemplateSelector.cs" />
     <Compile Include="Common\Textractor.cs" />
-    <Compile Include="Common\TextractorLib.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Model\EHProfile.cs" />
+    <Compile Include="Model\GameInfo.cs" />
     <Compile Include="Model\HookBindingList.cs" />
     <Compile Include="Model\HookParam.cs" />
     <Compile Include="Model\SingleTextItem.cs" />
-    <Compile Include="Model\Singleton\GameInfo.cs" />
+    <Compile Include="Service\DesignHookConfigDataService.cs" />
+    <Compile Include="Service\HookConfigDataService.cs" />
+    <Compile Include="Service\IHookConfigDataService.cs" />
+    <Compile Include="Service\IWindowService.cs" />
     <Compile Include="ViewModel\GameViewModel.cs" />
     <Compile Include="ViewModel\HookConfigViewModel.cs" />
+    <Compile Include="ViewModel\NotifyIconViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\Control\CardControl.xaml.cs">
       <DependentUpon>CardControl.xaml</DependentUpon>
@@ -146,6 +153,16 @@
     <Compile Include="View\HookConfigView.xaml.cs">
       <DependentUpon>HookConfigView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\PreferenceView.xaml.cs">
+      <DependentUpon>PreferenceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TaskbarView.xaml.cs">
+      <DependentUpon>TaskbarView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="NotifyIconResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Control\CardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -167,6 +184,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\HookConfigView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PreferenceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TaskbarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -210,6 +235,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resource\transparent.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resource\Red.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

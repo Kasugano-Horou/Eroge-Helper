@@ -1,14 +1,12 @@
-﻿using ErogeHelper.Common;
+﻿using CommonServiceLocator;
+using ErogeHelper.Common;
 using ErogeHelper.Model;
-using ErogeHelper.Model.Singleton;
-using ErogeHelper.View;
+using ErogeHelper.Service;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
-using System;
 
 namespace ErogeHelper.ViewModel
 {
@@ -16,36 +14,25 @@ namespace ErogeHelper.ViewModel
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HookConfigViewModel));
 
-        private static readonly GameInfo gameInfo = GameInfo.Instance;
+        private readonly IHookConfigDataService _dataService;
 
-        public HookConfigViewModel()
+        public HookConfigViewModel(IHookConfigDataService dataService)
         {
-            if (IsInDesignMode)
-            {
-                HookMapData = new HookBindingList<long, HookParam>(p => p.Handle);
-                HookParam hp = new HookParam()
-                {
-                    Addr = 0,
-                    Ctx = 0,
-                    Ctx2 = 0,
-                    Handle = 1,
-                    Hookcode = "e@e.exe",
-                    Name = "engine",
-                    Pid = 10000,
-                    Text = "Text is me"
-                };
-                HookMapData.Add(hp);
-            }
+            _dataService = dataService;
+            HookMapData = _dataService.GetHookMapData();
+
+            if (IsInDesignMode) { }
             else
             {
-                HookMapData = new HookBindingList<long, HookParam>(p => p.Handle);
+                // initialize
                 SubmitCommand = new RelayCommand(SubmitMessage, CanSubmitMessage);
 
                 Textractor.DataEvent += DataRecvEventHandler;
-                TextractorLib.DataEvent += DataRecvEventHandler;
             }
 
         }
+
+        public HookBindingList<long, HookParam> HookMapData { get; set; }
 
         private void DataRecvEventHandler(object sender, HookParam hp)
         {
@@ -64,8 +51,9 @@ namespace ErogeHelper.ViewModel
             });
         }
 
-        public HookBindingList<long, HookParam> HookMapData { get; set; }
         public HookParam SelectedHook { get; set; } = null;
+
+        #region SubmitCommand
         public RelayCommand SubmitCommand { get; private set; }
 
         private bool CanSubmitMessage() => SelectedHook != null;
@@ -73,6 +61,8 @@ namespace ErogeHelper.ViewModel
         private void SubmitMessage()
         {
             log.Info($"Selected Hook: {SelectedHook.Hookcode}");
+
+            var gameInfo = (GameInfo)SimpleIoc.Default.GetInstance(typeof(GameInfo));
 
             // write xml file
             EHConfig.WriteConfig(gameInfo.ConfigPath, new EHProfile()
@@ -88,7 +78,17 @@ namespace ErogeHelper.ViewModel
             gameInfo.ThreadContext = SelectedHook.Ctx;
             gameInfo.SubThreadContext = SelectedHook.Ctx2;
 
-            Messenger.Default.Send(new NotificationMessage("ShowGameView"));
+            if (WindowService != null)
+                WindowService.OpenWindow();
         }
+
+        private IWindowService WindowService
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<IWindowService>();
+            }
+        }
+        #endregion
     }
 }
