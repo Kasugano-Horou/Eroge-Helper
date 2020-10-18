@@ -30,12 +30,38 @@ namespace ErogeHelper.Common
 
         public static void SetValue(string Node, string value)
         {
+            var doc = XDocument.Load(Path);
 
+            var root = doc.Element("EHConfig");
+            var profile = root.Element("Profile");
+            var targetNode = profile.Element(Node);
+            if (targetNode != null) 
+            {
+                targetNode.Value = value;
+            }
+            else
+            {
+                profile.Add(new XElement(Node)
+                {
+                    Value = value
+                });
+            }
+            doc.Save(Path);
         }
 
         public static string GetValue(string Node)
         {
-            return null;
+            var root = XElement.Load(Path).Element("Profile");
+            string ret;
+            try
+            {
+                ret = root.Element(Node).Value;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw ex;
+            }
+            return ret;
         }
 
         internal static void NewWriteConfig(IEnumerable<XElement> nodeList)

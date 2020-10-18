@@ -1,4 +1,5 @@
-﻿using ErogeHelper.Model;
+﻿using ErogeHelper.Common;
+using ErogeHelper.Model;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
@@ -155,18 +156,21 @@ namespace ErogeHelper.View
         {
             base.OnSourceInitialized(e);
 
-            // しばらくはつかなくてもいい
-            // 窗口启动需要判断（**读取**设置）设置一次
-            // 设置里拨动开关需要 get 与 set(到config，set需要GameView窗口，在VM里处理逻辑？)
-            if (false)
+            var value = false;
+            try
             {
-                // 不需要再OnSourceInitialized设置应该也有效果
+                value = bool.Parse(EHConfig.GetValue("NoFocus"));
+            }
+            catch(NullReferenceException)
+            {
+                EHConfig.SetValue("NoFocus", value.ToString());
+            }
+            if (value)
+            {
                 var interopHelper = new WindowInteropHelper(this);
                 int exStyle = Hook.GetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE);
                 Hook.SetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE, exStyle | Hook.WS_EX_NOACTIVATE);
             }
-            // bool(exStyle & win32con.WS_EX_NOACTIVATE) 窗口忽视焦点开关状态
-            // exStyle & ~win32con.WS_EX_NOACTIVATE 关闭忽视焦点（即默认状态）
 
             DispatcherTimer timer = new DispatcherTimer();
             var pointer = new WindowInteropHelper(this);

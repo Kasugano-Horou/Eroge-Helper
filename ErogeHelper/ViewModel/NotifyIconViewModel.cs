@@ -1,6 +1,9 @@
-﻿using ErogeHelper.View;
+﻿using ErogeHelper.Model;
+using ErogeHelper.View;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Ioc;
+using System.IO;
 using System.Linq;
 using System.Windows;
 
@@ -8,6 +11,20 @@ namespace ErogeHelper.ViewModel
 {
     public class NotifyIconViewModel : ViewModelBase
     {
+        public NotifyIconViewModel()
+        {
+            ShowPreferenceCommand = new RelayCommand(() =>
+            {
+                var window = Application.Current.Windows.OfType<PreferenceView>().FirstOrDefault();
+                if (window == null)
+                    new PreferenceView().Show();
+                else
+                {
+                    window.Activate();
+                }
+            }, File.Exists(SimpleIoc.Default.GetInstance<GameInfo>().ConfigPath));
+        }
+
         public RelayCommand ShowHookConfigCommand
         {
             get
@@ -23,6 +40,8 @@ namespace ErogeHelper.ViewModel
                 });
             }
         }
+
+        public RelayCommand ShowPreferenceCommand { set; get; }
 
         /// <summary>
         /// (No Need かも)Shuts down the application.

@@ -47,6 +47,7 @@ namespace ErogeHelper.ViewModel
             SimpleIoc.Default.Register<GameViewModel>();
             SimpleIoc.Default.Register<HookConfigViewModel>();
             SimpleIoc.Default.Register<NotifyIconViewModel>();
+            SimpleIoc.Default.Register<PreferenceViewModel>();
         }
 
         public GameViewModel Game
@@ -68,6 +69,13 @@ namespace ErogeHelper.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<NotifyIconViewModel>();
+            }
+        }
+        public PreferenceViewModel Preference
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<PreferenceViewModel>();
             }
         }
 

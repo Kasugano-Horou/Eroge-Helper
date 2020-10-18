@@ -13,7 +13,9 @@
         DataContext="{Binding Game, Source={StaticResource Locator}}"
         d:DataContext="{d:DesignInstance d:Type=vm:GameViewModel,
                                          IsDesignTimeCreatable=True}"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        ShowInTaskbar="False">
+    
     <Window.Background>
         <SolidColorBrush />
     </Window.Background>

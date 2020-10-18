@@ -146,6 +146,7 @@
     <Compile Include="ViewModel\GameViewModel.cs" />
     <Compile Include="ViewModel\HookConfigViewModel.cs" />
     <Compile Include="ViewModel\NotifyIconViewModel.cs" />
+    <Compile Include="ViewModel\PreferenceViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\Control\CardControl.xaml.cs">
       <DependentUpon>CardControl.xaml</DependentUpon>
