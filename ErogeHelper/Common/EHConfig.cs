@@ -11,16 +11,26 @@ namespace ErogeHelper.Common
         public static void WriteConfig(string writeTo, EHProfile pro)
         {
             var baseNode = new XElement("Profile",
-                                      new XAttribute("Name", value: pro.Name),
-                                      new XElement("MD5", content: pro.MD5.ToUpper()),
-                                      new XElement("HookCode", content: pro.HookCode),
-                                      new XElement("ThreadContext", content: pro.ThreadContext),
-                                      new XElement("SubThreadContext", content: pro.SubThreadContext)
-                             );
+                new XAttribute("Name", value: pro.Name),
+                new XElement("MD5", content: pro.MD5.ToUpper()),
+                new XElement("HookCode", content: pro.HookCode),
+                new XElement("ThreadContext", content: pro.ThreadContext),
+                new XElement("SubThreadContext", content: pro.SubThreadContext)
+            );
 
             var tree = new XElement("EHConfig", baseNode);
             tree.Save(writeTo);
             log.Info("Write config file succeed");
+        }
+
+        public static void SetValue(string Node, string value)
+        {
+
+        }
+
+        public static string GetValue(string Node)
+        {
+            return null;
         }
     }
 }

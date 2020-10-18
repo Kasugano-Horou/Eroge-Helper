@@ -17,7 +17,17 @@ namespace ErogeHelper.Service
                 Hookcode = "e@e.exe",
                 Name = "engine",
                 Pid = 10000,
-                Text = "Text is me"
+                Text = "Text is me",
+                TotalText = "1Text is me\n" +
+                            "2Text is me\n" +
+                            "3Text is me\n" +
+                            "4Text is me\n" +
+                            "5Text is me\n" +
+                            "6Text is me\n" +
+                            "7Text is me\n" +
+                            "8Text is me\n" +
+                            "9Text is me\n" +
+                            "10Text is me\n"
             };
             ret.Add(hp);
             hp = new HookParam()
@@ -29,7 +39,8 @@ namespace ErogeHelper.Service
                 Hookcode = "e@e.exe",
                 Name = "engine",
                 Pid = 10000,
-                Text = "second text"
+                Text = "second text",
+                TotalText = "second text"
             };
             ret.Add(hp);
 

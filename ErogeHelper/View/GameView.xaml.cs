@@ -156,6 +156,8 @@ namespace ErogeHelper.View
             base.OnSourceInitialized(e);
 
             // しばらくはつかなくてもいい
+            // 窗口启动需要判断（**读取**设置）设置一次
+            // 设置里拨动开关需要 get 与 set(到config，set需要GameView窗口，在VM里处理逻辑？)
             if (false)
             {
                 // 不需要再OnSourceInitialized设置应该也有效果
@@ -174,7 +176,7 @@ namespace ErogeHelper.View
                 {
                     timer.Stop();
                 }
-                if (gameHWnd ==  Hook.GetForegroundWindow())
+                if (gameHWnd == Hook.GetForegroundWindow())
                 {
                     Hook.BringWindowToTop(pointer.Handle);
                 }

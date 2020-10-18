@@ -7,6 +7,9 @@ using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
+using System.IO;
+using System.Linq;
+using System.Windows.Media.TextFormatting;
 
 namespace ErogeHelper.ViewModel
 {
@@ -29,24 +32,50 @@ namespace ErogeHelper.ViewModel
 
                 Textractor.DataEvent += DataRecvEventHandler;
             }
-
         }
 
+        private string consoleOutput;
         public HookBindingList<long, HookParam> HookMapData { get; set; }
+        public string ConsoleOutput { get => consoleOutput; set { consoleOutput = value; RaisePropertyChanged(() => ConsoleOutput); } }
+        public string ClipboardOutput { get; set; }
 
         private void DataRecvEventHandler(object sender, HookParam hp)
         {
             DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
+                if (hp.Name == "控制台")
+                {
+                    ConsoleOutput += "\n" + hp.Text;
+                    return;
+                }
+                else if (hp.Name == "剪贴板")
+                {
+                    // ClipboardOutput += "\n" + hp.Text;
+                    return;
+                }
+
                 var targetItem = HookMapData.FastFind(hp.Handle);
                 if (targetItem == null)
                 {
-                    HookMapData.Insert(0, hp);
+                    hp.TotalText = hp.Text;
+                    HookMapData.Add(hp);
                 }
                 else
                 {
-                    HookMapData.Remove(targetItem);
-                    HookMapData.Insert(0, hp);
+                    if (hp.Text.Length > 80)
+                    {
+                        hp.Text = "String.Length > 80. Skip";
+                    }
+                    string tmp = targetItem.TotalText + "\n\n" + hp.Text;
+
+                    // dummy way
+                    var count = tmp.Count(f => f == '\n');
+                    if (count > 5)
+                    {
+                        var index = tmp.IndexOf('\n') + 2;
+                        tmp = tmp.Substring(index);
+                    }
+                    targetItem.TotalText = tmp;
                 }
             });
         }
@@ -63,16 +92,22 @@ namespace ErogeHelper.ViewModel
             log.Info($"Selected Hook: {SelectedHook.Hookcode}");
 
             var gameInfo = (GameInfo)SimpleIoc.Default.GetInstance(typeof(GameInfo));
-
-            // write xml file
-            EHConfig.WriteConfig(gameInfo.ConfigPath, new EHProfile()
+            if (!File.Exists(gameInfo.ConfigPath))
             {
-                HookCode = SelectedHook.Hookcode,
-                MD5 = gameInfo.MD5,
-                ThreadContext = SelectedHook.Ctx,
-                SubThreadContext = SelectedHook.Ctx2,
-                Name = gameInfo.ProcessName + ".eh.config",
-            });
+                EHConfig.WriteConfig(gameInfo.ConfigPath, new EHProfile()
+                {
+                    Name = gameInfo.ProcessName + ".eh.config",
+                    MD5 = gameInfo.MD5,
+
+                    HookCode = SelectedHook.Hookcode,
+                    ThreadContext = SelectedHook.Ctx,
+                    SubThreadContext = SelectedHook.Ctx2,
+                });
+            }
+            else
+            {
+                // load and write
+            }
 
             gameInfo.HookCode = SelectedHook.Hookcode;
             gameInfo.ThreadContext = SelectedHook.Ctx;

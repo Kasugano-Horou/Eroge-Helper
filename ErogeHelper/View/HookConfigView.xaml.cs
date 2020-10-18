@@ -14,7 +14,8 @@ namespace ErogeHelper.View
         {
             InitializeComponent();
             
-            SimpleIoc.Default.Register<IWindowService>(() => this);
+            if (!SimpleIoc.Default.IsRegistered<IWindowService>())
+                SimpleIoc.Default.Register<IWindowService>(() => this);
         }
 
         /// <summary>

@@ -49,7 +49,7 @@ namespace ErogeHelper
 
             if (e.Args.Length == 0)
             {
-                MessageBox.Show("请使用 ErogeHelperInstaller 安装我> < \n\r" +
+                MessageBox.Show("请使用 EHInstaller 安装我> < \n\r" +
                                 "如果你已经安装了直接右键游戏选择Eroge Helper启动就好了~",
                                 "ErogeHelper");
                 Current.Shutdown();
@@ -159,8 +159,6 @@ namespace ErogeHelper
                     // Read xml file
                     var profile = XElement.Load(gameInfo.ConfigPath).Element("Profile");
 
-                    // TODO: Check version and update xml file
-
                     // TODO: 试探MD5是否与配置文件相同。若不同，弹窗提醒exe程序有变动，可能需要重新选取hook以读取文本
                     //if ( !gameInfo.MD5.Equals(profile.Element("MD5").Value) )
 
@@ -174,7 +172,7 @@ namespace ErogeHelper
                 }
                 else
                 {
-                    log.Info("No xml config file, open hook panel.");
+                    log.Info("Not find xml config file, open hook panel.");
                     new HookConfigView().Show();
                 }
 

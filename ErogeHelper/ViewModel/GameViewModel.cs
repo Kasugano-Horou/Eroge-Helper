@@ -195,6 +195,11 @@ namespace ErogeHelper.ViewModel
             {
                 DisplayTextCollection.Clear();
 
+                if (hp.Text.Length > 80)
+                {
+                    hp.Text = "String.Length > 80. Skip";
+                }
+
                 var mecabWordList = _mecabHelper.SentenceHandle(hp.Text);
                 foreach (MecabWordInfo mecabWord in mecabWordList)
                 {
