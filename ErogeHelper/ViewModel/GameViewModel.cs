@@ -197,9 +197,13 @@ namespace ErogeHelper.ViewModel
             {
                 DisplayTextCollection.Clear();
 
-                var list = Regex.Split(hp.Text, SimpleIoc.Default.GetInstance<GameInfo>().Regexp);
-                hp.Text = string.Join("", list);
-
+                var pattern = SimpleIoc.Default.GetInstance<GameInfo>().Regexp;
+                if (pattern != null)
+                {
+                    var list = Regex.Split(hp.Text, pattern);
+                    hp.Text = string.Join("", list);
+                }
+                
                 if (hp.Text.Length > 80)
                 {
                     hp.Text = "String.Length > 80. Skip";

@@ -64,7 +64,7 @@ namespace ErogeHelper.ViewModel
             set 
             {
                 string tmp = value;
-                if (!InvalidRegexp)
+                if (Regexp != null && !InvalidRegexp)
                 {
                     // value with regexp
                     var list = Regex.Split(tmp, Regexp);
@@ -114,6 +114,7 @@ namespace ErogeHelper.ViewModel
                     if (count > 5)
                     {
                         var index = tmp.IndexOf('\n') + 2;
+                        index = tmp.IndexOf('\n', index);
                         tmp = tmp.Substring(index);
                     }
                     targetItem.TotalText = tmp;
