@@ -57,6 +57,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Common\MojiDictApiTests.cs" />
+    <Compile Include="Common\QueryHCodeApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

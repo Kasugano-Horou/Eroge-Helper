@@ -11,6 +11,7 @@ using log4net;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Media.TextFormatting;
 using System.Xml.Linq;
 
@@ -36,11 +37,17 @@ namespace ErogeHelper.ViewModel
             {
                 // initialize
                 InsertCodeCommand = new RelayCommand(() => Textractor.InsertHook(InputCode), CanInsertCode);
-                SelectedHookChangeCommand = new RelayCommand(() => {
+                SelectedHookChangeCommand = new RelayCommand(() =>
+                {
                     log.Info($"Select hook {SelectedHook.Name}");
                     SelectedText = SelectedHook.Text;
                 });
                 SubmitCommand = new RelayCommand(SubmitMessage, CanSubmitMessage);
+                Task.Run(async () =>
+                {
+                    SearchedCode = await QueryHCodeApi.QueryCode(SimpleIoc.Default.GetInstance<GameInfo>().MD5);
+                    if (SearchedCode != "") log.Info($"Find code {SearchedCode} in Aniclan");
+                });
 
                 Textractor.DataEvent += DataRecvEventHandler;
             }
@@ -52,6 +59,8 @@ namespace ErogeHelper.ViewModel
         public RelayCommand InsertCodeCommand { get; private set; }
         public bool InvalidHookCood { get; set; }
         private bool CanInsertCode() => InputCode != "" && !InvalidHookCood;
+        private string searchedCode = "";
+        public string SearchedCode { get => searchedCode; set { searchedCode = value; RaisePropertyChanged(() => SearchedCode); } }
         #endregion
 
         #region Regexp
@@ -59,9 +68,9 @@ namespace ErogeHelper.ViewModel
         public bool InvalidRegexp { get; set; }
         private string selectedText;
         public string SelectedText
-        { 
+        {
             get => selectedText;
-            set 
+            set
             {
                 string tmp = value;
                 if (Regexp != null && !InvalidRegexp)

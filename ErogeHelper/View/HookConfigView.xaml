@@ -69,15 +69,10 @@
                                     <validation:InvalidCodeFormatValidationRule ValidatesOnTargetUpdated="True" />
                                 </Binding.ValidationRules>
                             </Binding>
-                        <!-- TODO: Request database -->
                         </ComboBox.Text>
-                        
-                        <ComboBoxItem>
-                            Apple
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            Banana
-                        </ComboBoxItem>
+
+                        <ComboBoxItem Content="{Binding SearchedCode}"/>
+
                     </ComboBox>
                     <Button Content="插入"
                             Command="{Binding InsertCodeCommand}"

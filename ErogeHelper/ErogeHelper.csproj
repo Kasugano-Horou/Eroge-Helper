@@ -130,6 +130,7 @@
     <Compile Include="Common\MecabHelper.cs" />
     <Compile Include="Common\MojiDictApi.cs" />
     <Compile Include="Common\OutlinedTextBlock.cs" />
+    <Compile Include="Common\QueryHCodeApi.cs" />
     <Compile Include="Common\Selector\TextTemplateSelector.cs" />
     <Compile Include="Common\Textractor.cs" />
     <Compile Include="Common\Utils.cs" />
