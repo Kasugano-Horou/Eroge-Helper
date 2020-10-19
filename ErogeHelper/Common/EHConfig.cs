@@ -12,7 +12,7 @@ namespace ErogeHelper.Common
 
         private static string Path = GalaSoft.MvvmLight.Ioc.SimpleIoc.Default.GetInstance<GameInfo>().ConfigPath;
 
-        public static void WriteConfig(string writeTo, EHProfile pro)
+        public static void FirstTimeWriteConfig(string writeTo, EHProfile pro)
         {
             var baseNode = new XElement("Profile",
                 new XAttribute("Name", value: pro.Name),
@@ -20,7 +20,8 @@ namespace ErogeHelper.Common
                 new XElement("HookCode", content: pro.HookCode),
                 new XElement("ThreadContext", content: pro.ThreadContext),
                 new XElement("SubThreadContext", content: pro.SubThreadContext),
-                new XElement("Regexp", content: pro.Regexp)
+                new XElement("Regexp", content: pro.Regexp),
+                new XElement("NoFocus", content: pro.NoFocus)
             );
 
             var tree = new XElement("EHConfig", baseNode);
@@ -46,6 +47,7 @@ namespace ErogeHelper.Common
                     Value = value
                 });
             }
+
             doc.Save(Path);
         }
 
@@ -81,5 +83,6 @@ namespace ErogeHelper.Common
         public long ThreadContext;
         public long SubThreadContext;
         public string Regexp;
+        public string NoFocus;
     }
 }

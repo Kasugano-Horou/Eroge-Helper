@@ -152,7 +152,7 @@ namespace ErogeHelper.ViewModel
             var gameInfo = (GameInfo)SimpleIoc.Default.GetInstance(typeof(GameInfo));
             if (!File.Exists(gameInfo.ConfigPath))
             {
-                EHConfig.WriteConfig(gameInfo.ConfigPath, new EHProfile()
+                EHConfig.FirstTimeWriteConfig(gameInfo.ConfigPath, new EHProfile()
                 {
                     Name = gameInfo.ProcessName + ".eh.config",
                     MD5 = gameInfo.MD5,
@@ -161,16 +161,16 @@ namespace ErogeHelper.ViewModel
                     ThreadContext = SelectedHook.Ctx,
                     SubThreadContext = SelectedHook.Ctx2,
                     Regexp = Regexp,
+                    NoFocus = "false",
                 });
             }
             else
             {
-                // load and write
-                var root = XElement.Load(gameInfo.ConfigPath).Elements("Profile");
                 // update 4 node
-                // TODO
-                // write to file
-                EHConfig.NewWriteConfig(root);
+                EHConfig.SetValue("HookCode", SelectedHook.Hookcode);
+                EHConfig.SetValue("ThreadContext", SelectedHook.Ctx.ToString());
+                EHConfig.SetValue("SubThreadContext", SelectedHook.Ctx2.ToString());
+                EHConfig.SetValue("Regexp", Regexp);
             }
 
             gameInfo.HookCode = SelectedHook.Hookcode;
