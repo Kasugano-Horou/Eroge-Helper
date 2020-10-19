@@ -156,7 +156,7 @@ namespace ErogeHelper.View
         {
             base.OnSourceInitialized(e);
 
-            if (bool.Parse(EHConfig.GetValue("NoFocus")) )
+            if (bool.Parse(EHConfig.GetValue(EHNode.NoFocus)) )
             {
                 var interopHelper = new WindowInteropHelper(this);
                 int exStyle = Hook.GetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE);

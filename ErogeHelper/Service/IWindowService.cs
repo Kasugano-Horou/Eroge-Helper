@@ -2,6 +2,6 @@
 {
     public interface IWindowService
     {
-        void OpenWindow();
+        void OpenGameView();
     }
 }

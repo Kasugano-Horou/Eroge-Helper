@@ -1,6 +1,5 @@
 ﻿using CommonServiceLocator;
 using ErogeHelper.Common;
-using ErogeHelper.Common.Validation;
 using ErogeHelper.Model;
 using ErogeHelper.Service;
 using GalaSoft.MvvmLight;
@@ -12,8 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Media.TextFormatting;
-using System.Xml.Linq;
 
 namespace ErogeHelper.ViewModel
 {
@@ -32,24 +29,31 @@ namespace ErogeHelper.ViewModel
             if (IsInDesignMode)
             {
                 InputCode = "/HS-10@21967:NUKITASHI2.EXE";
+                Regexp = @"[\x00-\xFF]";
+                SelectedText = "悠真くんを攻略すれば２１０円か。なるほどなぁ…";
+                ConsoleOutput = "Textractor inject kirikiri\n" +
+                                "Textractor inject SiglusEngine\n" +
+                                "Textractor inject Cs2";
             }
             else
             {
                 // initialize
                 InsertCodeCommand = new RelayCommand(() => Textractor.InsertHook(InputCode), CanInsertCode);
-                SelectedHookChangeCommand = new RelayCommand(() =>
-                {
-                    log.Info($"Select hook {SelectedHook.Name}");
-                    SelectedText = SelectedHook.Text;
-                });
+                SelectedHookChangeCommand = new RelayCommand(SelectedHookChangeHandle);
                 SubmitCommand = new RelayCommand(SubmitMessage, CanSubmitMessage);
+
+                if (File.Exists(SimpleIoc.Default.GetInstance<GameInfo>().ConfigPath))
+                {
+                    Regexp = EHConfig.GetValue(EHNode.Regexp);
+                }
+
+                Textractor.DataEvent += DataRecvEventHandler;
+
                 Task.Run(async () =>
                 {
                     SearchedCode = await QueryHCodeApi.QueryCode(SimpleIoc.Default.GetInstance<GameInfo>().MD5);
                     if (SearchedCode != "") log.Info($"Find code {SearchedCode} in Aniclan");
                 });
-
-                Textractor.DataEvent += DataRecvEventHandler;
             }
         }
         #endregion
@@ -58,13 +62,13 @@ namespace ErogeHelper.ViewModel
         public string InputCode { get; set; } = "";
         public RelayCommand InsertCodeCommand { get; private set; }
         public bool InvalidHookCood { get; set; }
-        private bool CanInsertCode() => InputCode != "" && !InvalidHookCood;
-        private string searchedCode = "";
+        private bool CanInsertCode() => InputCode != null && InputCode != "" && !InvalidHookCood;
+        private string searchedCode;
         public string SearchedCode { get => searchedCode; set { searchedCode = value; RaisePropertyChanged(() => SearchedCode); } }
         #endregion
 
         #region Regexp
-        public string Regexp { get; set; } = SimpleIoc.Default.GetInstance<GameInfo>().Regexp;
+        public string Regexp { get; set; } = "";
         public bool InvalidRegexp { get; set; }
         private string selectedText;
         public string SelectedText
@@ -73,7 +77,7 @@ namespace ErogeHelper.ViewModel
             set
             {
                 string tmp = value;
-                if (Regexp != null && !InvalidRegexp)
+                if (Regexp != "" && Regexp != null && !InvalidRegexp)
                 {
                     // value with regexp
                     var list = Regex.Split(tmp, Regexp);
@@ -136,8 +140,13 @@ namespace ErogeHelper.ViewModel
             });
         }
 
-        public HookParam SelectedHook { get; set; } = null;
+        public HookParam SelectedHook { get; set; }
         public RelayCommand SelectedHookChangeCommand { get; set; }
+        private void SelectedHookChangeHandle()
+        {
+            log.Info($"Select hook {SelectedHook.Name}");
+            SelectedText = SelectedHook.Text;
+        }
         #endregion
 
         #region SubmitCommand
@@ -166,11 +175,11 @@ namespace ErogeHelper.ViewModel
             }
             else
             {
-                // update 4 node
-                EHConfig.SetValue("HookCode", SelectedHook.Hookcode);
-                EHConfig.SetValue("ThreadContext", SelectedHook.Ctx.ToString());
-                EHConfig.SetValue("SubThreadContext", SelectedHook.Ctx2.ToString());
-                EHConfig.SetValue("Regexp", Regexp);
+                // update nodes
+                EHConfig.SetValue(EHNode.HookCode, SelectedHook.Hookcode);
+                EHConfig.SetValue(EHNode.ThreadContext, SelectedHook.Ctx.ToString());
+                EHConfig.SetValue(EHNode.SubThreadContext, SelectedHook.Ctx2.ToString());
+                EHConfig.SetValue(EHNode.Regexp, Regexp);
             }
 
             gameInfo.HookCode = SelectedHook.Hookcode;
@@ -179,7 +188,7 @@ namespace ErogeHelper.ViewModel
             gameInfo.Regexp = Regexp;
 
             if (WindowService != null)
-                WindowService.OpenWindow();
+                WindowService.OpenGameView();
         }
 
         private IWindowService WindowService

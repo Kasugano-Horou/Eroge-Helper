@@ -24,14 +24,14 @@ namespace ErogeHelper.ViewModel
             {
                 try
                 {
-                    var ret = EHConfig.GetValue("NoFocus");
+                    var ret = EHConfig.GetValue(EHNode.NoFocus);
                     noFocusToggel = bool.Parse(ret);
                 }
                 catch (NullReferenceException)
                 {
                     // create the node
                     noFocusToggel = false;
-                    EHConfig.SetValue("NoFocus", noFocusToggel.ToString());
+                    EHConfig.SetValue(EHNode.NoFocus, noFocusToggel.ToString());
                 }
                 return noFocusToggel;
             }
@@ -42,7 +42,7 @@ namespace ErogeHelper.ViewModel
                 else HandleUnCheckedEvent();
 
                 noFocusToggel = value;
-                EHConfig.SetValue("NoFocus", value.ToString());
+                EHConfig.SetValue(EHNode.NoFocus, value.ToString());
                 RaisePropertyChanged(() => NoFocusToggel);
                 log.Info($"Set TextWindow to {noFocusToggel}");
             }

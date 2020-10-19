@@ -1,6 +1,5 @@
 ﻿using ErogeHelper.Service;
 using GalaSoft.MvvmLight.Ioc;
-using System;
 using System.Linq;
 using System.Windows;
 
@@ -20,9 +19,9 @@ namespace ErogeHelper.View
         }
 
         /// <summary>
-        /// Submit 打开主窗口
+        /// Submit 提交打开GameView
         /// </summary>
-        public void OpenWindow()
+        public void OpenGameView()
         {
             var window = Application.Current.Windows.OfType<GameView>().FirstOrDefault();
             if (window == null)

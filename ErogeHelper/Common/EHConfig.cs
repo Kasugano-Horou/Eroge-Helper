@@ -29,20 +29,20 @@ namespace ErogeHelper.Common
             log.Info("Write config file succeed");
         }
 
-        public static void SetValue(string Node, string value)
+        public static void SetValue(EHNode Node, string value)
         {
             var doc = XDocument.Load(Path);
 
             var root = doc.Element("EHConfig");
             var profile = root.Element("Profile");
-            var targetNode = profile.Element(Node);
+            var targetNode = profile.Element(Node.Value);
             if (targetNode != null) 
             {
                 targetNode.Value = value;
             }
             else
             {
-                profile.Add(new XElement(Node)
+                profile.Add(new XElement(Node.Value)
                 {
                     Value = value
                 });
@@ -51,13 +51,13 @@ namespace ErogeHelper.Common
             doc.Save(Path);
         }
 
-        public static string GetValue(string Node)
+        public static string GetValue(EHNode Node)
         {
             var root = XElement.Load(Path).Element("Profile");
             string ret;
             try
             {
-                ret = root.Element(Node).Value;
+                ret = root.Element(Node.Value).Value;
             }
             catch (NullReferenceException ex)
             {
@@ -84,5 +84,18 @@ namespace ErogeHelper.Common
         public long SubThreadContext;
         public string Regexp;
         public string NoFocus;
+    }
+
+    public class EHNode
+    {
+        private EHNode(string value) { Value = value; }
+
+        public string Value { get; set; }
+
+        public static EHNode HookCode { get { return new EHNode("HookCode"); } }
+        public static EHNode ThreadContext { get { return new EHNode("ThreadContext"); } }
+        public static EHNode SubThreadContext { get { return new EHNode("SubThreadContext"); } }
+        public static EHNode Regexp { get { return new EHNode("Regexp"); } }
+        public static EHNode NoFocus { get { return new EHNode("NoFocus"); } }
     }
 }
