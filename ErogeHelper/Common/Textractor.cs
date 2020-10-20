@@ -26,27 +26,16 @@ namespace ErogeHelper.Common
             createthread = CreateThreadHandle;
             output = OutputHandle;
             removethread = RemoveThreadHandle;
-            callback = CallBackHandle;
+            callback = OnConnectCallBackHandle;
 
-            TextHostInit(callback, callback, createthread, removethread, output);
-
-            log.Info("initilize over.");
+            TextHostInit(callback, (_) => { }, createthread, removethread, output);
 
             foreach (Process p in gameInfo.ProcList)
             {
                 InjectProcess((uint)p.Id);
                 log.Info($"attach to PID {p.Id}.");
             }
-
-            if (File.Exists(gameInfo.ConfigPath))
-            {
-                foreach (Process p in gameInfo.ProcList)
-                {
-                    TextHostLib.InsertHook((uint)p.Id, gameInfo.HookCode);
-                    log.Info($"Try insert code {gameInfo.HookCode} to PID {p.Id}");
-                }
-            }
-                
+            log.Info("initilize over.");
         }
         static private OnOutputText output;
         static private ProcessCallback callback;
@@ -100,7 +89,13 @@ namespace ErogeHelper.Common
 
         static public void RemoveThreadHandle(long threadId) { }
 
-        static public void CallBackHandle(uint processId) { }
+        static public void OnConnectCallBackHandle(uint processId)
+        {
+            if (File.Exists(gameInfo.ConfigPath))
+            {
+                InsertHook(gameInfo.HookCode);
+            }
+        }
         #endregion
 
         public static void InsertHook(string hookcode)

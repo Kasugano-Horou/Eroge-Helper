@@ -1,7 +1,6 @@
 ﻿using ErogeHelper.Common;
 using ErogeHelper.Model;
 using ErogeHelper.View;
-using ErogeHelper.ViewModel;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
 using Hardcodet.Wpf.TaskbarNotification;
@@ -11,9 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows;
-using System.Xml.Linq;
 
 namespace ErogeHelper
 {
@@ -64,7 +61,7 @@ namespace ErogeHelper
             gameInfo.MD5 = Utils.GetMD5(gameInfo.Path);
 
             log.Info($"Game's path: {e.Args[0]}");
-            log.Info($"Locate Emulator status: {e.Args.Contains("/le")}");
+            log.Info($"Locate Emulator statu: {e.Args.Contains("/le")}");
 
             if (e.Args.Contains("/le"))
             {

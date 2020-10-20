@@ -45,7 +45,7 @@
         <Grid  Margin="12 12 12 12">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
-                <RowDefinition Height="120" />
+                <RowDefinition Height="130" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
@@ -92,7 +92,8 @@
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox>
-                    <Label Content="选择的文本" />
+                    <Label Content="选择的文本"
+                           Margin="0 10 0 0"/>
                     <TextBlock Text="{Binding SelectedText}"
                                TextWrapping="Wrap"
                                Foreground="Red"/>

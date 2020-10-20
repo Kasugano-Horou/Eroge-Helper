@@ -116,7 +116,7 @@ namespace ErogeHelper.ViewModel
                 if (targetItem == null)
                 {
                     hp.TotalText = hp.Text;
-                    HookMapData.Add(hp);
+                    HookMapData.Insert(0, hp);
                 }
                 else
                 {
