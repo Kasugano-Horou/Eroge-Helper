@@ -144,7 +144,7 @@ namespace ErogeHelper.ViewModel
         public RelayCommand SelectedHookChangeCommand { get; set; }
         private void SelectedHookChangeHandle()
         {
-            log.Info($"Select hook {SelectedHook.Name}");
+            log.Info($"Select hook {SelectedHook.Hookcode}");
             SelectedText = SelectedHook.Text;
         }
         #endregion
@@ -156,14 +156,12 @@ namespace ErogeHelper.ViewModel
 
         private void SubmitMessage()
         {
-            log.Info($"Selected Hook: {SelectedHook.Hookcode}");
-
             var gameInfo = (GameInfo)SimpleIoc.Default.GetInstance(typeof(GameInfo));
             if (!File.Exists(gameInfo.ConfigPath))
             {
-                EHConfig.FirstTimeWriteConfig(gameInfo.ConfigPath, new EHProfile()
+                EHConfig.FirstTimeWriteConfig(new EHProfile()
                 {
-                    Name = gameInfo.ProcessName + ".eh.config",
+                    Name = gameInfo.ProcessName + "exe.eh.config",
                     MD5 = gameInfo.MD5,
 
                     HookCode = SelectedHook.Hookcode,

@@ -10,9 +10,9 @@ namespace ErogeHelper.Common
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(EHConfig));
 
-        private static string Path = GalaSoft.MvvmLight.Ioc.SimpleIoc.Default.GetInstance<GameInfo>().ConfigPath;
+        private static readonly string Path = GalaSoft.MvvmLight.Ioc.SimpleIoc.Default.GetInstance<GameInfo>().ConfigPath;
 
-        public static void FirstTimeWriteConfig(string writeTo, EHProfile pro)
+        public static void FirstTimeWriteConfig(EHProfile pro)
         {
             var baseNode = new XElement("Profile",
                 new XAttribute("Name", value: pro.Name),
@@ -25,24 +25,23 @@ namespace ErogeHelper.Common
             );
 
             var tree = new XElement("EHConfig", baseNode);
-            tree.Save(writeTo);
+            tree.Save(Path);
             log.Info("Write config file succeed");
         }
 
-        public static void SetValue(EHNode Node, string value)
+        public static void SetValue(EHNode node, string value)
         {
             var doc = XDocument.Load(Path);
+            var profile = doc.Element(EHNode.EHConfig.Name).Element(EHNode.Profile.Name);
 
-            var root = doc.Element("EHConfig");
-            var profile = root.Element("Profile");
-            var targetNode = profile.Element(Node.Value);
-            if (targetNode != null) 
+            var oldNode = profile.Element(node.Name);
+            if (oldNode != null) 
             {
-                targetNode.Value = value;
+                oldNode.Value = value;
             }
             else
             {
-                profile.Add(new XElement(Node.Value)
+                profile.Add(new XElement(node.Name)
                 {
                     Value = value
                 });
@@ -51,27 +50,20 @@ namespace ErogeHelper.Common
             doc.Save(Path);
         }
 
-        public static string GetValue(EHNode Node)
+        public static string GetValue(EHNode node)
         {
-            var root = XElement.Load(Path).Element("Profile");
-            string ret;
             try
             {
-                ret = root.Element(Node.Value).Value;
-            }
-            catch (NullReferenceException ex)
-            {
-                throw ex;
-            }
-            return ret;
-        }
+                var doc = XElement.Load(Path);
+                var profile = doc.Element("Profile");
 
-        internal static void NewWriteConfig(IEnumerable<XElement> nodeList)
-        {
-            var baseNode = new XElement("Profile", nodeList);
-            var tree = new XElement("EHConfig", baseNode);
-            tree.Save(Path);
-            log.Info("Update config file");
+                return profile.Element(node.Name).Value;
+            }
+            // should not be happend
+            catch (NullReferenceException)
+            {
+                throw new NullReferenceException($"致命错误: 可能是配置文件中{node.Name}节点不存在");
+            }
         }
     }
 
@@ -88,14 +80,18 @@ namespace ErogeHelper.Common
 
     public class EHNode
     {
-        private EHNode(string value) { Value = value; }
+        private EHNode(string value) { Name = value; }
 
-        public string Value { get; set; }
+        public string Name { get; set; }
+
+        public static EHNode EHConfig { get { return new EHNode("EHConfig"); } }
+        public static EHNode Profile { get { return new EHNode("Profile"); } }
 
         public static EHNode HookCode { get { return new EHNode("HookCode"); } }
         public static EHNode ThreadContext { get { return new EHNode("ThreadContext"); } }
         public static EHNode SubThreadContext { get { return new EHNode("SubThreadContext"); } }
         public static EHNode Regexp { get { return new EHNode("Regexp"); } }
         public static EHNode NoFocus { get { return new EHNode("NoFocus"); } }
+        public static EHNode NoFocssus { get { return new EHNode("NoFosscus"); } }
     }
 }

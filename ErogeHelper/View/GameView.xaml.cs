@@ -156,7 +156,20 @@ namespace ErogeHelper.View
         {
             base.OnSourceInitialized(e);
 
-            if (bool.Parse(EHConfig.GetValue(EHNode.NoFocus)) )
+            // Do upward compatible
+            var NoFocusFlag = false;
+            try
+            {
+                var ret = EHConfig.GetValue(EHNode.NoFocus);
+                NoFocusFlag = bool.Parse(ret);
+            }
+            catch (NullReferenceException)
+            {
+                // create the node
+                EHConfig.SetValue(EHNode.NoFocus, NoFocusFlag.ToString());
+            }
+
+            if (NoFocusFlag)
             {
                 var interopHelper = new WindowInteropHelper(this);
                 int exStyle = Hook.GetWindowLong(interopHelper.Handle, Hook.GWL_EXSTYLE);
@@ -171,6 +184,7 @@ namespace ErogeHelper.View
                 {
                     timer.Stop();
                 }
+                // Still get a little bad exprience with right click taskbar icon
                 if (gameHWnd == Hook.GetForegroundWindow())
                 {
                     Hook.BringWindowToTop(pointer.Handle);

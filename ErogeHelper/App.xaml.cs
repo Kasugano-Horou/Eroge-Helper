@@ -38,11 +38,11 @@ namespace ErogeHelper
             //new TaskbarView();
             notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
             log4net.Config.XmlConfigurator.Configure();
-            // AppDomain.CurrentDomain.UnhandledException += ErrorHandle 非ui线程
+            // AppDomain.CurrentDomain.UnhandledException += GlobalErrorHandle 非ui线程
             DispatcherUnhandledException += (s, eventArgs) => {
-                log.Error($"Unknown Error {eventArgs.Exception}");
-                MessageBox.Show(eventArgs.Exception.ToString());
-                // TODO: 复制粘贴板转到github
+                log.Error(eventArgs.Exception);
+                MessageBox.Show(eventArgs.Exception.ToString(), "Eroge Helper");
+                // TODO: 复制粘贴板转到github. Frendly error message
             };
             log.Info("Started Logging");
             log.Info($"Enviroment directory: {Directory.GetCurrentDirectory()}");
@@ -156,16 +156,10 @@ namespace ErogeHelper
                 // Cheak if there is eh.config file
                 if (File.Exists(gameInfo.ConfigPath))
                 {
-                    // Read xml file
-                    var profile = XElement.Load(gameInfo.ConfigPath).Element("Profile");
-
-                    // TODO: 试探MD5是否与配置文件相同。若不同，弹窗提醒exe程序有变动，可能需要重新选取hook以读取文本
-                    //if ( !gameInfo.MD5.Equals(profile.Element("MD5").Value) )
-
-                    gameInfo.HookCode = profile.Element("HookCode").Value;
-                    gameInfo.ThreadContext = long.Parse(profile.Element("ThreadContext").Value);
-                    gameInfo.SubThreadContext = long.Parse(profile.Element("SubThreadContext").Value);
-                    gameInfo.Regexp = profile.Element("Regexp").Value;
+                    gameInfo.HookCode = EHConfig.GetValue(EHNode.HookCode);
+                    gameInfo.ThreadContext = long.Parse(EHConfig.GetValue(EHNode.ThreadContext));
+                    gameInfo.SubThreadContext = long.Parse(EHConfig.GetValue(EHNode.SubThreadContext));
+                    gameInfo.Regexp = EHConfig.GetValue(EHNode.Regexp);
 
                     log.Info($"Get HCode {gameInfo.HookCode} from file {gameInfo.ProcessName}.exe.eh.config");
                     // Display text window
