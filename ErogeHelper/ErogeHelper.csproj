@@ -138,10 +138,11 @@
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\Validation\InvalidCodeFormatValidationRule.cs" />
     <Compile Include="Common\Validation\RegExpValidationRule.cs" />
-    <Compile Include="Model\GameInfo.cs" />
+    <Compile Include="Model\Singleton\GameInfo.cs" />
     <Compile Include="Model\HookBindingList.cs" />
     <Compile Include="Model\HookParam.cs" />
     <Compile Include="Model\SingleTextItem.cs" />
+    <Compile Include="Model\WordCardInfo.cs" />
     <Compile Include="Service\DesignHookConfigDataService.cs" />
     <Compile Include="Service\HookConfigDataService.cs" />
     <Compile Include="Service\IHookConfigDataService.cs" />

@@ -66,16 +66,22 @@ namespace ErogeHelper
             if (e.Args.Contains("/le"))
             {
                 // Use Locate Emulator
-                // LE AccessViolationException
-                Process.Start(new ProcessStartInfo
+                try
                 {
-                    FileName = Directory.GetCurrentDirectory() + @"\libs\x86\LEProc.exe",
-                    UseShellExecute = false,
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = Directory.GetCurrentDirectory() + @"\libs\x86\LEProc.exe",
+                        UseShellExecute = false,
 
-                    Arguments = File.Exists(gameInfo.Path + ".le.config") ?
-                    $"-run \"{gameInfo.Path}\"" :
-                    $"\"{gameInfo.Path}\""
-                });
+                        Arguments = File.Exists(gameInfo.Path + ".le.config") 
+                                               ? $"-run \"{gameInfo.Path}\""
+                                               : $"\"{gameInfo.Path}\""
+                    });
+                }
+                catch(AccessViolationException)
+                {
+                    throw new AccessViolationException("LE执行出现内存错误，这可能是游戏进程还未退出，问题不大请重新尝试用LE启动游戏~");
+                }
             }
             else
             {
@@ -137,7 +143,7 @@ namespace ErogeHelper
                 gameInfo.HWndProc = Utils.FindHWndProc(gameInfo.ProcList);
 
                 // timeout
-                if (totalTime.Elapsed.TotalSeconds > 7 && gameInfo.HWndProc.MainWindowHandle == IntPtr.Zero)
+                if (totalTime.Elapsed.TotalSeconds > 7 && gameInfo.HWndProc == null)
                 {
                     log.Info("Timeout! Find MainWindowHandle Faied");
                     MessageBox.Show("(超时)没能找到游戏窗口！", "ErogeHelper");

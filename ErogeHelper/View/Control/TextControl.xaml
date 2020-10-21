@@ -7,12 +7,13 @@
              xmlns:selector="clr-namespace:ErogeHelper.Common.Selector"
              xmlns:common="clr-namespace:ErogeHelper.Common"
              mc:Ignorable="d" 
-             d:DesignWidth="400"
+             d:DesignWidth="600"
              MinHeight="12"
              d:DataContext="{d:DesignInstance vm:GameViewModel, 
                                               IsDesignTimeCreatable=True}"
              xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform" 
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+             >
 
     <UserControl.Resources>
         <DataTemplate x:Key="TextDefaultTemplate">
@@ -84,7 +85,7 @@
                     <Border.Background>
                         <ImageBrush ImageSource="{Binding SubMarkColor}" />
                     </Border.Background>
-                    <common:OutlinedTextBlock Stroke="Black" 
+                    <common:OutlinedTextBlock x:Name="TextItem" Stroke="Black" 
                                               HorizontalAlignment="Center"
                                               ClipToBounds="False"
                                               FontSize="30"  
@@ -103,7 +104,7 @@
                 <common:OutlinedTextBlock Stroke="Black" 
                                           HorizontalAlignment="Center"
                                           ClipToBounds="False"
-                                          FontSize="16"  
+                                          FontSize="15"  
                                           Fill="white"
                                           StrokePosition="Outside"
                                           StrokeThickness="1" Text="{Binding RubyText}">
@@ -118,8 +119,10 @@
                                        OutLineBottomTemplate="{StaticResource OutLineBottomTemplate}"/>
     </UserControl.Resources>
 
-    <StackPanel>
-        <TextBlock FontSize="24"
+    <DockPanel >
+        <!-- Insert Right Toolbar Here -->
+        <TextBlock DockPanel.Dock="Top" 
+                   FontSize="24"
                    FontFamily="ＭＳ ゴシック"
                    Foreground="Black">
             <ItemsControl ItemsSource="{Binding DisplayTextCollection}"
@@ -131,5 +134,5 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </TextBlock>
-    </StackPanel>
+    </DockPanel>
 </UserControl>

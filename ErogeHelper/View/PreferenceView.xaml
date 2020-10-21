@@ -15,6 +15,8 @@
                           ToolTip="（如果你在全屏模式下点击查词会弹回桌面，请打开这个）"
                           IsChecked="{Binding NoFocusToggel}"/>
         </StackPanel>
+        <Border BorderThickness="1"
+                BorderBrush="{DynamicResource MaterialDesignDivider}" />
 
     </StackPanel>
 </Window>

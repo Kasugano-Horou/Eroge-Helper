@@ -7,12 +7,8 @@ using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace ErogeHelper.ViewModel
 {
@@ -32,6 +28,16 @@ namespace ErogeHelper.ViewModel
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(GameViewModel));
 
+        public double MainHeight { get; set; }
+        public double MainWidth { get; set; }
+        public double MainLeft { get; set; }
+        public double MainTop { get; set; }
+
+        private readonly MecabHelper _mecabHelper;
+        private readonly MojiDictApi _mojiHelper;
+
+        public ObservableCollection<SingleTextItem> DisplayTextCollection { get; set; }
+        public TextTemplateType TextTemplateConfig { get; set; } = TextTemplateType.Default;
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -45,8 +51,6 @@ namespace ErogeHelper.ViewModel
             if (IsInDesignMode)
             {
                 // Code runs in Blend --> create design time data.
-                ClientAreaMargin = new Thickness(10, 30, 10, 10);
-                TextAreaVisibility = Visibility.Visible;
                 // 悠真(ユウマ)くんを攻略(コウリャク)すれば２１０円(エン)か。なるほどなぁ…
                 #region Render Model
                 DisplayTextCollection.Add(new SingleTextItem
@@ -160,7 +164,7 @@ namespace ErogeHelper.ViewModel
                 {
                     Word = "買う",
                     Ruby = "かう",
-                    IsProcess = true, // fake
+                    IsProcess = false,
                     Hinshi = "動詞",
                     Kaisetsu = new ObservableCollection<string>()
                     {
@@ -168,29 +172,32 @@ namespace ErogeHelper.ViewModel
                         "2. 多半，大都。（ふつう。一般に。たいてい。）"
                     }
                 };
+
+                MainHeight = 800;
+                MainWidth = 600;
             }
             else
             {
                 // Code runs "for real"
-                TextAreaVisibility = Visibility.Collapsed;
-                Topmost = true;
-                TextPanelPin = true;
-
-                Textractor.SelectedDataEvent += SelectedDataEventHandler;
+                CardInfo = new WordCardInfo();
                 _mecabHelper = new MecabHelper();
                 _mojiHelper = new MojiDictApi();
                 WordSearchCommand = new RelayCommand<SingleTextItem>(WordSearch, CanWordSearch);
-                CardInfo = new WordCardInfo();
                 PopupCloseCommand = new RelayCommand(() =>
                 {
                     Messenger.Default.Send(new NotificationMessage("CloseCard"));
                 });
+                PinCommand = new RelayCommand(() => 
+                {
+                    TextPanelPin = !TextPanelPin;
+                    log.Info(TextPanelPin);
+                });
+
+                Textractor.SelectedDataEvent += SelectedDataEventHandler;
             }
         }
 
-        private readonly MecabHelper _mecabHelper;
-        private readonly MojiDictApi _mojiHelper;
-
+        #region Text Data Dispatch
         private void SelectedDataEventHandler(object sender, HookParam hp)
         {
             DispatcherHelper.CheckBeginInvokeOnUI(() =>
@@ -203,10 +210,10 @@ namespace ErogeHelper.ViewModel
                     var list = Regex.Split(hp.Text, pattern);
                     hp.Text = string.Join("", list);
                 }
-                
+
                 if (hp.Text.Length > 80)
                 {
-                    hp.Text = "String.Length > 80. Skip";
+                    hp.Text = "长度大于80的文本自动跳过";
                 }
 
                 var mecabWordList = _mecabHelper.SentenceHandle(hp.Text);
@@ -222,14 +229,10 @@ namespace ErogeHelper.ViewModel
                 }
             });
         }
+        #endregion
 
-        public bool Topmost { get; set; }
-        public Thickness ClientAreaMargin { get; set; }
-        public Visibility TextAreaVisibility { get; set; }
-
-        public ObservableCollection<SingleTextItem> DisplayTextCollection { get; set; }
-        public TextTemplateType TextTemplateConfig { get; set; } = TextTemplateType.Default;
-
+        #region TextPin
+        // Can't be init in constructor
         private bool _textPanelPin;
 
         public bool TextPanelPin
@@ -239,21 +242,28 @@ namespace ErogeHelper.ViewModel
             {
                 if (value == true)
                 {
-                    TextAreaVisibility = Visibility.Visible;
                     Messenger.Default.Send(new NotificationMessage("MakeTextPanelPin"));
                 }
                 else
                 {
-                    TextAreaVisibility = Visibility.Collapsed;
                     Messenger.Default.Send(new NotificationMessage("CancelTextPanelPin"));
                 }
                 _textPanelPin = value;
             }
         }
 
+        public RelayCommand PinCommand { get; set; }
+        #endregion
+
+        #region MojiCard Search
+        private WordCardInfo cardInfo;
+        public WordCardInfo CardInfo { get => cardInfo; set { cardInfo = value; RaisePropertyChanged(nameof(cardInfo)); } }
         public RelayCommand<SingleTextItem> WordSearchCommand { get; private set; }
+        public RelayCommand PopupCloseCommand { get; set; }
+
         private bool CanWordSearch(SingleTextItem item)
         {
+            // This should be same as item.SubMarkColor
             if (item.PartOfSpeed == "助詞")
             {
                 return false;
@@ -300,26 +310,7 @@ namespace ErogeHelper.ViewModel
                 CardInfo.Hinshi = "空空";
                 CardInfo.Kaisetsu.Add("没有找到呀!");
             }
-
         }
-
-        private WordCardInfo cardInfo;
-        public WordCardInfo CardInfo { get => cardInfo; set { cardInfo = value; RaisePropertyChanged(nameof(cardInfo)); } }
-        public RelayCommand PopupCloseCommand { get; set; }
-    }
-
-    public class WordCardInfo : ViewModelBase
-    {
-        private bool isProcess; // procssing flag
-        private string ruby;
-        private string hinshi; // 品詞
-        private string word;
-        private ObservableCollection<string> kaisetsu = new ObservableCollection<string>();
-
-        public string Word { get => word; set { word = value; RaisePropertyChanged(nameof(word)); } }
-        public string Hinshi { get => hinshi; set { hinshi = value; RaisePropertyChanged(nameof(hinshi)); } }
-        public string Ruby { get => ruby; set { ruby = value; RaisePropertyChanged(nameof(ruby)); } }
-        public ObservableCollection<string> Kaisetsu { get => kaisetsu; set { kaisetsu = value; RaisePropertyChanged(nameof(kaisetsu)); } }
-        public bool IsProcess { get => isProcess; set { isProcess = value; RaisePropertyChanged(nameof(isProcess)); } }
+        #endregion
     }
 }

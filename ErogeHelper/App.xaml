@@ -8,6 +8,8 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Application.Resources>
         <ResourceDictionary>
+            <SolidColorBrush Color="Black" Opacity=".1" x:Key="BlackHalfOpacityBrush"/>
+
             <vm:ViewModelLocator x:Key="Locator" 
                            d:IsDataSource="True" 
                            xmlns:vm="clr-namespace:ErogeHelper.ViewModel" />

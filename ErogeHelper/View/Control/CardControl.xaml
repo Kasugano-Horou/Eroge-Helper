@@ -16,7 +16,7 @@
              d:DataContext="{d:DesignInstance vm:GameViewModel, 
                                               IsDesignTimeCreatable=True}" >
     <UserControl.Resources>
-        <convert:BoolToVisibilityConverter x:Key="ShowDetail"/>
+        <convert:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
     <materialDesign:Card Margin="16" 
                          Padding="16,16,0,16"
@@ -25,6 +25,7 @@
                          MaxHeight="400">
         <ScrollViewer Margin="0,0,0,0">
             <StackPanel>
+                <!-- Title and Close button-->
                 <DockPanel>
                     <Label DockPanel.Dock="Left" 
                            Style="{DynamicResource MaterialDesignLabel}"
@@ -45,8 +46,9 @@
 
                 <ProgressBar IsIndeterminate="{Binding CardInfo.IsProcess}" />
 
-                <!--{Binding CardInfo.IsProcess, Converter={StaticResource ShowDetail} }-->
-                <StackPanel Visibility="Visible">
+                <!-- Main Card Area-->
+                <StackPanel Visibility="{Binding CardInfo.IsProcess,
+                                                 Converter={StaticResource ResourceKey=BoolToVisibilityConverter}}">
                     <TextBlock Style="{DynamicResource MaterialDesignTextBlock}"
                                FontSize="16"
                                Text="{Binding CardInfo.Ruby}"

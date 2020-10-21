@@ -1,13 +1,11 @@
 ﻿using ErogeHelper.Model;
 using GalaSoft.MvvmLight.Ioc;
-using GalaSoft.MvvmLight.Messaging;
 using log4net;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Windows;
 using static ErogeHelper.Common.Textractor.TextHostLib;
 
 namespace ErogeHelper.Common

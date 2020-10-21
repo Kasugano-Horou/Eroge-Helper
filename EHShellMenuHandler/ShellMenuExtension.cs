@@ -91,13 +91,13 @@ namespace EHShellMenuHandler
 
             var DirectStartItem = new ToolStripMenuItem
             {
-                Text = "Direct start game",
+                Text = "直接启动游戏",
                 Image = Resource.Lime
             };
 
             var LEStartItem = new ToolStripMenuItem
             {
-                Text = "Use LE start game",
+                Text = "使用Locate Emulator启动",
                 Image = Resource.Lime
             };
 

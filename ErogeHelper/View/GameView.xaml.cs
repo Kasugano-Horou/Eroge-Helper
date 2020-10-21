@@ -5,7 +5,6 @@ using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
@@ -23,33 +22,14 @@ namespace ErogeHelper.View
         private static readonly ILog log = LogManager.GetLogger(typeof(GameView));
 
         public IntPtr gameHWnd = IntPtr.Zero;
-        private bool textPanelPin = false;
 
         public GameView()
         {
             log.Info("Initialize");
-            Messenger.Default.Register<NotificationMessage>(this, NotificationMessageReceived);
-
             InitializeComponent(); // VM Initialize -> Component Initialize
 
             SetGameWindowHook();
-        }
-
-        private void NotificationMessageReceived(NotificationMessage obj)
-        {
-            if (obj.Notification == "MakeTextPanelPin")
-            {
-                log.Info("Set TextPanel Pin");
-                textPanelPin = true;
-            }
-            if (obj.Notification == "OpenCard")
-            {
-                WordCard.IsOpen = true;
-            }
-            if (obj.Notification == "CloseCard")
-            {
-                WordCard.IsOpen = false;
-            }
+            Messenger.Default.Register<NotificationMessage>(this, NotificationMessageReceived);
         }
 
         #region Window Follow Game Initialize
@@ -150,8 +130,11 @@ namespace ErogeHelper.View
                 Closed -= Window_Closed;
                 Application.Current.Shutdown();
             });
+            // TODO: New Version Tip
         }
 
+        #region When Window Loding
+        // 设置窗口焦点状态与BringToTop计时器
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
@@ -197,13 +180,16 @@ namespace ErogeHelper.View
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            // Clear red border in design mode
             WinArea.SetValue(StyleProperty, null);
             ClientArea.SetValue(StyleProperty, null);
-            if (textPanelPin == true)
-            {
-                TriggerPopupBorder.Visibility = Visibility.Collapsed;
-            }
+            // Hide TextArea by default
+            TextArea.Visibility = Visibility.Collapsed;
         }
+        #endregion
+
+        #region TextWindow Pin
+        private bool textPanelPin = false;
 
         private void TriggerPopupBorder_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -220,6 +206,37 @@ namespace ErogeHelper.View
             {
                 TextArea.Visibility = Visibility.Collapsed;
                 TriggerPopupBorder.Visibility = Visibility.Visible;
+            }
+        }
+        #endregion
+
+        private void NotificationMessageReceived(NotificationMessage obj)
+        {
+            // Must called after InitializeComponent() finished
+
+            if (obj.Notification == "MakeTextPanelPin")
+            {
+                log.Info("Set TextPanel Pin");
+                textPanelPin = true;
+                TriggerPopupBorder.Visibility = Visibility.Collapsed;
+                TextArea.Visibility = Visibility.Visible;
+                TextArea.Background = Background;
+            }
+            if (obj.Notification == "CancelTextPanelPin")
+            {
+                log.Info("Cancel TextPanel Pin");
+                textPanelPin = false;
+                TriggerPopupBorder.Visibility = Visibility.Visible;
+                TextArea.Visibility = Visibility.Collapsed;
+                TextArea.Background = Brushes.Black;
+            }
+            if (obj.Notification == "OpenCard")
+            {
+                WordCard.IsOpen = true;
+            }
+            if (obj.Notification == "CloseCard")
+            {
+                WordCard.IsOpen = false;
             }
         }
     }
