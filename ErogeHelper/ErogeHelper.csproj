@@ -143,8 +143,11 @@
     <Compile Include="Model\HookParam.cs" />
     <Compile Include="Model\SingleTextItem.cs" />
     <Compile Include="Model\WordCardInfo.cs" />
+    <Compile Include="Service\DesignGameDataService.cs" />
     <Compile Include="Service\DesignHookConfigDataService.cs" />
+    <Compile Include="Service\GameDataService.cs" />
     <Compile Include="Service\HookConfigDataService.cs" />
+    <Compile Include="Service\IGameDataService.cs" />
     <Compile Include="Service\IHookConfigDataService.cs" />
     <Compile Include="Service\IWindowService.cs" />
     <Compile Include="ViewModel\GameViewModel.cs" />

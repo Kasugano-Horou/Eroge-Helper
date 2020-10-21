@@ -1,5 +1,6 @@
 using ErogeHelper.Common;
 using ErogeHelper.Model;
+using ErogeHelper.Service;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
@@ -36,129 +37,23 @@ namespace ErogeHelper.ViewModel
         private readonly MecabHelper _mecabHelper;
         private readonly MojiDictApi _mojiHelper;
 
+        private readonly IGameDataService _dataService;
         public ObservableCollection<SingleTextItem> DisplayTextCollection { get; set; }
         public TextTemplateType TextTemplateConfig { get; set; } = TextTemplateType.Default;
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public GameViewModel()
+        public GameViewModel(IGameDataService dataService)
         {
             log.Info("Initialize");
-
-            DisplayTextCollection = new ObservableCollection<SingleTextItem>();
             TextTemplateConfig = TextTemplateType.OutLineKanaBottom;
+
+            _dataService = dataService;
+            DisplayTextCollection = _dataService.InitTextData(TextTemplateConfig);
 
             if (IsInDesignMode)
             {
                 // Code runs in Blend --> create design time data.
-                // 悠真(ユウマ)くんを攻略(コウリャク)すれば２１０円(エン)か。なるほどなぁ…
-                #region Render Model
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "ユウマ",
-                    Text = "悠真",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "名詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "",
-                    Text = "くん",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "名詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "",
-                    Text = "を",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "助詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "コウリャク",
-                    Text = "攻略",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "名詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "",
-                    Text = "すれ",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "動詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "",
-                    Text = "ば",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "助詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "",
-                    Text = "２",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "名詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "",
-                    Text = "１",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "名詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "",
-                    Text = "０",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "名詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "エン",
-                    Text = "円",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "名詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "",
-                    Text = "か",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "助詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "",
-                    Text = "。",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "記号"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "",
-                    Text = "なるほど",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "感動詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "",
-                    Text = "なぁ",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "助詞"
-                });
-                DisplayTextCollection.Add(new SingleTextItem
-                {
-                    RubyText = "",
-                    Text = "…",
-                    TextTemplateType = TextTemplateConfig,
-                    PartOfSpeed = "記号"
-                });
-                #endregion
 
                 CardInfo = new WordCardInfo()
                 {
@@ -183,10 +78,7 @@ namespace ErogeHelper.ViewModel
                 _mecabHelper = new MecabHelper();
                 _mojiHelper = new MojiDictApi();
                 WordSearchCommand = new RelayCommand<SingleTextItem>(WordSearch, CanWordSearch);
-                PopupCloseCommand = new RelayCommand(() =>
-                {
-                    Messenger.Default.Send(new NotificationMessage("CloseCard"));
-                });
+                PopupCloseCommand = new RelayCommand(() => Messenger.Default.Send(new NotificationMessage("CloseCard")));
                 PinCommand = new RelayCommand(() => 
                 {
                     TextPanelPin = !TextPanelPin;
@@ -233,8 +125,8 @@ namespace ErogeHelper.ViewModel
 
         #region TextPin
         // Can't be init in constructor
+        public RelayCommand PinCommand { get; set; }
         private bool _textPanelPin;
-
         public bool TextPanelPin
         {
             get => _textPanelPin;
@@ -251,8 +143,6 @@ namespace ErogeHelper.ViewModel
                 _textPanelPin = value;
             }
         }
-
-        public RelayCommand PinCommand { get; set; }
         #endregion
 
         #region MojiCard Search

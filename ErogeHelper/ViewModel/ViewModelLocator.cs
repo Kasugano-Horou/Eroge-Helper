@@ -37,11 +37,13 @@ namespace ErogeHelper.ViewModel
             {
                 // Create design time view services and models
                 SimpleIoc.Default.Register<IHookConfigDataService, DesignHookConfigDataService>();
+                SimpleIoc.Default.Register<IGameDataService, DesignGameDataService>();
             }
             else
             {
                 // Create run time view services and models
                 SimpleIoc.Default.Register<IHookConfigDataService, HookConfigDataService>();
+                SimpleIoc.Default.Register<IGameDataService, GameDataService>();
             }
 
             SimpleIoc.Default.Register<GameViewModel>();
