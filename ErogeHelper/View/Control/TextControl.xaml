@@ -120,7 +120,7 @@
     </UserControl.Resources>
 
     <DockPanel >
-        <!-- Insert Right Toolbar Here -->
+        <!-- Can Insert Right Toolbar Here -->
         <TextBlock DockPanel.Dock="Top" 
                    FontSize="24"
                    FontFamily="ＭＳ ゴシック"

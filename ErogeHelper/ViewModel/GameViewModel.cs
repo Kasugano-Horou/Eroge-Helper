@@ -158,11 +158,8 @@ namespace ErogeHelper.ViewModel
         private bool CanWordSearch(SingleTextItem item)
         {
             // This should be same as item.SubMarkColor
-            if (item.PartOfSpeed == "ÖúÔ~")
-            {
-                return false;
-            }
-            else if (item.PartOfSpeed == "Ó›ºÅ")
+            var tmp = Utils.LoadBitmapFromResource("Resource/transparent.png");
+            if (item.SubMarkColor.ToString() == tmp.ToString())
             {
                 return false;
             }

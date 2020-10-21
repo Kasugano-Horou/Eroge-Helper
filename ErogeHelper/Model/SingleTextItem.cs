@@ -22,7 +22,7 @@ namespace ErogeHelper.Model
                     case "助詞":
                         //SubMarkColor = Utils.LoadBitmapFromResource("Resource/aqua_green.png");
                         SubMarkColor = Utils.LoadBitmapFromResource("Resource/transparent.png");
-                        // 不能点击的单词就不要上色了
+                        // 不想点击的单词就不要上色了
                         break;
                     case "動詞":
                     case "感動詞":
