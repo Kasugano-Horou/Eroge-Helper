@@ -9,8 +9,7 @@
              mc:Ignorable="d" 
              d:DesignWidth="600"
              MinHeight="12"
-             d:DataContext="{d:DesignInstance vm:GameViewModel, 
-                                              IsDesignTimeCreatable=True}"
+             DataContext="{Binding Game, Source={StaticResource Locator}}"
              xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
              >

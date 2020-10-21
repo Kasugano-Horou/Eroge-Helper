@@ -130,7 +130,6 @@ namespace ErogeHelper.View
                 Closed -= Window_Closed;
                 Application.Current.Shutdown();
             });
-            // TODO: New Version Tip
         }
 
         #region When Window Loding

@@ -13,8 +13,7 @@
              TextOptions.TextFormattingMode="Ideal"
              TextOptions.TextRenderingMode="Auto"
              FontFamily="{DynamicResource MaterialDesignFont}"
-             d:DataContext="{d:DesignInstance vm:GameViewModel, 
-                                              IsDesignTimeCreatable=True}" >
+             DataContext="{Binding Game, Source={StaticResource Locator}}">
     <UserControl.Resources>
         <convert:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </UserControl.Resources>
@@ -37,7 +36,6 @@
                             Background="{DynamicResource MaterialDesignTextFieldBoxBackground}"
                             Command="{Binding PopupCloseCommand}">
                         <materialDesign:PackIcon Kind="Close" />
-
                     </Button>
                 </DockPanel>
                 

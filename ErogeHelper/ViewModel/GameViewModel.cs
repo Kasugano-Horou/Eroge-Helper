@@ -157,9 +157,9 @@ namespace ErogeHelper.ViewModel
 
         private bool CanWordSearch(SingleTextItem item)
         {
-            // This should be same as item.SubMarkColor
-            var tmp = Utils.LoadBitmapFromResource("Resource/transparent.png");
-            if (item.SubMarkColor.ToString() == tmp.ToString())
+            // If text background is transparent, then we don't click it 
+            if (item.SubMarkColor.ToString() 
+                == Utils.LoadBitmapFromResource("Resource/transparent.png").ToString())
             {
                 return false;
             }
