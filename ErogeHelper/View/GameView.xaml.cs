@@ -172,6 +172,9 @@ namespace ErogeHelper.View
                 {
                     Hook.BringWindowToTop(pointer.Handle);
                 }
+                else
+                {
+                }
             };
 
             timer.Interval = TimeSpan.FromMilliseconds(100);
