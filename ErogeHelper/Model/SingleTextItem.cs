@@ -42,10 +42,8 @@ namespace ErogeHelper.Model
                 _partOfSpeed = value;
             }
         }
-        // Fixme: Stiil get error
-        // System.Windows.Data Error: 2 : Cannot find governing FrameworkElement or FrameworkContentElement for target element. BindingExpression:Path=SubMarkColor; DataItem=null; target element is 'ImageBrush' (HashCode=61374531); target property is 'ImageSource' (type 'ImageSource')
         public TextTemplateType TextTemplateType { get; set; }
-        public ImageSource SubMarkColor { get; internal set; } = Utils.LoadBitmapFromResource("Resource/transparent.png");
+        public ImageSource SubMarkColor { get; set; }
     }
 
     public enum TextTemplateType

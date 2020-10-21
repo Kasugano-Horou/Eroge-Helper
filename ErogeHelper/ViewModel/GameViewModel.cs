@@ -44,7 +44,7 @@ namespace ErogeHelper.ViewModel
         // FIXME: learn new way
         // https://stackoverflow.com/questions/20099743/how-do-i-get-design-time-view-of-a-view-model-first-approach-with-ioc
         // This make design view but get wrong in Real mode
-        //public GameViewModel() : this(new DesignGameDataService()){ }
+        //public GameViewModel() : this(new DesignGameDataService()) { }
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>

@@ -21,7 +21,7 @@
                        TextAlignment="Center">
                 <Border>
                     <Border.Background>
-                        <ImageBrush ImageSource="{Binding SubMarkColor}" />
+                        <ImageBrush x:Name="DummyBug" ImageSource="{Binding SubMarkColor}" />
                     </Border.Background>
                     <TextBlock Text="{Binding Text}"/>               
                 </Border>
@@ -35,7 +35,7 @@
                            Margin="0,0,0,-10">
                     <Border>
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding SubMarkColor}" />
+                            <ImageBrush x:Name="DummyBug" ImageSource="{Binding SubMarkColor}" />
                         </Border.Background>
                         <TextBlock Text="{Binding Text}">
                             <!-- XXX: 可能可以在View中做这个通过Messager通信 -->
@@ -59,7 +59,7 @@
         <DataTemplate x:Key="OutLineDefaultTemplate">
             <Border>
                 <Border.Background>
-                    <ImageBrush ImageSource="{Binding SubMarkColor}" />
+                    <ImageBrush x:Name="DummyBug" ImageSource="{Binding SubMarkColor}" />
                 </Border.Background>
                 <common:OutlinedTextBlock Stroke="Black" 
                              ClipToBounds="False"
@@ -83,7 +83,7 @@
                 <!-- 文字部分 -->
                 <Border>
                     <Border.Background>
-                        <ImageBrush ImageSource="{Binding SubMarkColor}" />
+                        <ImageBrush x:Name="DummyBug" ImageSource="{Binding SubMarkColor}" />
                     </Border.Background>
                     <common:OutlinedTextBlock x:Name="TextItem" Stroke="Black" 
                                               HorizontalAlignment="Center"
