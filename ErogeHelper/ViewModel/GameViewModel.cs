@@ -54,7 +54,6 @@ namespace ErogeHelper.ViewModel
             if (IsInDesignMode)
             {
                 // Code runs in Blend --> create design time data.
-
                 CardInfo = new WordCardInfo()
                 {
                     Word = "ÙI¤¦",

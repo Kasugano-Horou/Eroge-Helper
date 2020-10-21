@@ -63,19 +63,9 @@ namespace EHShellMenuHandler {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        internal static System.Drawing.Bitmap Lime {
+        internal static System.Drawing.Bitmap E {
             get {
-                object obj = ResourceManager.GetObject("Lime", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap Lime_200 {
-            get {
-                object obj = ResourceManager.GetObject("Lime_200", resourceCulture);
+                object obj = ResourceManager.GetObject("E", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

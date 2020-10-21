@@ -63,8 +63,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Lime%40200.bmp" />
-    <Content Include="Resources\Lime.bmp" />
+    <Content Include="Resources\E%40200.bmp" />
+    <Content Include="Resources\E.bmp" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resource.resx">

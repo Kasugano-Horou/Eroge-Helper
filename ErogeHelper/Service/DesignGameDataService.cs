@@ -15,7 +15,7 @@ namespace ErogeHelper.Service
             var DisplayTextCollection = new ObservableCollection<SingleTextItem>();
 
             // 悠真(ユウマ)くんを攻略(コウリャク)すれば２１０円(エン)か。なるほどなぁ…
-            #region Render Model
+            #region Render Design Model
             DisplayTextCollection.Add(new SingleTextItem
             {
                 RubyText = "ユウマ",
