@@ -247,9 +247,14 @@
   <ItemGroup>
     <Resource Include="Resource\transparent.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resource\E.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resource\Red.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\E_32.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

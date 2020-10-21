@@ -127,7 +127,7 @@ namespace ErogeHelper.ViewModel
         }
         #endregion
 
-        #region TextPin
+        #region Right Toolbar
         // Can't be init in constructor
         public RelayCommand PinCommand { get; set; }
         private bool _textPanelPin;

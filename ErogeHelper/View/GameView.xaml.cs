@@ -171,12 +171,6 @@ namespace ErogeHelper.View
                 if (gameHWnd == Hook.GetForegroundWindow())
                 {
                     Hook.BringWindowToTop(pointer.Handle);
-                    MainView.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    // this must be with no focus else there button wont be clicked
-                    MainView.Visibility = Visibility.Collapsed;
                 }
             };
 
@@ -234,7 +228,7 @@ namespace ErogeHelper.View
                 textPanelPin = false;
                 TriggerPopupBorder.Visibility = Visibility.Visible;
                 TextArea.Visibility = Visibility.Collapsed;
-                TextArea.Background = Brushes.Black;
+                TextArea.Background = new SolidColorBrush(Colors.Black) { Opacity = 0.1 };
             }
             if (obj.Notification == "OpenCard")
             {

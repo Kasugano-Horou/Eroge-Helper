@@ -42,7 +42,7 @@
                        LastChildFill="False">
                 <!-- Right Toolbar -->
                 <StackPanel DockPanel.Dock="Right"
-                    Margin="0 10 10 0">
+                            Margin="0 10 10 0">
                     <Button Padding="5 0 5 0"
                             Background="{DynamicResource MaterialDesignDarkBackground}">
                         <!--Command="{Binding TranslateCommand}"-->
