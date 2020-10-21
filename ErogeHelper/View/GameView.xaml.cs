@@ -171,9 +171,12 @@ namespace ErogeHelper.View
                 if (gameHWnd == Hook.GetForegroundWindow())
                 {
                     Hook.BringWindowToTop(pointer.Handle);
+                    MainView.Visibility = Visibility.Visible;
                 }
                 else
                 {
+                    // this must be with no focus else there button wont be clicked
+                    MainView.Visibility = Visibility.Collapsed;
                 }
             };
 

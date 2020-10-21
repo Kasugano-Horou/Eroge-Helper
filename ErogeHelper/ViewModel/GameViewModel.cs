@@ -41,9 +41,10 @@ namespace ErogeHelper.ViewModel
         public ObservableCollection<SingleTextItem> DisplayTextCollection { get; set; }
         public TextTemplateType TextTemplateConfig { get; set; } = TextTemplateType.Default;
 
-        // TODO: learn new way
+        // FIXME: learn new way
         // https://stackoverflow.com/questions/20099743/how-do-i-get-design-time-view-of-a-view-model-first-approach-with-ioc
-        public GameViewModel() : this(new DesignGameDataService()){ }
+        // This make design view but get wrong in Real mode
+        //public GameViewModel() : this(new DesignGameDataService()){ }
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
