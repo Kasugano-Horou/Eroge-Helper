@@ -68,7 +68,7 @@ namespace EHShellMenuHandler
             ToolStripMenuItem MainMenu;
             MainMenu = new ToolStripMenuItem
             {
-                Text = "Start with Eroge Helper",
+                Text = "使用EH直接启动游戏",
                 Image = Resource.E
             };
             MainMenu.Click += (sender, args) => MainProcess(false);
@@ -97,7 +97,7 @@ namespace EHShellMenuHandler
 
             var LEStartItem = new ToolStripMenuItem
             {
-                Text = "使用Locate Emulator启动",
+                Text = "使用Locate Emulator转区启动",
                 Image = Resource.E
             };
 

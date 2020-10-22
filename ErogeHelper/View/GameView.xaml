@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ErogeHelper.ViewModel"
+        xmlns:common="clr-namespace:ErogeHelper.Common"
         xmlns:control="clr-namespace:ErogeHelper.View.Control"
+        xmlns:convert="clr-namespace:ErogeHelper.Common.Converter"
         mc:Ignorable="d"
         Title="GameView" 
         AllowsTransparency="True" 
@@ -24,6 +26,7 @@
         <SolidColorBrush />
     </Window.Background>
     <Window.Resources>
+        <convert:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <Style TargetType="Border" x:Key="DesignBorder">
             <Setter Property="BorderBrush" Value="red"/>
             <Setter Property="BorderThickness" Value="1"/>
@@ -42,8 +45,8 @@
                 <StackPanel DockPanel.Dock="Right"
                             Margin="0 10 10 0">
                     <Button Padding="5 0 5 0"
-                            Background="{DynamicResource MaterialDesignDarkBackground}">
-                        <!--Command="{Binding TranslateCommand}"-->
+                            Background="{DynamicResource MaterialDesignDarkBackground}"
+                            Command="{Binding TranslateCommand}" >
                         <materialDesign:PackIcon Height="25" Width="25" Kind="GoogleTranslate" />
                     </Button>
                     <Button Padding="5 0 5 0"
@@ -58,12 +61,12 @@
                 <!-- Main avtivity area -->
                 <StackPanel DockPanel.Dock="Top">
                     <Border Name="TriggerPopupBorder" 
-                            Margin="0 2 0 0"
+                            Margin="0 0 0 0"
                             MouseEnter="TriggerPopupBorder_MouseEnter"
                             Width="auto" 
                             Height="12"
                             Background="white"
-                            Opacity="0.1"/>
+                            Opacity="0.002"/>
                     <control:TextControl x:Name="TextArea"
                                          Background="{StaticResource ResourceKey=BlackHalfOpacityBrush}"
                                          MouseLeave="TextArea_MouseLeave" 
@@ -76,6 +79,16 @@
                            PopupAnimation="Slide">
                         <control:CardControl />
                     </Popup>
+                    <!-- Auxiliary -->
+                    <common:OutlinedTextBlock Stroke="Black" 
+                                              Fill="white"
+                                              ClipToBounds="False"
+                                              StrokePosition="Outside"
+                                              StrokeThickness="1"
+                                              FontSize="26"
+                                              TextWrapping="Wrap"
+                                              Visibility="{Binding TransTextVisible}"
+                                              Text="{Binding TransText}"/>
                 </StackPanel>
             </DockPanel>
         </Border>

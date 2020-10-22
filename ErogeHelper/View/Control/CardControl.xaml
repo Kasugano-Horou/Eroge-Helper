@@ -45,6 +45,7 @@
                 <ProgressBar IsIndeterminate="{Binding CardInfo.IsProcess}" />
 
                 <!-- Main Card Area-->
+                <!-- TODO: Use <Expander> to build a Saladict like card -->
                 <StackPanel Visibility="{Binding CardInfo.IsProcess,
                                                  Converter={StaticResource ResourceKey=BoolToVisibilityConverter}}">
                     <TextBlock Style="{DynamicResource MaterialDesignTextBlock}"

@@ -10,6 +10,8 @@ using log4net;
 using System;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace ErogeHelper.ViewModel
 {
@@ -36,6 +38,7 @@ namespace ErogeHelper.ViewModel
 
         private readonly MecabHelper _mecabHelper;
         private readonly MojiDictApi _mojiHelper;
+        private readonly BaiduTranslator _baiduHelper;
 
         private readonly IGameDataService _dataService;
         public ObservableCollection<SingleTextItem> DisplayTextCollection { get; set; }
@@ -81,19 +84,19 @@ namespace ErogeHelper.ViewModel
                 CardInfo = new WordCardInfo();
                 _mecabHelper = new MecabHelper();
                 _mojiHelper = new MojiDictApi();
+                _baiduHelper = new BaiduTranslator();
                 WordSearchCommand = new RelayCommand<SingleTextItem>(WordSearch, CanWordSearch);
                 PopupCloseCommand = new RelayCommand(() => Messenger.Default.Send(new NotificationMessage("CloseCard")));
-                PinCommand = new RelayCommand(() => 
-                {
-                    TextPanelPin = !TextPanelPin;
-                    log.Info(TextPanelPin);
-                });
+                PinCommand = new RelayCommand(() => TextPanelPin = !TextPanelPin);
+                TranslateCommand = new RelayCommand(FakeDoTranslate);
 
                 Textractor.SelectedDataEvent += SelectedDataEventHandler;
             }
         }
 
         #region Text Data Dispatch
+        private string currentSentence = "";
+        private string lastSentence = "";
         private void SelectedDataEventHandler(object sender, HookParam hp)
         {
             DispatcherHelper.CheckBeginInvokeOnUI(() =>
@@ -123,6 +126,20 @@ namespace ErogeHelper.ViewModel
                         TextTemplateType = TextTemplateConfig
                     });
                 }
+
+                if (lastSentence == "")
+                {
+                    currentSentence = hp.Text;
+                }
+                else
+                {
+                    lastSentence = currentSentence;
+                    currentSentence = hp.Text;
+                }
+
+                TransText = "";
+                TransTextVisible = Visibility.Collapsed;
+                Task.Run(DoPreTranslate);
             });
         }
         #endregion
@@ -147,6 +164,21 @@ namespace ErogeHelper.ViewModel
                 _textPanelPin = value;
             }
         }
+
+        private Visibility transTextVisible;
+        public Visibility TransTextVisible { get => transTextVisible; set { transTextVisible = value; RaisePropertyChanged(()=>TransTextVisible); } }
+        public RelayCommand TranslateCommand { get; set; }
+        private string transText;
+        public string TransText { get => transText; set { transText = value; RaisePropertyChanged(() => TransText); } }
+        private void FakeDoTranslate()
+        {
+            //只做显示的操作
+            TransTextVisible = Visibility.Visible;
+        }
+        private void DoPreTranslate()
+        {
+            TransText = _baiduHelper.Translate(currentSentence, "jp", "zh").GetAwaiter().GetResult();
+        }
         #endregion
 
         #region MojiCard Search
@@ -158,7 +190,7 @@ namespace ErogeHelper.ViewModel
         private bool CanWordSearch(SingleTextItem item)
         {
             // If text background is transparent, then we don't click it 
-            if (item.SubMarkColor.ToString() 
+            if (item.SubMarkColor.ToString()
                 == Utils.LoadBitmapFromResource("Resource/transparent.png").ToString())
             {
                 return false;

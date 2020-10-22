@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -11,6 +13,11 @@ namespace ErogeHelper.Common
 {
     static class Utils
     {
+        /// <summary>
+        /// Get MD5 hash by file
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public static string GetMD5(string filePath)
         {
             FileStream file = File.OpenRead(filePath);
@@ -60,6 +67,41 @@ namespace ErogeHelper.Common
                 pathInApplication = pathInApplication.Substring(1);
             }
             return new BitmapImage(new Uri(@"pack://application:,,,/" + assembly.GetName().Name + ";component/" + pathInApplication, UriKind.Absolute));
+        }
+
+        static HttpClient HC;
+        static public CookieContainer cookieContainer;
+        /// <summary>
+        /// 获得HttpClinet单例，第一次调用自动初始化
+        /// </summary>
+        public static HttpClient GetHttpClient()
+        {
+            if (HC == null)
+            {
+                lock (typeof(Utils))
+                {
+                    if (HC == null)
+                    {
+                        cookieContainer = new CookieContainer();
+                        var handel = new HttpClientHandler()
+                        {
+                            AutomaticDecompression = DecompressionMethods.GZip,
+                            CookieContainer = cookieContainer
+                        };
+                        HC = new HttpClient(handel)
+                        { 
+                            Timeout = TimeSpan.FromSeconds(6)
+                        };
+                        var headers = HC.DefaultRequestHeaders;
+                        headers.UserAgent.ParseAdd("Eroge-Helper");
+                        headers.Add("ContentType", "text/html;charset=UTF-8");
+                        headers.AcceptEncoding.ParseAdd("gzip");
+                        headers.Connection.ParseAdd("keep-alive");
+                        ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+                    }
+                }
+            }
+            return HC;
         }
     }
 }

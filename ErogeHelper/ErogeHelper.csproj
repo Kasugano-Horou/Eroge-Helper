@@ -30,16 +30,18 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DebugSymbols>false</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -59,6 +61,9 @@
     </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
+    <Reference Include="Jurassic, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jurassic.3.1.0\lib\net45\Jurassic.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.11\lib\net45\log4net.dll</HintPath>
@@ -123,12 +128,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\BaiduTranslator.cs" />
     <Compile Include="Common\Behavior\ScrollToEndBehavior.cs" />
     <Compile Include="Common\Behavior\ScrollViewerBehavior.cs" />
     <Compile Include="Common\Behavior\ValidationBehavior.cs" />
     <Compile Include="Common\Converter\BoolToVisibilityConverter.cs" />
     <Compile Include="Common\EHConfig.cs" />
     <Compile Include="Common\Hook.cs" />
+    <Compile Include="Common\ITranslator.cs" />
     <Compile Include="Common\MecabHelper.cs" />
     <Compile Include="Common\MojiDictApi.cs" />
     <Compile Include="Common\OutlinedTextBlock.cs" />
@@ -143,13 +150,13 @@
     <Compile Include="Model\HookParam.cs" />
     <Compile Include="Model\SingleTextItem.cs" />
     <Compile Include="Model\WordCardInfo.cs" />
-    <Compile Include="Service\DesignGameDataService.cs" />
-    <Compile Include="Service\DesignHookConfigDataService.cs" />
-    <Compile Include="Service\GameDataService.cs" />
-    <Compile Include="Service\HookConfigDataService.cs" />
-    <Compile Include="Service\IGameDataService.cs" />
-    <Compile Include="Service\IHookConfigDataService.cs" />
-    <Compile Include="Service\IWindowService.cs" />
+    <Compile Include="Common\Service\DesignGameDataService.cs" />
+    <Compile Include="Common\Service\DesignHookConfigDataService.cs" />
+    <Compile Include="Common\Service\GameDataService.cs" />
+    <Compile Include="Common\Service\HookConfigDataService.cs" />
+    <Compile Include="Common\Service\IGameDataService.cs" />
+    <Compile Include="Common\Service\IHookConfigDataService.cs" />
+    <Compile Include="Common\Service\IWindowService.cs" />
     <Compile Include="ViewModel\GameViewModel.cs" />
     <Compile Include="ViewModel\HookConfigViewModel.cs" />
     <Compile Include="ViewModel\NotifyIconViewModel.cs" />
