@@ -70,5 +70,17 @@ namespace ErogeHelper.Properties {
                 this["BaiduSecretKey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool BaiduSwitch {
+            get {
+                return ((bool)(this["BaiduSwitch"]));
+            }
+            set {
+                this["BaiduSwitch"] = value;
+            }
+        }
     }
 }

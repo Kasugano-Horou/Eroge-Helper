@@ -8,11 +8,13 @@
         mc:Ignorable="d"
         Title="PreferenceView" Height="450" Width="400"
         DataContext="{Binding Preference, Source={StaticResource Locator}}"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         >
     <Window.Resources>
         <convert:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </Window.Resources>
     <StackPanel>
+        <!-- 文本焦点 -->
         <StackPanel Orientation="Horizontal">
             <Label Content="关闭文本显示的焦点" />
             <ToggleButton Style="{StaticResource MaterialDesignSwitchDarkToggleButton}"
@@ -23,6 +25,7 @@
         <Border BorderThickness="1"
                 BorderBrush="{DynamicResource MaterialDesignDivider}" />
 
+        <!-- Machine Translation Switch-->
         <StackPanel Orientation="Horizontal"
                     Margin="0 10 0 0">
             <Label Content="机器翻译模式" />
@@ -30,9 +33,52 @@
                           Style="{StaticResource MaterialDesignSwitchDarkToggleButton}"
                           IsChecked="{Binding MachineTransMode}"/>
         </StackPanel>
-        
+        <!-- Machine Translation Area-->
         <StackPanel IsEnabled="{Binding ElementName=MachineTransToggle, Path=IsChecked}">
-            
+            <DataGrid ItemsSource="{Binding TranslatorList}"
+                      CanUserAddRows="False"
+                      AutoGenerateColumns="False"
+                      HeadersVisibility="All"
+                      
+                      SelectedItem="{Binding SelectedItem}"
+                      LoadingRow="DataGrid_LoadingRow"
+                      >
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
+                                            ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
+                                            EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
+                    </DataGridCheckBoxColumn>
+                    <!-- if you want to use the pop up style (MaterialDesignDataGridTextColumnPopupEditingStyle), you must use MaterialDataGridTextColumn -->
+                    <DataGridTextColumn Binding="{Binding TranslatorName}"
+                                        Header="翻译器"
+                                        Width="auto"
+                                        IsReadOnly="True"
+                                        ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                                        EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}" />
+
+                    <materialDesign:DataGridComboBoxColumn
+                        x:Name="Source"
+                        Header="源语言"
+                        IsEditable="False"
+                        Width="auto"
+                        SelectedValueBinding="{Binding SourceLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        ItemsSourceBinding="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                     AncestorType={x:Type DataGrid}}, 
+                                                     Path=DataContext.SourceLanguages}">
+                    </materialDesign:DataGridComboBoxColumn>
+                    <!-- use custom combo box column to get better combos. Use ItemsSourceBinding as your binding template to be applied to each combo -->
+                    <materialDesign:DataGridComboBoxColumn 
+                        Header="目标语言"
+                        IsEditable="False"
+                        Width="auto"
+                        SelectedValueBinding="{Binding DestLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        ItemsSourceBinding="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                     AncestorType={x:Type DataGrid}}, 
+                                                     Path=DataContext.DestLanguages}">
+                    </materialDesign:DataGridComboBoxColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
         </StackPanel>
         
         <Border BorderThickness="1"

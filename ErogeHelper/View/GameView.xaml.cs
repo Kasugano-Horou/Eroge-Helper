@@ -30,6 +30,7 @@ namespace ErogeHelper.View
 
             SetGameWindowHook();
             Messenger.Default.Register<NotificationMessage>(this, NotificationMessageReceived);
+            Unloaded += (sender, e) => Messenger.Default.Unregister(this);
         }
 
         #region Window Follow Game Initialize

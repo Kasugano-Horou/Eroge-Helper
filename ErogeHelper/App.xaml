@@ -11,8 +11,8 @@
             <SolidColorBrush Color="Black" Opacity=".1" x:Key="BlackHalfOpacityBrush"/>
 
             <vm:ViewModelLocator x:Key="Locator" 
-                           d:IsDataSource="True" 
-                           xmlns:vm="clr-namespace:ErogeHelper.ViewModel" />
+                                 d:IsDataSource="True" 
+                                 xmlns:vm="clr-namespace:ErogeHelper.ViewModel" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="NotifyIconResources.xaml" />
                 <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="DeepPurple" SecondaryColor="Lime" />

@@ -1,4 +1,7 @@
 ﻿using ErogeHelper.Common;
+using ErogeHelper.ViewModel;
+using GalaSoft.MvvmLight.Messaging;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +23,23 @@ namespace ErogeHelper.View
     /// </summary>
     public partial class PreferenceView : Window
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(PreferenceView));
+
         public PreferenceView()
         {
             InitializeComponent();
+        }
+
+        // 在DataGrid Loading 完成后，把每一行的鼠标滑过事件订阅到Row_MouseEnter上去
+        private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.MouseEnter += Row_MouseEnter;
+        }
+
+        void Row_MouseEnter(object sender, MouseEventArgs e)
+        {
+            DataGridRow row = (DataGridRow)sender;
+            Messenger.Default.Send(row, "PreferenceReceivedRow");
         }
     }
 }

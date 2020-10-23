@@ -188,7 +188,9 @@ namespace ErogeHelper.ViewModel
         private async void DoPreTranslateAsync()
         {
             // Make language dynamic, set by user, use setting properties?
+            // FIXME: Some error
             TransText = await _baiduHelper.Translate(currentSentence, "jp", "zh");
+            log.Info($"Get translate {TransText}");
         }
         #endregion
 

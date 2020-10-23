@@ -82,24 +82,31 @@ namespace ErogeHelper.Common
                 var client = Utils.GetHttpClient();
 
                 // Do request to get cookies
-                if (sb_cookie.ToString() == "")
+                lock(this)
                 {
-                    client.GetAsync(uri).GetAwaiter().GetResult();
-                    List<Cookie> cookies = Utils.cookieContainer.GetCookies(uri).Cast<Cookie>().ToList();
-                    foreach (var item in cookies)
+                    if (sb_cookie.ToString() == "")
                     {
-                        sb_cookie.Append(item.Name);
-                        sb_cookie.Append("=");
-                        sb_cookie.Append(item.Value);
-                        sb_cookie.Append(";");
-
+                        // May cause error?
+                        client.GetAsync(uri).GetAwaiter().GetResult();
+                        List<Cookie> cookies = Utils.cookieContainer.GetCookies(uri).Cast<Cookie>().ToList();
+                        foreach (var item in cookies)
+                        {
+                            sb_cookie.Append(item.Name);
+                            sb_cookie.Append("=");
+                            sb_cookie.Append(item.Value);
+                            sb_cookie.Append(";");
+                        }
                     }
                 }
                 #endregion
 
                 string gtk = "";
                 string token = "";
-                var content = client.GetStringAsync(transUrl).GetAwaiter().GetResult();
+                string content = "";
+                lock(this)
+                {
+                    content = client.GetStringAsync(transUrl).GetAwaiter().GetResult();
+                }
                 var tokenMatch = Regex.Match(content, "token: '(.*?)',");
                 var gtkMatch = Regex.Match(content, "window.gtk = '(.*?)';");
                 if (gtkMatch.Success && gtkMatch.Groups.Count > 1)
