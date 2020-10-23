@@ -151,6 +151,13 @@ namespace ErogeHelper.View
                 EHConfig.SetValue(EHNode.NoFocus, NoFocusFlag.ToString());
             }
 
+            // 处理全局开启了MTMode，在加载别的游戏时focus选项还没打开的情况
+            if (Properties.Settings.Default.OnlyMachineTranslation && NoFocusFlag == false)
+            {
+                NoFocusFlag = true;
+                EHConfig.SetValue(EHNode.NoFocus, NoFocusFlag.ToString());
+            }
+
             if (NoFocusFlag)
             {
                 var interopHelper = new WindowInteropHelper(this);

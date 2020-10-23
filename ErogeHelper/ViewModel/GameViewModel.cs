@@ -1,5 +1,6 @@
 using ErogeHelper.Common;
 using ErogeHelper.Model;
+using ErogeHelper.Model.Singleton;
 using ErogeHelper.Service;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -10,8 +11,10 @@ using log4net;
 using System;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace ErogeHelper.ViewModel
 {
@@ -101,45 +104,52 @@ namespace ErogeHelper.ViewModel
         {
             DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
-                DisplayTextCollection.Clear();
-
-                var pattern = SimpleIoc.Default.GetInstance<GameInfo>().Regexp;
-                if (pattern != null)
+                if (!Properties.Settings.Default.OnlyMachineTranslation)
                 {
-                    var list = Regex.Split(hp.Text, pattern);
-                    hp.Text = string.Join("", list);
-                }
+                    DisplayTextCollection.Clear();
 
-                if (hp.Text.Length > 80)
-                {
-                    hp.Text = "长度大于80的文本自动跳过";
-                }
-
-                var mecabWordList = _mecabHelper.SentenceHandle(hp.Text);
-                foreach (MecabWordInfo mecabWord in mecabWordList)
-                {
-                    DisplayTextCollection.Add(new SingleTextItem
+                    var pattern = SimpleIoc.Default.GetInstance<GameInfo>().Regexp;
+                    if (pattern != null)
                     {
-                        Text = mecabWord.Word,
-                        RubyText = mecabWord.Kana,
-                        PartOfSpeed = mecabWord.PartOfSpeech,
-                        TextTemplateType = TextTemplateConfig
-                    });
-                }
+                        var list = Regex.Split(hp.Text, pattern);
+                        hp.Text = string.Join("", list);
+                    }
 
-                if (lastSentence == "")
-                {
-                    currentSentence = hp.Text;
+                    if (hp.Text.Length > 80)
+                    {
+                        hp.Text = "长度大于80的文本自动跳过";
+                    }
+
+                    var mecabWordList = _mecabHelper.SentenceHandle(hp.Text);
+                    foreach (MecabWordInfo mecabWord in mecabWordList)
+                    {
+                        DisplayTextCollection.Add(new SingleTextItem
+                        {
+                            Text = mecabWord.Word,
+                            RubyText = mecabWord.Kana,
+                            PartOfSpeed = mecabWord.PartOfSpeech,
+                            TextTemplateType = TextTemplateConfig
+                        });
+                    }
+
+                    if (lastSentence == "")
+                    {
+                        currentSentence = hp.Text;
+                    }
+                    else
+                    {
+                        lastSentence = currentSentence;
+                        currentSentence = hp.Text;
+                    }
+
+                    TransText = "";
+                    TransTextVisible = Visibility.Collapsed;
+                    DoPreTranslateAsync();
                 }
                 else
                 {
-                    lastSentence = currentSentence;
-                    currentSentence = hp.Text;
-                }
 
-                TransText = "";
-                TransTextVisible = Visibility.Collapsed;
-                Task.Run(DoPreTranslate);
+                }
             });
         }
         #endregion
@@ -166,7 +176,7 @@ namespace ErogeHelper.ViewModel
         }
 
         private Visibility transTextVisible;
-        public Visibility TransTextVisible { get => transTextVisible; set { transTextVisible = value; RaisePropertyChanged(()=>TransTextVisible); } }
+        public Visibility TransTextVisible { get => transTextVisible; set { transTextVisible = value; RaisePropertyChanged(() => TransTextVisible); } }
         public RelayCommand TranslateCommand { get; set; }
         private string transText;
         public string TransText { get => transText; set { transText = value; RaisePropertyChanged(() => TransText); } }
@@ -175,9 +185,10 @@ namespace ErogeHelper.ViewModel
             //只做显示的操作
             TransTextVisible = Visibility.Visible;
         }
-        private void DoPreTranslate()
+        private async void DoPreTranslateAsync()
         {
-            TransText = _baiduHelper.Translate(currentSentence, "jp", "zh").GetAwaiter().GetResult();
+            // Make language dynamic, set by user, use setting properties?
+            TransText = await _baiduHelper.Translate(currentSentence, "jp", "zh");
         }
         #endregion
 
@@ -235,5 +246,7 @@ namespace ErogeHelper.ViewModel
             }
         }
         #endregion
+
+        public AppSetting Setting { get; set; } = SimpleIoc.Default.GetInstance<AppSetting>();
     }
 }

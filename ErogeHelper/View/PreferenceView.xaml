@@ -4,16 +4,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ErogeHelper.View"
+        xmlns:convert="clr-namespace:ErogeHelper.Common.Converter"
         mc:Ignorable="d"
         Title="PreferenceView" Height="450" Width="400"
         DataContext="{Binding Preference, Source={StaticResource Locator}}"
         >
+    <Window.Resources>
+        <convert:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </Window.Resources>
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <Label Content="关闭文本显示的焦点" />
             <ToggleButton Style="{StaticResource MaterialDesignSwitchDarkToggleButton}"
                           ToolTip="（如果你在全屏模式下点击查词会弹回桌面，请打开这个）"
-                          IsChecked="{Binding NoFocusToggel}"/>
+                          IsChecked="{Binding NoFocusToggel}"
+                          IsEnabled="{Binding ElementName=MachineTransToggle, Path=IsChecked, Converter={StaticResource InverseBooleanConverter}}"/>
         </StackPanel>
         <Border BorderThickness="1"
                 BorderBrush="{DynamicResource MaterialDesignDivider}" />
@@ -23,7 +28,7 @@
             <Label Content="机器翻译模式" />
             <ToggleButton x:Name="MachineTransToggle"
                           Style="{StaticResource MaterialDesignSwitchDarkToggleButton}"
-                          IsChecked="False"/>
+                          IsChecked="{Binding MachineTransMode}"/>
         </StackPanel>
         
         <StackPanel IsEnabled="{Binding ElementName=MachineTransToggle, Path=IsChecked}">

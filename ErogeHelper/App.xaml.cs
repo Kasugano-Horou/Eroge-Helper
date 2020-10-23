@@ -1,5 +1,6 @@
 ﻿using ErogeHelper.Common;
 using ErogeHelper.Model;
+using ErogeHelper.Model.Singleton;
 using ErogeHelper.View;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Threading;
@@ -32,6 +33,7 @@ namespace ErogeHelper
             Directory.SetCurrentDirectory(Path.GetDirectoryName(GetType().Assembly.Location));
             DispatcherHelper.Initialize();
             SimpleIoc.Default.Register<GameInfo>();
+            SimpleIoc.Default.Register<AppSetting>();
             //new TaskbarView();
             notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
             log4net.Config.XmlConfigurator.Configure();
@@ -78,6 +80,7 @@ namespace ErogeHelper
                                                : $"\"{gameInfo.Path}\""
                     });
                 }
+                // XXX: 捕获不到，7秒超时
                 catch(AccessViolationException)
                 {
                     throw new AccessViolationException("LE执行出现内存错误，这可能是游戏进程还未退出，问题不大请重新尝试用LE启动游戏~");

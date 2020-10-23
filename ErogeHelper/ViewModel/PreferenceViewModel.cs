@@ -1,6 +1,8 @@
 ﻿using ErogeHelper.Common;
+using ErogeHelper.Model.Singleton;
 using ErogeHelper.View;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Ioc;
 using log4net;
 using System;
 using System.Linq;
@@ -26,7 +28,7 @@ namespace ErogeHelper.ViewModel
                     var ret = EHConfig.GetValue(EHNode.NoFocus);
                     noFocusToggel = bool.Parse(ret);
                 }
-                catch (NullReferenceException) 
+                catch (NullReferenceException)
                 {
                     // create the node
                     noFocusToggel = false;
@@ -44,7 +46,25 @@ namespace ErogeHelper.ViewModel
                 noFocusToggel = value;
                 EHConfig.SetValue(EHNode.NoFocus, value.ToString());
                 RaisePropertyChanged(() => NoFocusToggel);
-                log.Info($"Set TextWindow statu to {(noFocusToggel? "NoFocus" : "Normal")}");
+                log.Info($"Set TextWindow statu to {(noFocusToggel ? "NoFocus" : "Normal")}");
+            }
+        }
+
+        public AppSetting Setting { get; set; } = SimpleIoc.Default.GetInstance<AppSetting>();
+
+        // 拨动开关 先执行set 后 get
+        public bool MachineTransMode 
+        {
+            get 
+            {
+                if (Setting.MachineTransleVisible == Visibility.Visible) return false;
+                else return true;
+            }
+            set 
+            {
+                Setting.MachineTransleVisible = value ? Visibility.Collapsed : Visibility.Visible;
+                NoFocusToggel = value;
+                log.Info($"MachineTranslate Only: {value}");
             }
         }
     }

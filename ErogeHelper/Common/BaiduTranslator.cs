@@ -25,8 +25,9 @@ namespace ErogeHelper.Common
 
         public async Task<string> Translate(string query, string from, string to, params string[] list)
         {
-            string appId = "";
-            string secretKey = "";
+            string appId = Properties.Settings.Default.BaiduAppId;
+            string secretKey = Properties.Settings.Default.SettingsKey;
+
             if (list.Length != 0)
             {
                 appId = list[0];

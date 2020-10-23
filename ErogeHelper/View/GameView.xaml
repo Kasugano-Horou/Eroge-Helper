@@ -26,7 +26,7 @@
         <SolidColorBrush />
     </Window.Background>
     <Window.Resources>
-        <convert:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <convert:VisibilityInverseConverter x:Key="VisibilityInverseConverter" />
         <Style TargetType="Border" x:Key="DesignBorder">
             <Setter Property="BorderBrush" Value="red"/>
             <Setter Property="BorderThickness" Value="1"/>
@@ -39,58 +39,67 @@
         <!-- Client area -->
         <Border x:Name="ClientArea" Style="{StaticResource ResourceKey=DesignBorder}" 
                 Margin="10, 30, 10, 10">
-            <DockPanel x:Name="MainView"
-                       LastChildFill="False">
-                <!-- Right Toolbar -->
-                <StackPanel DockPanel.Dock="Right"
-                            Margin="0 10 10 0">
-                    <Button Padding="5 0 5 0"
-                            Background="{DynamicResource MaterialDesignDarkBackground}"
-                            Command="{Binding TranslateCommand}" >
-                        <materialDesign:PackIcon Height="25" Width="25" Kind="GoogleTranslate" />
-                    </Button>
-                    <Button Padding="5 0 5 0"
-                    Margin="0 10 0 0"
-                    Background="{DynamicResource MaterialDesignDarkBackground}"
-                    Command="{Binding PinCommand}">
-                        <!--<materialDesign:PackIcon Height="25" Width="25" Kind="Pin" />-->
-                        <materialDesign:PackIcon Height="25" Width="25" Kind="PinOutline" />
-                    </Button>
-                </StackPanel>
+            <StackPanel>
+                <DockPanel x:Name="MainView"
+                           Visibility="{Binding Setting.MachineTransleVisible}"
+                           LastChildFill="False">
+                    <!-- Right Toolbar -->
+                    <StackPanel DockPanel.Dock="Right"
+                                Margin="0 10 10 0">
+                        <Button Padding="5 0 5 0"
+                                Background="{DynamicResource MaterialDesignDarkBackground}"
+                                Command="{Binding TranslateCommand}">
+                            <materialDesign:PackIcon Height="25" Width="25" Kind="GoogleTranslate" />
+                        </Button>
+                        <Button Padding="5 0 5 0"
+                                Margin="0 10 0 0"
+                                Background="{DynamicResource MaterialDesignDarkBackground}"
+                                Command="{Binding PinCommand}">
+                            <!--<materialDesign:PackIcon Height="25" Width="25" Kind="Pin" />-->
+                            <materialDesign:PackIcon Height="25" Width="25" Kind="PinOutline" />
+                        </Button>
+                    </StackPanel>
                 
-                <!-- Main avtivity area -->
-                <StackPanel DockPanel.Dock="Top">
-                    <Border Name="TriggerPopupBorder" 
-                            Margin="0 0 0 0"
-                            MouseEnter="TriggerPopupBorder_MouseEnter"
-                            Width="auto" 
-                            Height="12"
-                            Background="white"
-                            Opacity="0.002"/>
-                    <control:TextControl x:Name="TextArea"
-                                         Background="{StaticResource ResourceKey=BlackHalfOpacityBrush}"
-                                         MouseLeave="TextArea_MouseLeave" 
-                                         Visibility="Visible"/>
-                    <Popup x:Name="WordCard" 
-                           Placement="Bottom" 
-                           PlacementTarget="{Binding ElementName=TextArea}"
-                           StaysOpen="False" 
-                           AllowsTransparency="True"
-                           PopupAnimation="Slide">
-                        <control:CardControl />
-                    </Popup>
-                    <!-- Auxiliary -->
-                    <common:OutlinedTextBlock Stroke="Black" 
-                                              Fill="white"
-                                              ClipToBounds="False"
-                                              StrokePosition="Outside"
-                                              StrokeThickness="1"
-                                              FontSize="26"
-                                              TextWrapping="Wrap"
-                                              Visibility="{Binding TransTextVisible}"
-                                              Text="{Binding TransText}"/>
-                </StackPanel>
-            </DockPanel>
+                    <!-- Main avtivity area -->
+                    <StackPanel DockPanel.Dock="Top">
+                        <Border Name="TriggerPopupBorder" 
+                                Margin="0 0 0 0"
+                                MouseEnter="TriggerPopupBorder_MouseEnter"
+                                Width="auto" 
+                                Height="12"
+                                Background="white"
+                                Opacity="0.002"/>
+                        <control:TextControl x:Name="TextArea"
+                                             Background="{StaticResource ResourceKey=BlackHalfOpacityBrush}"
+                                             MouseLeave="TextArea_MouseLeave" 
+                                             Visibility="Visible"/>
+                        <Popup x:Name="WordCard" 
+                               Placement="Bottom" 
+                               PlacementTarget="{Binding ElementName=TextArea}"
+                               StaysOpen="False" 
+                               AllowsTransparency="True"
+                               PopupAnimation="Slide">
+                            <control:CardControl />
+                        </Popup>
+                        <!-- Auxiliary -->
+                        <common:OutlinedTextBlock Stroke="Black" 
+                                                  Fill="white"
+                                                  ClipToBounds="False"
+                                                  StrokePosition="Outside"
+                                                  StrokeThickness="1"
+                                                  FontSize="26"
+                                                  TextWrapping="Wrap"
+                                                  Visibility="{Binding TransTextVisible}"
+                                                  Text="{Binding TransText}"/>
+                    </StackPanel>
+                </DockPanel>
+                <DockPanel x:Name="MachineTransPanel"
+                           Visibility="{Binding Setting.MachineTransleVisible, Converter={StaticResource VisibilityInverseConverter}}">
+                    <TextBlock DockPanel.Dock="Top"
+                               Text="纯机翻"
+                               FontSize="50"/>
+                </DockPanel>
+            </StackPanel>
         </Border>
     </Border>
 </Window>

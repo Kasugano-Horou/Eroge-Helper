@@ -133,6 +133,9 @@
     <Compile Include="Common\Behavior\ScrollViewerBehavior.cs" />
     <Compile Include="Common\Behavior\ValidationBehavior.cs" />
     <Compile Include="Common\Converter\BoolToVisibilityConverter.cs" />
+    <Compile Include="Common\Converter\BoolToVisibilityInverseConverter.cs" />
+    <Compile Include="Common\Converter\InverseBooleanConverter.cs" />
+    <Compile Include="Common\Converter\VisibilityInverseConverter.cs" />
     <Compile Include="Common\EHConfig.cs" />
     <Compile Include="Common\Hook.cs" />
     <Compile Include="Common\ITranslator.cs" />
@@ -145,6 +148,7 @@
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\Validation\InvalidCodeFormatValidationRule.cs" />
     <Compile Include="Common\Validation\RegExpValidationRule.cs" />
+    <Compile Include="Model\Singleton\AppSetting.cs" />
     <Compile Include="Model\Singleton\GameInfo.cs" />
     <Compile Include="Model\HookBindingList.cs" />
     <Compile Include="Model\HookParam.cs" />
