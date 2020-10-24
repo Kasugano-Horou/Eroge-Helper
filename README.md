@@ -15,7 +15,9 @@ Fill the command paragrams in Debug
 
 one is full path of game, '/le' to use Locate Emulator
 
-Then build and press F5
+Right click the project "ErogeHelper" and select "set as startup project".
+
+Then Press F5
 
 ### Install
 
