@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
@@ -102,6 +103,13 @@ namespace ErogeHelper.Common
                 }
             }
             return HC;
+        }
+
+        public static void AddEnvironmentPaths(IEnumerable<string> paths)
+        {
+            var path = new[] { Environment.GetEnvironmentVariable("PATH") ?? string.Empty };
+            string newPath = string.Join(Path.PathSeparator.ToString(), path.Concat(paths));
+            Environment.SetEnvironmentVariable("PATH", newPath);   // 这种方式只会修改当前进程的环境变量
         }
     }
 }

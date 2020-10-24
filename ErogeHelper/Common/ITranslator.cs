@@ -8,6 +8,13 @@ namespace ErogeHelper.Common
 {
     interface ITranslator
     {
-        Task<string> Translate(string sourceText, string srcLang, string desLang, params string[] list);
+        Task<string> Translate(string sourceText, Language srcLang, Language desLang, params string[] list);
+    }
+
+    public enum Language
+    {
+        Auto,
+        ChineseSimplified,   
+        Japenese,
     }
 }

@@ -278,4 +278,12 @@
   </Target>
   <Import Project="..\packages\MeCab.DotNet.0.0.26\build\MeCab.DotNet.targets" Condition="Exists('..\packages\MeCab.DotNet.0.0.26\build\MeCab.DotNet.targets')" />
   <Import Project="..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>if not exist $(ProjectDir)$(OutDir)libs\ xcopy $(ProjectDir)libs\ $(ProjectDir)$(OutDir)\libs\ /e
+if not exist $(ProjectDir)$(OutDir)dic\ xcopy $(ProjectDir)dic\ $(ProjectDir)$(OutDir)\dic\ /e</PostBuildEvent>
+  </PropertyGroup>
 </Project>

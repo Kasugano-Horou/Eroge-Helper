@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Security.Principal;
+using System.Linq.Expressions;
+using System.ComponentModel;
 
 namespace EHInstaller
 {
@@ -20,13 +22,21 @@ namespace EHInstaller
                 Console.WriteLine("Program run in admin mode");
             }
 
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+            try
             {
-                FileName = "ServerRegistrationManager.exe",
-                Arguments = "install EHShellMenuHandler.dll -codebase"
-            });
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+                {
+                    FileName = "ServerRegistrationManager.exe",
+                    Arguments = "install EHShellMenuHandler.dll -codebase"
+                });
+            }
+            catch(Win32Exception ex)
+            {
+                MessageBox.Show("找不到文件ServerRegistrationManager.exe", "EHInstaller");
+                throw ex;
+            }
             MessageBox.Show("已将EH注册到右键菜单! 右键游戏.\n" +
-                            "移动文件夹会自动取消");
+                            "移动文件夹会自动取消", "EHInstaller");
 
             // Uninstall
             //Process.Start(new ProcessStartInfo()

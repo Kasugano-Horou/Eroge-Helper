@@ -125,7 +125,7 @@ namespace ErogeHelper.Common
             internal delegate void OnOutputText(long threadId, [MarshalAs(UnmanagedType.LPWStr)] string text);
             #endregion
 
-            [DllImport("texthost.dll")]
+            [DllImport(@"libs\texthost.dll")]
             internal static extern int TextHostInit(
                 ProcessCallback OnConnect,
                 ProcessCallback OnDisconnect,
@@ -134,22 +134,22 @@ namespace ErogeHelper.Common
                 OnOutputText OnOutputText
                 );
 
-            [DllImport("texthost.dll")]
+            [DllImport(@"libs\texthost.dll")]
             internal static extern int InsertHook(
                 uint processId,
                 [MarshalAs(UnmanagedType.LPWStr)] string hookCode
                 );
 
-            [DllImport("texthost.dll")]
+            [DllImport(@"libs\texthost.dll")]
             internal static extern int RemoveHook(uint processId, ulong address);
 
-            [DllImport("texthost.dll")]
+            [DllImport(@"libs\texthost.dll")]
             internal extern static int InjectProcess(uint processId);
 
-            [DllImport("texthost.dll")]
+            [DllImport(@"libs\texthost.dll")]
             internal extern static int DetachProcess(uint processId);
 
-            [DllImport("texthost.dll")]
+            [DllImport(@"libs\texthost.dll")]
             internal extern static int AddClipboardThread(IntPtr windowHandle);
 
             //用于搜索钩子的结构体参数，32bit size=608 ,64bit size=632

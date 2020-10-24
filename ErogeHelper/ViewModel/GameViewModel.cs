@@ -92,6 +92,7 @@ namespace ErogeHelper.ViewModel
                 PopupCloseCommand = new RelayCommand(() => Messenger.Default.Send(new NotificationMessage("CloseCard")));
                 PinCommand = new RelayCommand(() => TextPanelPin = !TextPanelPin);
                 TranslateCommand = new RelayCommand(FakeDoTranslate);
+                TranslateTextList = new ObservableCollection<string>();
 
                 Textractor.SelectedDataEvent += SelectedDataEventHandler;
             }
@@ -148,7 +149,8 @@ namespace ErogeHelper.ViewModel
                 }
                 else
                 {
-
+                    TranslateTextList.Clear();
+                    TrasnlateAllAsync(hp.Text);
                 }
             });
         }
@@ -189,7 +191,7 @@ namespace ErogeHelper.ViewModel
         {
             // Make language dynamic, set by user, use setting properties?
             // FIXME: Some error
-            TransText = await _baiduHelper.Translate(currentSentence, "jp", "zh");
+            TransText = await _baiduHelper.Translate(currentSentence, Language.Japenese, Language.ChineseSimplified);
             log.Info($"Get translate {TransText}");
         }
         #endregion
@@ -250,5 +252,20 @@ namespace ErogeHelper.ViewModel
         #endregion
 
         public AppSetting Setting { get; set; } = SimpleIoc.Default.GetInstance<AppSetting>();
+
+        public ObservableCollection<string> TranslateTextList { get; set; }
+
+        private async void TrasnlateAllAsync(string text)
+        {
+            // 获取所有
+            // if (开启的) yeild
+            // foreach
+            //     await TranslateAsync(translator, text);
+        }
+        private async void TranslateAsync(ITranslator translator, string text)
+        {
+            // 语言也通过properties获取？直接在内部
+            TranslateTextList.Add(await translator.Translate(text, Language.Japenese, Language.ChineseSimplified)); 
+        }
     }
 }

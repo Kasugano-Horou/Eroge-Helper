@@ -1,6 +1,5 @@
 ﻿using Jurassic;
 using log4net;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +22,7 @@ namespace ErogeHelper.Common
         private const string transUrl = @"https://fanyi.baidu.com";
         private const string serviceUrl = @"https://fanyi.baidu.com/v2transapi";
 
-        public async Task<string> Translate(string query, string from, string to, params string[] list)
+        public async Task<string> Translate(string query, Language srcLang, Language desLang, params string[] list)
         {
             string appId = Properties.Settings.Default.BaiduAppId;
             string secretKey = Properties.Settings.Default.SettingsKey;
@@ -33,6 +32,22 @@ namespace ErogeHelper.Common
                 appId = list[0];
                 secretKey = list[1];
             }
+
+            string from = "";
+            string to = "";
+            switch (srcLang)
+            {
+                case Language.Japenese:
+                    from = "jp";
+                    break;
+            }
+            switch (desLang)
+            {
+                case Language.ChineseSimplified:
+                    to = "zh";
+                    break;
+            }
+
             if (appId != null && appId != "")
             {
                 Random rd = new Random();
@@ -82,7 +97,7 @@ namespace ErogeHelper.Common
                 var client = Utils.GetHttpClient();
 
                 // Do request to get cookies
-                lock(this)
+                lock (this)
                 {
                     if (sb_cookie.ToString() == "")
                     {
@@ -103,7 +118,7 @@ namespace ErogeHelper.Common
                 string gtk = "";
                 string token = "";
                 string content = "";
-                lock(this)
+                lock (this)
                 {
                     content = client.GetStringAsync(transUrl).GetAwaiter().GetResult();
                 }
@@ -131,6 +146,9 @@ namespace ErogeHelper.Common
                 var resp = await client.PostAsync(serviceUrl, data);
 
                 BaiduWebApiResponce obj = await resp.Content.ReadAsAsync<BaiduWebApiResponce>();
+
+                if (obj.liju_result == null || obj.trans_result == null || obj.logid == 0)
+                    return "未知错误";
 
                 return obj.trans_result.data[0].dst;
                 // TODO: Check Error!

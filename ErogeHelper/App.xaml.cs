@@ -30,7 +30,11 @@ namespace ErogeHelper
         {
             base.OnStartup(e);
 
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(GetType().Assembly.Location));
+            var currentDirectory = Path.GetDirectoryName(GetType().Assembly.Location);
+            Directory.SetCurrentDirectory(currentDirectory);
+            Utils.AddEnvironmentPaths((currentDirectory + @"\libs").Split());
+            Utils.AddEnvironmentPaths((currentDirectory + @"\libs\x86").Split());
+            Utils.AddEnvironmentPaths((currentDirectory + @"\libs\x64").Split());
             DispatcherHelper.Initialize();
             SimpleIoc.Default.Register<GameInfo>();
             SimpleIoc.Default.Register<AppSetting>();

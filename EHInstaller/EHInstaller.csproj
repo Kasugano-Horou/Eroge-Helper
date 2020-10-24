@@ -92,4 +92,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if not exist $(ProjectDir)$(OutDir)ServerRegistrationManager.exe xcopy $(ProjectDir)ServerRegistrationManager.exe $(ProjectDir)$(OutDir)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
