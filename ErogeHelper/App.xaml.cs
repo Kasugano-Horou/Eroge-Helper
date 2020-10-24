@@ -43,7 +43,7 @@ namespace ErogeHelper
             DispatcherUnhandledException += (s, eventArgs) => {
                 log.Error(eventArgs.Exception);
                 MessageBox.Show(eventArgs.Exception.ToString(), "Eroge Helper");
-                // TODO: 复制粘贴板转到github. Frendly error message
+                // TODO: 复制粘贴板转到github. Friendly error message
             };
             log.Info("Started Logging");
             log.Info($"Enviroment directory: {Directory.GetCurrentDirectory()}");
