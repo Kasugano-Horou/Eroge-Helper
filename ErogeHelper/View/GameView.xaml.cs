@@ -5,7 +5,9 @@ using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -50,7 +52,44 @@ namespace ErogeHelper.View
             Closed += Window_Closed;
 
             gameHWnd = targetProc.MainWindowHandle;
-            log.Info($"Set handle {gameHWnd} Title: {targetProc.MainWindowTitle}");
+
+            IntPtr handle = targetProc.MainWindowHandle;
+
+            var defaultRect = Hook.GetClientRect(handle);
+            if (0 == defaultRect.Bottom && defaultRect.Bottom == defaultRect.Right)
+            {
+                log.Info($"Can't find window Rect in MainWindowHandle! Start search..");
+                log.Info($"Process {targetProc.Id} has {targetProc.HandleCount} handles");
+
+                int textLength = targetProc.MainWindowTitle.Length;
+                StringBuilder title = new StringBuilder(textLength + 1);
+                Hook.GetWindowText(handle, title, title.Capacity);
+
+                IntPtr first = Hook.GetWindow(targetProc.MainWindowHandle, Hook.GW.HWNDFIRST);
+                IntPtr last = Hook.GetWindow(targetProc.MainWindowHandle, Hook.GW.HWNDLAST);
+                IntPtr realHandle = IntPtr.Zero;
+                for (IntPtr cur = first; cur != last; cur = Hook.GetWindow(cur, Hook.GW.HWNDNEXT))
+                {
+                    StringBuilder outText = new StringBuilder(textLength + 1);
+                    Hook.GetWindowText(cur, outText, title.Capacity);
+                    if(outText.Equals(title))
+                    {
+                        var rectClient = Hook.GetClientRect(cur);
+                        if (rectClient.Right != 0 && rectClient.Bottom != 0)
+                        {
+                            log.Info($"Find real handle at 0x{Convert.ToString(realHandle.ToInt64(), 16).ToUpper()}");
+                            realHandle = cur;
+                            break;
+                        }
+                    }
+                }
+                if (realHandle != IntPtr.Zero)
+                    gameHWnd = realHandle;
+                else
+                    throw new Exception("无法找到游戏的窗体handle！请联系开发者寻求帮助");
+            }
+
+            log.Info($"Set handle to 0x{Convert.ToString(gameHWnd.ToInt64(), 16).ToUpper()} Title: {targetProc.MainWindowTitle}");
             uint targetThreadId = Hook.GetWindowThread(gameHWnd);
             dpi = VisualTreeHelper.GetDpi(this).DpiScaleX;
 

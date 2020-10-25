@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Permissions;
-
+using System.Text;
+using System.Windows.Documents;
 
 namespace ErogeHelper
 {
@@ -24,6 +26,35 @@ namespace ErogeHelper
         public const int GWL_EXSTYLE = -20;
 
         public static long SWEH_CHILDID_SELF = 0;
+
+        //uCmd 可选值:
+        public enum GW : uint
+        {
+            /// <summary>
+            /// 同级别第一个
+            /// </summary>
+            HWNDFIRST = 0,
+            /// <summary>
+            /// 同级别最后一个
+            /// </summary>
+            HWNDLAST = 1,
+            /// <summary>
+            /// 同级别下一个
+            /// </summary>
+            HWNDNEXT = 2,
+            /// <summary>
+            /// 同级别上一个
+            /// </summary>
+            HWNDPREV = 3,
+            /// <summary>
+            /// 属主窗口
+            /// </summary>
+            OWNER = 4,
+            /// <summary>
+            /// 子窗口
+            /// </summary>
+            CHILD = 5,
+        }
 
         public enum WM : uint
         {
@@ -199,7 +230,7 @@ namespace ErogeHelper
         }
 
         /// <summary>
-        /// 返回窗口客户区大小, Right as Width, Bottom as Height
+        /// 返回窗口客户区大小, Right as Width, Bottom as Height 其余两项只会是0
         /// </summary>
         /// <param name="hWnd"></param>
         /// <returns></returns>
@@ -240,6 +271,14 @@ namespace ErogeHelper
         {
             return SafeNativeMethods.BringWindowToTop(hWnd);
         }
+        public static IntPtr GetWindow(IntPtr parentHWnd, GW uCmd)
+        {
+            return SafeNativeMethods.GetWindow(parentHWnd, uCmd);
+        }
+        public static int GetWindowText(IntPtr hWnd, StringBuilder title, int length)
+        {
+            return SafeNativeMethods.GetWindowText(hWnd, title, length);
+        }
     }
 
     [SuppressUnmanagedCodeSecurity]
@@ -278,6 +317,12 @@ namespace ErogeHelper
 
         [DllImport("user32.dll")]
         public static extern bool BringWindowToTop(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetWindow(IntPtr parentHWnd, Hook.GW uCmd);
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
     }
 
     [SuppressUnmanagedCodeSecurity]
