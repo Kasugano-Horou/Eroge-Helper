@@ -11,7 +11,7 @@ namespace ErogeHelper.Common
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(QueryHCodeApi));
 
-        static string GameQuery = "http://vnr.aniclan.com/connection.php?go=game_query";
+        static readonly string GameQuery = "http://vnr.aniclan.com/connection.php?go=game_query";
 
 		public static async Task<string> QueryCode(string md5)
         {
@@ -25,24 +25,20 @@ namespace ErogeHelper.Common
 			{
 				reqStream.Write(bs, 0, bs.Length);
 			}
-			using (WebResponse wr = await req.GetResponseAsync())
-			{
-				using (StreamReader sr = new StreamReader(wr.GetResponseStream()))
-				{
-					string xmlString = sr.ReadToEnd();
+            using WebResponse wr = await req.GetResponseAsync();
+            using StreamReader sr = new StreamReader(wr.GetResponseStream());
+            string xmlString = sr.ReadToEnd();
 
-					var xDoc = XDocument.Parse(xmlString);
-					var game = xDoc.Element("grimoire").Element("games").Element("game");
-					if (game.Element("hook") != null)
-					{
-						return game.Element("hook").Value;
-					}
-					else
-					{
-						return "";
-					}
-				}
-			}
-		}
+            var xDoc = XDocument.Parse(xmlString);
+            var game = xDoc.Element("grimoire").Element("games").Element("game");
+            if (game.Element("hook") != null)
+            {
+                return game.Element("hook").Value;
+            }
+            else
+            {
+                return "";
+            }
+        }
     }
 }

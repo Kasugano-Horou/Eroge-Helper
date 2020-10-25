@@ -53,8 +53,8 @@ namespace ErogeHelper.View
 
             gameHWnd = targetProc.MainWindowHandle;
 
+            //if MainWindowHandle has no window
             IntPtr handle = targetProc.MainWindowHandle;
-
             var defaultRect = Hook.GetClientRect(handle);
             if (0 == defaultRect.Bottom && defaultRect.Bottom == defaultRect.Right)
             {
@@ -72,7 +72,7 @@ namespace ErogeHelper.View
                 {
                     StringBuilder outText = new StringBuilder(textLength + 1);
                     Hook.GetWindowText(cur, outText, title.Capacity);
-                    if(outText.Equals(title))
+                    if (outText.Equals(title))
                     {
                         var rectClient = Hook.GetClientRect(cur);
                         if (rectClient.Right != 0 && rectClient.Bottom != 0)
@@ -86,7 +86,7 @@ namespace ErogeHelper.View
                 if (realHandle != IntPtr.Zero)
                     gameHWnd = realHandle;
                 else
-                    throw new Exception("无法找到游戏的窗体handle！请联系开发者寻求帮助");
+                    throw new Exception("无法找到游戏的窗体handle！请再次尝试，或者联系开发者寻求帮助");
             }
 
             log.Info($"Set handle to 0x{Convert.ToString(gameHWnd.ToInt64(), 16).ToUpper()} Title: {targetProc.MainWindowTitle}");
