@@ -128,7 +128,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Common\BaiduTranslator.cs" />
+    <Compile Include="Repository\BaiduApiTranslator.cs" />
+    <Compile Include="Repository\BaiduWebTranslator.cs" />
     <Compile Include="Common\Behavior\ScrollToEndBehavior.cs" />
     <Compile Include="Common\Behavior\ScrollViewerBehavior.cs" />
     <Compile Include="Common\Behavior\ValidationBehavior.cs" />
@@ -138,7 +139,8 @@
     <Compile Include="Common\Converter\VisibilityInverseConverter.cs" />
     <Compile Include="Common\EHConfig.cs" />
     <Compile Include="Common\Hook.cs" />
-    <Compile Include="Common\ITranslator.cs" />
+    <Compile Include="Repository\BaseTranslator.cs" />
+    <Compile Include="Repository\ITranslator.cs" />
     <Compile Include="Common\MecabHelper.cs" />
     <Compile Include="Common\MojiDictApi.cs" />
     <Compile Include="Common\OutlinedTextBlock.cs" />
@@ -267,6 +269,7 @@
   <ItemGroup>
     <Resource Include="Resource\E_32.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

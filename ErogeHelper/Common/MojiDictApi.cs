@@ -38,26 +38,37 @@ namespace ErogeHelper.Common
 
             // ? System.Net.Http.HttpRequestException:“发送请求时出错。”
             // WebException: 未能解析此远程名称: 'api.mojidict.com'
-            HttpResponseMessage resMsg = await client.PostAsJsonAsync(searchApi, searchPayload);
-            resMsg.EnsureSuccessStatusCode();
-
-            var searchResponse = await resMsg.Content.ReadAsAsync<MojiSearchResponse>();
-
-            if (searchResponse.result.words.Length != 0)
+            try
             {
-                MojiFetchPayload fetchPayload = new MojiFetchPayload
-                {
-                    wordId = searchResponse.result.searchResults[0].tarId,
-                    _ApplicationId = "E62VyFVLMiW7kvbtVq3p",
-                };
-
-                resMsg = await client.PostAsJsonAsync(fetchApi, fetchPayload);
+                HttpResponseMessage resMsg = await client.PostAsJsonAsync(searchApi, searchPayload);
                 resMsg.EnsureSuccessStatusCode();
 
-                return await resMsg.Content.ReadAsAsync<MojiFetchResponse>();
+                var searchResponse = await resMsg.Content.ReadAsAsync<MojiSearchResponse>();
+
+                if (searchResponse.result.words.Length != 0)
+                {
+                    MojiFetchPayload fetchPayload = new MojiFetchPayload
+                    {
+                        wordId = searchResponse.result.searchResults[0].tarId,
+                        _ApplicationId = "E62VyFVLMiW7kvbtVq3p",
+                    };
+
+                    resMsg = await client.PostAsJsonAsync(fetchApi, fetchPayload);
+                    resMsg.EnsureSuccessStatusCode();
+
+                    return await resMsg.Content.ReadAsAsync<MojiFetchResponse>();
+                }
+                else
+                {
+                    return new MojiFetchResponse
+                    {
+                        result = null
+                    };
+                }
             }
-            else
+            catch(HttpRequestException ex)
             {
+                log.Error(ex.Message);
                 return new MojiFetchResponse
                 {
                     result = null

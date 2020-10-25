@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ErogeHelper.Repository;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -110,6 +111,13 @@ namespace ErogeHelper.Common
             var path = new[] { Environment.GetEnvironmentVariable("PATH") ?? string.Empty };
             string newPath = string.Join(Path.PathSeparator.ToString(), path.Concat(paths));
             Environment.SetEnvironmentVariable("PATH", newPath);   // 这种方式只会修改当前进程的环境变量
+        }
+
+        public static List<ITranslator> GetTranslatorList()
+        {
+            var ret = new List<ITranslator>();
+            ret.Add(new BaiduWebTranslator());
+            return ret;
         }
     }
 }

@@ -50,6 +50,7 @@ namespace ErogeHelper.View
             Closed += Window_Closed;
 
             gameHWnd = targetProc.MainWindowHandle;
+            log.Info($"Set handle {gameHWnd} Title: {targetProc.MainWindowTitle}");
             uint targetThreadId = Hook.GetWindowThread(gameHWnd);
             dpi = VisualTreeHelper.GetDpi(this).DpiScaleX;
 

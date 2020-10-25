@@ -95,13 +95,13 @@
                 </DockPanel>
                 <DockPanel x:Name="MachineTransPanel"
                            Visibility="{Binding Setting.MachineTransleVisible, Converter={StaticResource VisibilityInverseConverter}}">
-                    <ListView DockPanel.Dock="Top"
+                    <ItemsControl DockPanel.Dock="Top"
                               ItemsSource="{Binding TranslateTextList}"
                               FontSize="50">
-                        <ListView.ItemTemplate>
+                        <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Vertical">
-                                    <common:OutlinedTextBlock  Margin="0 -5 0 -10"
+                                    <common:OutlinedTextBlock  Margin="0 0 0 -5"
                                                                Stroke="Black" 
                                                                Fill="white"
                                                                ClipToBounds="False"
@@ -112,8 +112,8 @@
                                                                Text="{Binding}"/>
                                 </StackPanel>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </DockPanel>
             </StackPanel>
         </Border>

@@ -1,6 +1,7 @@
 using ErogeHelper.Common;
 using ErogeHelper.Model;
 using ErogeHelper.Model.Singleton;
+using ErogeHelper.Repository;
 using ErogeHelper.Service;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -9,7 +10,9 @@ using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using log4net;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,7 +44,7 @@ namespace ErogeHelper.ViewModel
 
         private readonly MecabHelper _mecabHelper;
         private readonly MojiDictApi _mojiHelper;
-        private readonly BaiduTranslator _baiduHelper;
+        private readonly BaiduWebTranslator _baiduHelper;
 
         private readonly IGameDataService _dataService;
         public ObservableCollection<SingleTextItem> DisplayTextCollection { get; set; }
@@ -87,7 +90,7 @@ namespace ErogeHelper.ViewModel
                 CardInfo = new WordCardInfo();
                 _mecabHelper = new MecabHelper();
                 _mojiHelper = new MojiDictApi();
-                _baiduHelper = new BaiduTranslator();
+                _baiduHelper = new BaiduWebTranslator();
                 WordSearchCommand = new RelayCommand<SingleTextItem>(WordSearch, CanWordSearch);
                 PopupCloseCommand = new RelayCommand(() => Messenger.Default.Send(new NotificationMessage("CloseCard")));
                 PinCommand = new RelayCommand(() => TextPanelPin = !TextPanelPin);
@@ -110,7 +113,7 @@ namespace ErogeHelper.ViewModel
                     DisplayTextCollection.Clear();
 
                     var pattern = SimpleIoc.Default.GetInstance<GameInfo>().Regexp;
-                    if (pattern != null)
+                    if (!string.IsNullOrEmpty(pattern))
                     {
                         var list = Regex.Split(hp.Text, pattern);
                         hp.Text = string.Join("", list);
@@ -150,7 +153,13 @@ namespace ErogeHelper.ViewModel
                 else
                 {
                     TranslateTextList.Clear();
-                    TrasnlateAllAsync(hp.Text);
+                    if (hp.Text.Length > 80)
+                    {
+                        TranslateTextList.Add("长度大于80的文本自动跳过");
+                        return;
+                    }
+
+                    TrasnlateAllAsync(hp.Text, Utils.GetTranslatorList());
                 }
             });
         }
@@ -190,8 +199,11 @@ namespace ErogeHelper.ViewModel
         private async void DoPreTranslateAsync()
         {
             // Make language dynamic, set by user, use setting properties?
-            // FIXME: Some error
-            TransText = await _baiduHelper.Translate(currentSentence, Language.Japenese, Language.ChineseSimplified);
+            var result = await _baiduHelper.Translate(currentSentence, Language.Japenese, Language.ChineseSimplified);
+            // Task canceled
+            if (result == "") return;
+
+            TransText = result == null ? _baiduHelper.GetLastError() : result;
             log.Info($"Get translate {TransText}");
         }
         #endregion
@@ -255,17 +267,31 @@ namespace ErogeHelper.ViewModel
 
         public ObservableCollection<string> TranslateTextList { get; set; }
 
-        private async void TrasnlateAllAsync(string text)
+        private async void TrasnlateAllAsync(string text, List<ITranslator> list)
         {
-            // 获取所有
-            // if (开启的) yeild
-            // foreach
-            //     await TranslateAsync(translator, text);
+            await Task.Run(() => 
+            { 
+                foreach(var translator in list)
+                {
+                    TranslateAsync(translator, text);
+                }
+            });
         }
+
         private async void TranslateAsync(ITranslator translator, string text)
         {
             // 语言也通过properties获取？直接在内部
-            TranslateTextList.Add(await translator.Translate(text, Language.Japenese, Language.ChineseSimplified)); 
+            var sw = new Stopwatch();
+            sw.Start();
+            var result = await translator.Translate(text, Language.Japenese, Language.ChineseSimplified);
+            sw.Stop();
+            if (result == "")
+                return;
+            //if (result == null)
+            //    result = translator.GetLastError();
+            log.Info($"[{sw.Elapsed.TotalSeconds:0.00}s][TranslatorName] {result}");
+
+            DispatcherHelper.CheckBeginInvokeOnUI(() => TranslateTextList.Add(result) );
         }
     }
 }

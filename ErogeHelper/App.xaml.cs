@@ -127,7 +127,6 @@ namespace ErogeHelper
                     if (!procMark.Contains(p.Id))
                     {
                         procMark.Add(p.Id);
-                        // May occurrent System.InvalidOperationException
                         try
                         {
                             if (p.WaitForInputIdle(500) == false) // 500 延迟随意写的，正常启动一般在100~200范围
@@ -137,14 +136,15 @@ namespace ErogeHelper
                         }
                         catch (InvalidOperationException ex)
                         {
-                            // skip no effect error
-                            log.Error(ex.Message);
+                            // skip no effect exception
+                            // This occurrent because process has no window event
+                            log.Warn(ex.Message);
                         }
 
                         newProcFind = true;
                     }
                 }
-                // 进程找完却没有得到hWnd的可能也是存在的，所以以hWnd为主
+                // 进程找完却没有得到hWnd的可能也是存在的，所以以带hWnd的进程为主
                 gameInfo.HWndProc = Utils.FindHWndProc(gameInfo.ProcList);
 
                 // timeout
@@ -158,34 +158,27 @@ namespace ErogeHelper
             } while (newProcFind || (gameInfo.HWndProc == null));
             totalTime.Stop();
 
-            log.Info($"{gameInfo.ProcList.Count} Process(es) and window handle Found. Spend time {totalTime.Elapsed.TotalSeconds}");
-            if (gameInfo.ProcList.Count != 0)
+            log.Info($"{gameInfo.ProcList.Count} Process(es) and window handle {gameInfo.HWndProc.MainWindowHandle} Found. Spend time {totalTime.Elapsed.TotalSeconds:0:00}s");
+                
+            // Cheak if there is eh.config file
+            if (File.Exists(gameInfo.ConfigPath))
             {
-                // Cheak if there is eh.config file
-                if (File.Exists(gameInfo.ConfigPath))
-                {
-                    gameInfo.HookCode = EHConfig.GetValue(EHNode.HookCode);
-                    gameInfo.ThreadContext = long.Parse(EHConfig.GetValue(EHNode.ThreadContext));
-                    gameInfo.SubThreadContext = long.Parse(EHConfig.GetValue(EHNode.SubThreadContext));
-                    gameInfo.Regexp = EHConfig.GetValue(EHNode.Regexp);
+                gameInfo.HookCode = EHConfig.GetValue(EHNode.HookCode);
+                gameInfo.ThreadContext = long.Parse(EHConfig.GetValue(EHNode.ThreadContext));
+                gameInfo.SubThreadContext = long.Parse(EHConfig.GetValue(EHNode.SubThreadContext));
+                gameInfo.Regexp = EHConfig.GetValue(EHNode.Regexp);
 
-                    log.Info($"Get HCode {gameInfo.HookCode} from file {gameInfo.ProcessName}.exe.eh.config");
-                    // Display text window
-                    new GameView().Show();
-                }
-                else
-                {
-                    log.Info("Not find xml config file, open hook panel.");
-                    new HookConfigView().Show();
-                }
-
-                Textractor.Init();
+                log.Info($"Get HCode {gameInfo.HookCode} from file {gameInfo.ProcessName}.exe.eh.config");
+                // Display text window
+                new GameView().Show();
             }
             else
             {
-                MessageBox.Show("没有找到游戏进程！", "ErogeHelper");
-                Current.Shutdown();
+                log.Info("Not find xml config file, open hook panel.");
+                new HookConfigView().Show();
             }
+
+            Textractor.Init();
         }
     }
 }
