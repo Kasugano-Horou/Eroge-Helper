@@ -158,7 +158,7 @@ namespace ErogeHelper
             } while (newProcFind || (gameInfo.HWndProc == null));
             totalTime.Stop();
 
-            log.Info($"{gameInfo.ProcList.Count} Process(es) and window handle {gameInfo.HWndProc.MainWindowHandle} Found. Spend time {totalTime.Elapsed.TotalSeconds:0:00}s");
+            log.Info($"{gameInfo.ProcList.Count} Process(es) and window handle 0x{Convert.ToString(gameInfo.HWndProc.MainWindowHandle.ToInt64(), 16).ToUpper()} Found. Spend time {totalTime.Elapsed.TotalSeconds:0:00}s");
                 
             // Cheak if there is eh.config file
             if (File.Exists(gameInfo.ConfigPath))
