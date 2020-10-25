@@ -27,6 +27,11 @@ namespace ErogeHelper.Repository
             return errorInfo;
         }
 
+        public string GetTranslatorName()
+        {
+            return "BaiduApi";
+        }
+
         public async Task<string> Translate(string sourceText, Language srcLang, Language desLang)
         {
             #region SetCancelToken
@@ -83,6 +88,11 @@ namespace ErogeHelper.Repository
             catch (HttpRequestException ex)
             {
                 errorInfo = ex.Message + "可能是程序无法连接到互联网";
+                return null;
+            }
+            catch (TaskCanceledException ex)
+            {
+                errorInfo = ex.Message + "可能是网络状态不太好";
                 return null;
             }
 

@@ -10,6 +10,7 @@ namespace ErogeHelper.Repository
     public interface ITranslator
     {
         public string GetLastError();
+        public string GetTranslatorName();
         /// <summary>
         /// <para>return <strong>string.Empty</strong> means this task has been canceled</para>
         /// <para>return <strong>null</strong> means error</para>

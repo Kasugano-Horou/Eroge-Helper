@@ -278,7 +278,7 @@ namespace ErogeHelper.ViewModel
             });
         }
 
-        private async void TranslateAsync(ITranslator translator, string text)
+        private async void TranslateAsync(ITranslator translator, string text)// , Language src, Language des
         {
             // 语言也通过properties获取？直接在内部
             var sw = new Stopwatch();
@@ -287,9 +287,9 @@ namespace ErogeHelper.ViewModel
             sw.Stop();
             if (result == "")
                 return;
-            //if (result == null)
-            //    result = translator.GetLastError();
-            log.Info($"[{sw.Elapsed.TotalSeconds:0.00}s][TranslatorName] {result}");
+            if (result == null)
+                result = translator.GetLastError();
+            log.Info($"[{sw.Elapsed.TotalSeconds:0.00}s][{translator.GetTranslatorName()}] {result}");
 
             DispatcherHelper.CheckBeginInvokeOnUI(() => TranslateTextList.Add(result) );
         }

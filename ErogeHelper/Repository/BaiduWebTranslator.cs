@@ -28,6 +28,11 @@ namespace ErogeHelper.Repository
             return errorInfo;
         }
 
+        public string GetTranslatorName()
+        {
+            return "BaiduWeb";
+        }
+
         private const string baseUrl = @"https://www.baidu.com";
         private const string transUrl = @"https://fanyi.baidu.com";
         private const string serviceUrl = @"https://fanyi.baidu.com/v2transapi";
@@ -109,6 +114,11 @@ namespace ErogeHelper.Repository
             catch(HttpRequestException ex)
             {
                 errorInfo = ex.Message + "可能是程序无法连接到互联网";
+                return null;
+            }
+            catch (TaskCanceledException ex)
+            {
+                errorInfo = ex.Message + "可能是网络状态不太好";
                 return null;
             }
 
