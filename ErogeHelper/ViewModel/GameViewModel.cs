@@ -148,7 +148,8 @@ namespace ErogeHelper.ViewModel
 
                     TransText = "";
                     TransTextVisible = Visibility.Collapsed;
-                    DoPreTranslateAsync();
+                    // XXX: learn Task first
+                    Task.Run(async () => await DoPreTranslateAsync());
                 }
                 else
                 {
@@ -196,7 +197,7 @@ namespace ErogeHelper.ViewModel
             //只做显示的操作
             TransTextVisible = Visibility.Visible;
         }
-        private async void DoPreTranslateAsync()
+        private async Task DoPreTranslateAsync()
         {
             // Make language dynamic, set by user, use setting properties?
             var result = await _baiduHelper.Translate(currentSentence, Language.Japenese, Language.ChineseSimplified);

@@ -85,6 +85,7 @@ namespace ErogeHelper.View
                 }
                 if (realHandle != IntPtr.Zero)
                     gameHWnd = realHandle;
+                // 如果再次报错 再次检查MainWindowHandle
                 else
                     throw new Exception("无法找到游戏的窗体handle！请再次尝试，或者联系开发者寻求帮助");
             }
