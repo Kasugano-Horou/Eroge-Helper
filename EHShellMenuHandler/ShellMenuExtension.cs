@@ -106,12 +106,19 @@ namespace EHShellMenuHandler
 
             MainMenu.DropDownItems.Add(DirectStartItem);
             MainMenu.DropDownItems.Add(LEStartItem);
+            var AdminItem = new ToolStripMenuItem
+            {
+                Text = "使用管理员转区启动",
+            };
+            // TODO: 点击后变化图片，改变变量。sharpshell的变量会一直保存？
+            AdminItem.Click += (sender, args) => MainProcess(true, true);
+            MainMenu.DropDownItems.Add(AdminItem);
 
             menu.Items.Clear();
             menu.Items.Add(MainMenu);
         }
 
-        private void MainProcess(bool useLE)
+        private void MainProcess(bool useLE, bool admin = false)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo();
 
@@ -133,6 +140,13 @@ namespace EHShellMenuHandler
             {
                 // gamePath must be Args[0]
                 startInfo.Arguments += " /le";
+            }
+
+            if (admin)
+            {
+                //startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                startInfo.UseShellExecute = true;
+                startInfo.Verb = "runas";
             }
 
             try
