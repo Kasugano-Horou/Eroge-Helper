@@ -83,6 +83,14 @@ namespace ErogeHelper.Common
                 log.Info(hp.Text);
                 SelectedDataEvent?.Invoke(typeof(Textractor), hp);
             }
+            else if (gameInfo.HookCode != null
+                     && gameInfo.HookCode == hp.Hookcode
+                     && (gameInfo.ThreadContext & 0xFF00) == (hp.Ctx & 0xFF00) // may be more usefull
+                     && gameInfo.SubThreadContext == hp.Ctx2)
+            {
+                log.Info(hp.Text);
+                SelectedDataEvent?.Invoke(typeof(Textractor), hp);
+            }
         }
 
         static public void RemoveThreadHandle(long threadId) { }
@@ -91,6 +99,13 @@ namespace ErogeHelper.Common
         {
             if (File.Exists(gameInfo.ConfigPath))
             {
+                foreach (var item in ThreadHandleDict)
+                {
+                    if (item.Value.Hookcode == gameInfo.HookCode)
+                    {
+                        return ;
+                    }
+                }
                 InsertHook(gameInfo.HookCode);
             }
         }
@@ -98,6 +113,7 @@ namespace ErogeHelper.Common
 
         public static void InsertHook(string hookcode)
         {
+            // 重复插入相同的code会导致产生很高位的Context
             foreach (Process p in gameInfo.ProcList)
             {
                 TextHostLib.InsertHook((uint)p.Id, hookcode);

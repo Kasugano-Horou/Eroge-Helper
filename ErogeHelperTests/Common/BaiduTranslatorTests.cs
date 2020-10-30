@@ -14,16 +14,18 @@ namespace ErogeHelper.Common.Tests
         [TestMethod()]
         public async Task TranslateTest()
         {
-            string source = "悠真くんを攻略すれば２１０円か。なるほどなぁ…";
+            //string source = "悠真くんを攻略すれば２１０円か。なるほどなぁ…";
 
-            string appid = "";
-            string pass = "";
+            //string appid = "";
+            //string pass = "";
 
             //var t = new BaiduTranslator();
             //var result = await t.Translate(source, Language.Japenese, Language.ChineseSimplified, appid, pass);
 
-            string expect = "攻略悠真的话是210日元吧。原来如此啊…";
+            //string expect = "攻略悠真的话是210日元吧。原来如此啊…";
             //Assert.AreEqual(expect, result);
+            await Task.Run(()=> { });
+            Assert.Fail();
         }
     }
 }

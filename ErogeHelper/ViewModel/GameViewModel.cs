@@ -111,7 +111,7 @@ namespace ErogeHelper.ViewModel
                 if (!Properties.Settings.Default.OnlyMachineTranslation)
                 {
                     DisplayTextCollection.Clear();
-
+                    
                     var pattern = SimpleIoc.Default.GetInstance<GameInfo>().Regexp;
                     if (!string.IsNullOrEmpty(pattern))
                     {

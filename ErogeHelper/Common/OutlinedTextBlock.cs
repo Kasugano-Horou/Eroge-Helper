@@ -291,6 +291,7 @@ namespace ErogeHelper.Common
                 return;
             }
 
+            #pragma warning disable CS0618
             _FormattedText = new FormattedText(
               Text ?? "",
               CultureInfo.CurrentUICulture,
@@ -298,7 +299,6 @@ namespace ErogeHelper.Common
               new Typeface(FontFamily, FontStyle, FontWeight, FontStretch),
               FontSize,
               Brushes.Black);
-
             UpdateFormattedText();
         }
 

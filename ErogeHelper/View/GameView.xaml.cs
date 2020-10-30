@@ -53,6 +53,9 @@ namespace ErogeHelper.View
 
             gameHWnd = targetProc.MainWindowHandle;
 
+            // TODO: hardcode for 参千世界遊戯 check fullscrenn changed single, then do handle search
+            // Then call WinEventDelegate send threadId of handle
+            // 找窗口是否全屏还不太容易，不能使用handle的方法、最好查找有无什么事件。。
             //if MainWindowHandle has no window
             IntPtr handle = targetProc.MainWindowHandle;
             var defaultRect = Hook.GetClientRect(handle);
@@ -77,9 +80,11 @@ namespace ErogeHelper.View
                         var rectClient = Hook.GetClientRect(cur);
                         if (rectClient.Right != 0 && rectClient.Bottom != 0)
                         {
-                            log.Info($"Find real handle at 0x{Convert.ToString(realHandle.ToInt64(), 16).ToUpper()}");
+                            log.Info($"Find real handle at 0x{Convert.ToString(cur.ToInt64(), 16).ToUpper()}");
                             realHandle = cur;
-                            break;
+                            //var tmp = Hook.GetWindowRect(cur);
+                            //log.Info($"{rectClient.Right} {rectClient.Bottom} {tmp.Left} {tmp.Top} {tmp.Right} {tmp.Bottom}");
+                            //break;
                         }
                     }
                 }
