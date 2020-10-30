@@ -17,6 +17,7 @@ namespace ErogeHelper.Common
             var baseNode = new XElement("Profile",
                 new XAttribute("Name", value: pro.Name),
                 new XElement("MD5", content: pro.MD5.ToUpper()),
+                new XElement("IsUserHook", content: pro.IsUserHook),
                 new XElement("HookCode", content: pro.HookCode),
                 new XElement("ThreadContext", content: pro.ThreadContext),
                 new XElement("SubThreadContext", content: pro.SubThreadContext),
@@ -71,6 +72,7 @@ namespace ErogeHelper.Common
     {
         public string Name;
         public string MD5;
+        public string IsUserHook;
         public string HookCode;
         public long ThreadContext;
         public long SubThreadContext;
@@ -87,11 +89,11 @@ namespace ErogeHelper.Common
         public static EHNode EHConfig { get { return new EHNode("EHConfig"); } }
         public static EHNode Profile { get { return new EHNode("Profile"); } }
 
+        public static EHNode IsUserHook { get { return new EHNode("IsUserHook"); } }
         public static EHNode HookCode { get { return new EHNode("HookCode"); } }
         public static EHNode ThreadContext { get { return new EHNode("ThreadContext"); } }
         public static EHNode SubThreadContext { get { return new EHNode("SubThreadContext"); } }
         public static EHNode Regexp { get { return new EHNode("Regexp"); } }
         public static EHNode NoFocus { get { return new EHNode("NoFocus"); } }
-        public static EHNode NoFocssus { get { return new EHNode("NoFosscus"); } }
     }
 }

@@ -83,37 +83,31 @@ namespace ErogeHelper.Common
                 log.Info(hp.Text);
                 SelectedDataEvent?.Invoke(typeof(Textractor), hp);
             }
-            else if (gameInfo.HookCode != null
-                     && gameInfo.HookCode == hp.Hookcode
-                     && (gameInfo.ThreadContext & 0xFF00) == (hp.Ctx & 0xFF00) // may be more usefull
-                     && gameInfo.SubThreadContext == hp.Ctx2)
-            {
-                log.Info(hp.Text);
-                SelectedDataEvent?.Invoke(typeof(Textractor), hp);
-            }
         }
 
         static public void RemoveThreadHandle(long threadId) { }
 
         static public void OnConnectCallBackHandle(uint processId)
         {
-            if (File.Exists(gameInfo.ConfigPath))
+            try
             {
-                foreach (var item in ThreadHandleDict)
+                var isUserHook = EHConfig.GetValue(EHNode.IsUserHook);
+                if (bool.Parse(isUserHook))
                 {
-                    if (item.Value.Hookcode == gameInfo.HookCode)
-                    {
-                        return ;
-                    }
+                    InsertHook(gameInfo.HookCode);
                 }
-                InsertHook(gameInfo.HookCode);
+            }
+            catch (NullReferenceException)
+            {
+                log.Info("find a nice way to deal xml in the future");
+                EHConfig.SetValue(EHNode.IsUserHook, "false");
             }
         }
         #endregion
 
         public static void InsertHook(string hookcode)
         {
-            // 重复插入相同的code会导致产生很高位的Context
+            // 重复插入相同的code(可能)会导致产生很高位的Context
             foreach (Process p in gameInfo.ProcList)
             {
                 TextHostLib.InsertHook((uint)p.Id, hookcode);

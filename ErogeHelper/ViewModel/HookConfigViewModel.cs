@@ -164,6 +164,7 @@ namespace ErogeHelper.ViewModel
                     Name = gameInfo.ProcessName + "exe.eh.config",
                     MD5 = gameInfo.MD5,
 
+                    IsUserHook = SelectedHook.Name.Contains("UserHook") ? "true" : "false",
                     HookCode = SelectedHook.Hookcode,
                     ThreadContext = SelectedHook.Ctx,
                     SubThreadContext = SelectedHook.Ctx2,
@@ -174,6 +175,7 @@ namespace ErogeHelper.ViewModel
             else
             {
                 // update nodes
+                EHConfig.SetValue(EHNode.IsUserHook, SelectedHook.Name.Contains("UserHook") ? "true" : "false");
                 EHConfig.SetValue(EHNode.HookCode, SelectedHook.Hookcode);
                 EHConfig.SetValue(EHNode.ThreadContext, SelectedHook.Ctx.ToString());
                 EHConfig.SetValue(EHNode.SubThreadContext, SelectedHook.Ctx2.ToString());
